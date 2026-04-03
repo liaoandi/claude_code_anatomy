@@ -1,62 +1,39 @@
 # 第 12 章 Context 管理
 
-## 这个功能是什么
+## 上下文窗口是有限资源
 
-Context 管理解决的是"当前窗口里什么该留、什么该压缩、用户怎么看到这件事"。
+模型能"看到"的内容有上限。对话历史、读进来的文件、工具调用结果、memory 文件、skill 定义——这些都在消耗这个上限。用完了，就没法继续了。
 
-这一章讲当前上下文预算控制。历史续接在上一章，长期 memory 沉淀在第 10 章。
+Claude Code 把这个资源的管理做成了显式功能，而不是让用户自己猜"为什么它突然忘了之前说的话"。
 
-## 用户如何感知它
+## 你能看到上下文花在哪里
 
-用户会在这些地方直接看到 context 管理：
-- `/compact` 手动压缩当前上下文
-- `/context` 查看当前上下文使用情况
-- context visualization 界面展示"上下文花在哪里"
-- 某些对话中自动发生的 compact 或 collapse，输出被折叠
+`/context` 会显示当前上下文的使用分布：多少在对话历史里，多少在 memory 文件里，多少在 MCP tool 定义里，多少在 skill 里，还有多少剩余。
 
-## 实现链路
+这个可视化的价值不是帮你优化 token 用量，而是让系统行为变透明。如果 agent 好像没注意到某件事，你可以看看那件事是不是已经被压缩掉了；如果上下文快满了，你知道该做什么，而不是等到突然报错。
 
-上下文管理有三层：
+## Compact 是怎么工作的
 
-**命令层**：允许用户主动查询（`/context`）和触发压缩（`/compact`）。
+`/compact` 手动触发上下文压缩。系统也会在上下文接近上限时自动触发。
 
-**服务层**：`services/compact/*` 负责自动 compact 的时机和算法：
-1. 监控当前 token 使用量
-2. 当接近模型上下文窗口上限时触发自动 compact 评估
-3. compact 算法选择要保留的内容：优先保留最近几轮、工具结果的关键部分、用户明确引用的内容
-4. 被压缩的内容用 summary 替代，打上 `summarized` 标记
-5. `context collapse` 是更激进的压缩，把多轮内容合并成单个摘要块
+压缩的逻辑不是随机丢弃，而是有优先级的：
+- 最近几轮对话完整保留，不压缩
+- 工具调用结果保留摘要，原始输出可以丢
+- 被后续对话引用的内容保留，没有被引用的可以丢
+- 纯文本的中间回复，多轮合并成摘要
 
-**可视化层**：把"上下文花在哪里"呈现给用户，而不是让 compact 变成黑盒。
+被压缩的内容会打上标记，界面上能看到"这里有内容被摘要了"，不是悄悄消失。
 
-## 关键源码点
+## Context Collapse
 
-[`components/ContextVisualization.tsx`](/Users/antonio/Desktop/cc2.1.88/all/src/components/ContextVisualization.tsx) 把通常藏在系统内部的 token 分配做成了显式产品界面：
-- 按 category 展示 context usage（model、memory files、MCP tools、skills、agents、message breakdown）
-- 如果启用了 context collapse，通过 `CollapseStatus` 告诉用户有多少内容被 summarized / staged
-- 让用户能看到"为什么上下文满了"，而不是突然发现系统忘了之前说的话
+Context collapse 比 compact 更激进：把多轮内容（包括工具调用链）折叠成一个 summary block。
 
-**compact 算法的核心判断**（`services/compact/*`）：
-- **保留最近**：最近 N 轮对话默认完整保留，不压缩
-- **保留工具结果摘要**：工具调用结果通常很长，compact 后只保留关键输出
-- **保留用户明确引用的内容**：如果某段内容被后续对话引用，不压缩
-- **合并相似轮次**：多轮纯文本对话可以合并成摘要，减少 token 消耗
+适合长任务的阶段切换点：当前阶段完成了，开始新阶段之前，把前面的历史折叠起来，清空空间。新阶段开始时，上下文里只有一个简短的"之前做了什么"的摘要，加上当前的新任务。
 
-**context collapse** 比 compact 更激进：把多轮内容（包括工具调用链）折叠成一个 summary block，通过 `CollapseStatus` 标注折叠了多少内容。适合长任务的中间阶段，在新阶段开始前清理历史积累。
+## 为什么要把这些做成显式功能
 
-## 为什么这样做
+另一种设计是：全部自动处理，用户不需要知道上下文管理的存在。
 
-长任务里最难受的体验之一，就是用户不知道系统为什么突然"忘了"什么、压了什么、保留了什么。
+问题是：自动压缩意味着系统在你不知道的情况下悄悄丢弃了一些信息。如果因此出了问题——agent 忘了一个重要约束，或者重复做了已经做过的事——你很难判断是 agent 的问题还是上下文被压缩导致的问题。
 
-Claude Code 把 context 管理做成显式功能，有三个好处：
-- **降低黑箱感**：ContextVisualization 让 token 分配透明，用户知道上下文去哪了
-- **让压缩行为可解释**：summarized 和 staged 的标记让用户能看到"什么被压缩了"
-- **让高级用户能主动管理预算**：`/compact`、`/context` 给了显式控制入口，不是完全被动接受
-
-把 context 预算做成可见化 UI，本质上是在降低用户对 AI 行为的不确定感。
-
-## 本章关键文件
-- [ContextVisualization.tsx](/Users/antonio/Desktop/cc2.1.88/all/src/components/ContextVisualization.tsx)
-- `commands/compact/*`
-- `commands/context/*`
-- `services/compact/*`
+显式管理的代价是多了一些你需要了解的概念，好处是系统行为是可解释的。这和权限系统的设计哲学一样：宁可让用户多了解一点，也不要让关键行为成为黑箱。

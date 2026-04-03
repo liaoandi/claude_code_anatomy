@@ -1,52 +1,25 @@
 # 第 7 章 Plan Mode
 
-## 这个功能是什么
+## "先想清楚再动手"怎么变成运行时约束
 
-Plan Mode 是 Claude Code 给复杂任务加的一层显式控制模式。它不是"先解释一下再做"，而是把系统切到一种更受约束的任务推进状态——在这个状态里，模型只规划，不执行。
+做复杂任务之前先写一个计划，这个道理谁都懂。但如果只是在 prompt 里说"先规划再执行"，实际上没有任何保证——模型随时可能边想边做，在你还没看清楚的时候就开始改代码了。
 
-## 用户如何感知它
+Plan mode 把这个约定变成了系统强制执行的状态。进入 plan mode 之后，写操作工具的权限上下文发生变化，模型想调用 FileEditTool 或者跑有副作用的 shell 命令，都会被拦住。这不是靠提示词约束，而是运行时约束。
 
-用户会感知到几件事：
-- `/plan` 会进入一个单独模式，此后模型不再直接调用写操作工具
-- 当前 plan 可以查看，也可以用 `/plan open` 在外部编辑器里直接修改
-- 明确退出 plan mode 后，才进入执行阶段
+## 进入和退出
 
-这种"先规划后执行"的边界不是约定，而是运行时状态，系统强制执行。
+`/plan` 切换到 plan mode。这不只是改了一个 UI 状态，而是写进了 `toolPermissionContext`，影响后续所有工具的执行策略。
 
-## 实现链路
+在 plan mode 里，模型可以读文件、搜索、思考、生成计划内容，但不能写文件、不能跑有副作用的命令。计划内容存在磁盘上的一个文件里，不是临时的内存变量——这意味着你可以用 `/plan open` 在外部编辑器里直接修改这个文件，手工调整计划，然后让模型按调整后的计划执行。
 
-Plan Mode 的链路并不复杂，但很有代表性：
+退出 plan mode，进入执行阶段。
 
-1. 用户触发 `/plan`
-2. [`commands/plan/plan.tsx`](/Users/antonio/Desktop/cc2.1.88/all/src/commands/plan/plan.tsx) 检查当前 `toolPermissionContext.mode`
-3. 如果不在 plan mode，调用 `prepareContextForPlanMode` 和 `applyPermissionUpdate` 切换权限上下文
-4. 如果已在 plan mode，读取当前 plan 文件并展示内容
-5. `/plan open` 调用外部编辑器直接打开 plan 文件
+## 为什么是显式模式切换，而不是自动判断
 
-进入 plan mode 后，权限上下文变化让写操作工具（FileEditTool、BashTool 有副作用的命令等）无法执行，不需要模型"自我约束"。
+另一种设计是：系统自动判断当前是在规划还是在执行，用户不需要手动切换。
 
-## 关键源码点
+这种设计看起来更智能，但实际上把控制权从用户手里拿走了。你不确定系统现在是什么状态，也不确定它什么时候会开始真正改东西。对于风险较高的操作，这种不确定感很不舒服。
 
-[`commands/plan/plan.tsx`](/Users/antonio/Desktop/cc2.1.88/all/src/commands/plan/plan.tsx) 说明 Plan Mode 的本质是权限上下文切换，不是纯 UI 状态：
+显式模式切换的好处是：状态对用户完全透明。你知道现在是规划状态，你决定什么时候进入执行状态。计划写到磁盘上，你可以审阅和修改，不是只能接受模型给出的方案。
 
-- 状态写进 `toolPermissionContext`，而不是 React state
-- `handlePlanModeTransition` 和 `prepareContextForPlanMode` 会影响后续所有工具的执行策略
-- plan 内容来自专门的 plan 文件路径，持久化到磁盘，不是临时内存变量
-- `renderToString(display)` 说明 plan 也被当作本地命令结果来呈现，进入消息流
-
-`tools/EnterPlanModeTool` 和 `tools/ExitPlanModeTool` 让模型自己也能触发模式切换，不只是用户操作才能控制。
-
-## 为什么这样做
-
-复杂任务最怕两件事：
-- 模型边想边做，直接越过关键决策点，出了问题难以回溯
-- 用户失去"现在是在规划还是在执行"的边界感，不知道下一步会发生什么
-
-Claude Code 把 plan mode 做成显式模式而不是口头约定，目的是让"先规划后执行"真正变成运行时约束，而不是 prompt 文案。
-
-这个设计的副产品是：plan 文件可以在外部编辑器里手工修改，用户可以直接介入规划过程，不是只能接受模型给出的方案。
-
-## 本章关键文件
-- [plan.tsx](/Users/antonio/Desktop/cc2.1.88/all/src/commands/plan/plan.tsx)
-- `tools/EnterPlanModeTool/*`
-- `tools/ExitPlanModeTool/*`
+这是 Claude Code 在"自动化程度"和"用户控制感"之间的一个典型取舍：选择了让用户保持控制感。

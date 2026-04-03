@@ -1,58 +1,29 @@
 # 第 11 章 Session、Resume、History
 
-## 这个功能是什么
+## 三种"记住之前发生的事"
 
-Claude Code 不是一次性问答器，它必须处理历史输入、会话恢复和长任务续接。
+Claude Code 有三个相关但不同的概念：
 
-这一章讲"会话如何续上"。长期 memory 提取在上一章，当前窗口压缩在下一章。
+**输入历史**：你之前输入过的内容。上下方向键可以翻，跨会话也能用。就像 shell 的历史记录，只存输入，不存对话内容。
 
-## 用户如何感知它
+**Session 续接**：恢复之前的一次完整对话，包括所有消息、工具调用、上下文。用 `/resume` 或者启动时选择历史线程。
 
-重度用户依赖三类能力：
-- 上下方向键或 picker 里的历史输入（输入过的内容可以复用）
-- 恢复之前的线程（不同 session 可以继续）
-- 在 remote/viewer 场景里继续往前翻更早的会话消息
+**远程历史分页**：在 remote viewer 场景里，往上滚可以看到更早的消息，按需加载，不是一次性全部拉取。
 
-## 实现链路
+三者都和"记住过去"有关，但粒度和用途完全不同。
 
-这里有两条独立链路：
+## 为什么不把所有历史都放在上下文里
 
-**本地历史链路**：把输入和 paste 引用写到全局 `history.jsonl`，倒序读取，支持跨 session 复用。
+一个朴素的想法是：把整个对话历史都放在当前上下文里，这样 agent 什么都"记得"。
 
-**远程会话链路**：通过 session events API 分页加载更老消息，支持 viewer 模式和 remote 场景下的历史滚动。
+这在短会话里没问题。但长会话积累的历史很快就会超出模型上下文窗口的限制，而且把几百轮历史全塞进去，大部分都是不相关的噪声，反而让 agent 更难找到真正有用的信息。
 
-## 关键源码点
+Claude Code 的处理方式是分层存储：最近的消息在上下文里，更老的消息在磁盘上，需要的时候按需加载。Session 续接是把一个旧的上下文重新激活，不是把所有历史合并进来。
 
-[`history.ts`](/Users/antonio/Desktop/cc2.1.88/all/src/history.ts) 负责本地历史总账：
-- 历史存成 `history.jsonl`，append-only，不做删改
-- 通过 `makeLogEntryReader()` 倒序读取，最近的优先返回
-- 支持 pasted text / image 引用的格式化和展开（粘贴的大段内容不原文存储，存引用）
-- `getHistory()` 优先返回当前 session 的历史，再补其他 session 的历史，当前上下文优先
+## 远程历史的懒加载
 
-[`assistant/sessionHistory.ts`](/Users/antonio/Desktop/cc2.1.88/all/src/assistant/sessionHistory.ts) 是远程事件分页层：
-- 先创建带 OAuth headers 的 `HistoryAuthCtx`
-- 再按 `anchor_to_latest`（初次加载最新页）或 `before_id`（往前翻页）分页拉取事件
+在有远程会话的场景里，消息历史通过 API 分页加载。初次打开拉取最新的一页，往上滚到一定位置时再拉更老的一页，以此类推。
 
-[`hooks/useAssistantHistory.ts`](/Users/antonio/Desktop/cc2.1.88/all/src/hooks/useAssistantHistory.ts) 把远程历史接回 UI：
-- 初次挂载先拉最新页
-- 往上滚动时按阈值触发拉取更老页（类似社交 feed 的懒加载）
-- 通过 scroll anchor 保持 prepend 后视口不跳（消息加在上方但不影响当前阅读位置）
-- 用 sentinel message 表示 `loading`、`failed`、`start of session` 等边界状态
+这里有一个 UX 细节值得注意：加载更老的消息时，新内容是往上插入的，但界面不应该因此跳动，让用户突然不知道自己在看哪里了。这通过 scroll anchor 机制解决——插入前记住当前可见消息的位置，插入后恢复到相同位置。
 
-## 为什么这样做
-
-Claude Code 显然不相信"把所有历史全塞在当前上下文里"这条路。它把 history 拆成三块：
-- **本地输入历史**：轻量，只存输入，支持快速回填
-- **远程事件分页**：完整会话记录，按需加载，不一次性拉取
-- **UI 里的懒加载续接**：scroll anchor 保证体验，不因为加载历史导致界面跳动
-
-这样做的好处是：
-- 长会话不会一次性拖垮界面渲染
-- 恢复能力不依赖模型记忆，是独立的持久化机制
-- remote viewer 场景也能平滑回放历史，不需要重跑会话
-
-## 本章关键文件
-- [history.ts](/Users/antonio/Desktop/cc2.1.88/all/src/history.ts)
-- [sessionHistory.ts](/Users/antonio/Desktop/cc2.1.88/all/src/assistant/sessionHistory.ts)
-- [useAssistantHistory.ts](/Users/antonio/Desktop/cc2.1.88/all/src/hooks/useAssistantHistory.ts)
-- `commands/resume/*`
+边界状态（正在加载、加载失败、到了最开头）用特殊的 sentinel message 表示，这样 UI 逻辑不需要单独维护这些状态，直接跟着消息流走。

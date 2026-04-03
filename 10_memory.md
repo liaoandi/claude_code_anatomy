@@ -1,67 +1,37 @@
 # 第 10 章 Memory 功能
 
-## 这个功能是什么
+## Memory 要解决的问题
 
-Claude Code 的 memory 不是简单"存一下"，而是把当前会话里真正值得保留的信息沉淀成更长期的材料。
+每次开启新会话，Claude Code 对上次发生的事情一无所知。这对短任务问题不大，但对长期使用的人来说很麻烦——你得反复解释项目背景、重申偏好、重新介绍约定。
 
-这一章讲长期记忆与后台提取。Session 续接和当前窗口压缩在后续两章分别讲。
+Memory 的目的是让这些信息持久化，下次用的时候不用再说一遍。
 
-## 用户如何感知它
+## Memory 是一些 Markdown 文件
 
-用户会感知到三种层次：
-- `/memory` 打开或编辑 memory 文件，可以直接手工增删
-- 某些对话自动沉淀到 session memory，下次会话能"记住"关键信息
-- 某些内容可能进一步进入 team memory 或更长期的同步流程
+Claude Code 的 memory 没有数据库，没有向量检索，就是几个 markdown 文件。你可以直接用 `/memory` 打开来编辑，加、删、改都行。
 
-## 实现链路
+这个设计的好处是透明：你能看到 memory 里存了什么，能直接控制它，不是一个不透明的黑箱在背后记住一些东西。
 
-memory 的链路分前台和后台两段：
+有多个层级的 memory 文件：个人 memory（只对你自己生效）、项目 memory（对整个项目生效）、team memory（在团队内共享）。系统启动时会把这些文件加载进上下文，所以 agent 能"知道"这些信息。
 
-**前台入口**：用户通过 `/memory` 直接打开 memory 文件，在外部编辑器里手工编辑。
+## 后台自动提取
 
-**后台提取链路**：
-1. 系统监控 token 消耗量和工具调用次数
-2. 当 token threshold 或 tool-call threshold 触发时，决定是否值得做一次提取
-3. 避免在最后一轮还有活跃 tool calls 时贸然提取（防止打断执行流）
-4. 启动 forked subagent 在后台执行提取，不阻塞主流程
-5. 提取结果写回 markdown memory 文件
+除了手工编辑，会话结束后系统会自动做一次 memory 提取——把这次会话里值得长期保留的内容写入 memory 文件。
 
-## 关键源码点
+提取不是每轮都发生，而是有触发条件：当前会话消耗的 token 超过一定量，或者工具调用次数达到阈值。这两个条件都是在估计"这次会话发生了足够多的事情，值得提取"。
 
-[`commands/memory/memory.tsx`](/Users/antonio/Desktop/cc2.1.88/all/src/commands/memory/memory.tsx) 是前台入口：
-- 先 `clearMemoryFileCaches()` 再 `getMemoryFiles()`，避免缓存过期导致初次打开闪烁
-- 打开时确保目录和文件存在（首次使用自动创建）
-- 把 memory 文件交给外部编辑器处理，不在 UI 里内嵌编辑
+提取本身是由一个 forked subagent 在后台做的，不阻塞主对话。提取结束后，新内容追加进 memory 文件。
 
-[`services/SessionMemory/sessionMemory.ts`](/Users/antonio/Desktop/cc2.1.88/all/src/services/SessionMemory/sessionMemory.ts) 是真正有价值的后台逻辑：
+## 为什么提取用 subagent，而不是简单地截取文本
 
-**触发条件**：不是每轮都提取，而是看两个阈值：
-- token threshold：当前会话消耗的 token 超过阈值时触发评估
-- tool-call threshold：工具调用次数达到阈值时触发评估
+直接把对话的最后几轮截下来存进 memory，实现最简单，但效果差。
 
-两个阈值都是为了确保"这次会话发生了足够多的事情，提取才有意义"。空会话或极短会话不会触发后台提取。
+有价值的信息往往散落在整个会话里：第5轮发现了一个重要约定，第15轮确认了一个技术决策，第28轮遇到了一个坑。简单截取只能拿到最近的内容，拿不到这些散落的关键点。
 
-**提取时机控制**：
-- 避免在最后一轮还有 tool calls 时提取（会话还没结束，提取内容不完整）
-- 提取是异步的，通过 forked subagent 执行，不阻塞主对话
+用 subagent 做提取，subagent 可以读完整个会话历史，判断什么值得保留、以什么形式保留，然后生成结构化的 memory 内容。这比文本截取准确得多，当然也更贵一点。
 
-**复用工具体系**：`setupSessionMemoryFile()` 通过 `FileReadTool` 读取现有 memory，而不是绕过工具体系直接读文件。这意味着读取操作仍然经过权限检查和系统侧观测，保持一致性。
+## Memory 不是万能的
 
-`services/extractMemories/*` 是具体的提取逻辑所在——提取本身是由 subagent 完成的，subagent 有自己的上下文，可以做摘要和结构化，不是简单地截取片段。
+Memory 文件会被加载进每次会话的上下文，但这也意味着它占用 token。如果 memory 文件很大、包含大量不相关的历史记录，反而会稀释上下文，让 agent 在噪声里找有用信息。
 
-## 为什么这样做
-
-**为什么不每轮都更新 memory？**
-频繁更新会让系统变慢、变吵、引入噪声。大多数对话轮次不产生值得长期保留的信息，强制提取会稀释 memory 的质量。
-
-**为什么不完全手动？**
-长任务会话里，真正重要的信息往往在第 20 轮、第 30 轮才出现。让用户全程手工维护 memory 不现实。
-
-**为什么提取用 subagent？**
-普通字符串处理很难判断"哪些内容值得保留、以什么格式保留"。用 subagent 做提取，可以做真正的语义理解和结构化，不是简单截取文本。这是"比直接接向量库更产品化的设计"——向量库解决的是检索问题，memory 提取解决的是"什么值得记"的问题。
-
-## 本章关键文件
-- [memory.tsx](/Users/antonio/Desktop/cc2.1.88/all/src/commands/memory/memory.tsx)
-- [sessionMemory.ts](/Users/antonio/Desktop/cc2.1.88/all/src/services/SessionMemory/sessionMemory.ts)
-- `services/extractMemories/*`
-- `services/teamMemorySync/*`
+保持 memory 文件精炼、定期手工清理不再相关的内容，是让 memory 真正好用的关键。这件事系统帮不了你，得靠你自己判断。

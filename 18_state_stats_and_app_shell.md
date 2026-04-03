@@ -1,59 +1,32 @@
 # 第 18 章 状态、统计与应用壳
 
-## 这个功能是什么
+## 顶层越薄越好
 
-Claude Code 顶层的 `App` 很薄，但承担的是"把全局能力兜起来"的职责：状态、统计、性能指标和全局上下文都从这里灌进组件树。
-
-这一章只讲顶层壳，不重复展开各功能域内部的状态机。
-
-## 用户如何感知它
-
-用户通常不会直接注意到 `App.tsx`，但会感知到几个结果：
-- 界面状态是连续的，不同功能之间切换不会丢失上下文
-- 统计和性能信息能稳定存在，`/stats` 之类的命令始终可用
-- 功能越加越多，但顶层体验没有明显变乱
-
-这些都是顶层壳做好了才有的结果，但用户感知不到壳本身。
-
-## 实现链路
-
-App 壳的链路非常简单：
-
-1. 接收 `initialState`、`stats`、`getFpsMetrics` 等全局入参
-2. 依次套上 `AppStateProvider`、`StatsProvider`、`FpsMetricsProvider`
-3. 通过 `onChangeAppState` 统一监听状态变化
-4. 其他所有功能从 provider 消费这些全局能力，不直接依赖 App
-
-## 关键源码点
-
-[`components/App.tsx`](/Users/antonio/Desktop/cc2.1.88/all/src/components/App.tsx) 几乎只做 provider 组合，没有业务逻辑：
+Claude Code 的顶层 `App` 组件很短，几乎只做一件事：把几个 provider 套起来，把全局状态、统计数据、性能指标注入到组件树里。
 
 ```
-AppStateProvider        // 全局应用状态
-  StatsProvider         // token 统计、用量数据
-    FpsMetricsProvider  // 渲染性能指标
-      <子组件树>
+AppStateProvider
+  StatsProvider
+    FpsMetricsProvider
+      <所有其他东西>
 ```
 
-这说明 Claude Code 很克制地把顶层当成"壳"，而不是"业务总线"：
-- 业务逻辑下沉到 commands / tools / services / hooks
-- 顶层只承接全局环境和观测能力
-- 状态变化可以集中追踪，但不迫使所有功能都堆到一层
+业务逻辑不在这里。命令逻辑在 `commands/` 里，工具逻辑在 `tools/` 里，服务逻辑在 `services/` 里。顶层只是把这些需要全局可用的东西挂上去，然后让子组件自己去用。
 
-`state/*` 和 `context/*` 目录维护各自功能域的状态，App 只是把它们的 provider 组合起来，不直接管理业务状态。
+## 为什么要刻意保持顶层简单
 
-## 为什么这样做
+功能越堆越多的系统，顶层很容易变成一个大垃圾桶：什么状态都往上放，什么副作用都从顶层触发，改任何功能都要动顶层。
 
-功能越来越多时，最容易膨胀的就是顶层壳。很多系统最后变成了"大 App.tsx"——什么状态都放在顶层，什么副作用都从顶层触发，改任何功能都要动顶层。
+这种膨胀一旦发生就很难逆转，因为越来越多的组件开始依赖顶层的状态，解耦的成本越来越高。
 
-Claude Code 这里反而保持了很强的纪律性：
-- **壳薄**：App.tsx 只做 provider 组合，代码量极少
-- **provider 明确**：每类全局能力对应一个 provider，边界清晰
-- **业务下沉**：功能逻辑不在顶层，在各自的 commands/tools/services 里
+Claude Code 的做法是从一开始就把顶层当成壳而不是总线：顶层只提供全局环境，不承载业务状态。功能领域的状态由各自的 provider 和 hook 管理，不上浮到顶层。
 
-这让系统可以继续长，而不用不断重写最外层架构——顶层稳定，功能在下层迭代。
+这让系统可以继续长大，而不需要不断重写最外层架构。新功能加进来，在自己的目录里实现自己的状态管理，顶层不需要动。
 
-## 本章关键文件
-- [App.tsx](/Users/antonio/Desktop/cc2.1.88/all/src/components/App.tsx)
-- `state/*`
-- `context/*`
+## 统计和性能指标
+
+`StatsProvider` 提供 token 使用量、请求次数等统计数据，这是 `/stats` 命令能显示数据的基础。
+
+`FpsMetricsProvider` 提供渲染帧率等性能数据。Claude Code 是一个 terminal UI 应用，渲染性能直接影响使用体验，特别是在输出大量内容时。把 FPS 指标作为全局状态，是因为性能监控需要贯穿整个应用。
+
+这两个 provider 的存在说明一件事：可观测性是从设计层就考虑进去的，不是事后打补丁。

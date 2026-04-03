@@ -1,59 +1,42 @@
 # 第 6 章 Shell 执行
 
-## 这个功能是什么
+## Shell 是最强也是最危险的能力
 
-Shell 是 Claude Code 最强、也最危险的能力层。它让 agent 从"会改文件"升级为"会操作真实环境"——运行测试、安装依赖、启动服务、部署代码，都要经过这里。
+给 agent 开放 shell，它就能做几乎任何事：跑测试、安装依赖、启动服务、部署代码。但同样，`rm -rf`、`curl | bash`、访问生产数据库也都可以做。
 
-但 Claude Code 没有把 shell 当成无边界的万能后门。它做成了有权限分级、有语义识别、有前后台策略的正式工具。
+Claude Code 没有因为这种风险就限制 shell 能力，而是把 shell 做成了一个正式的工具，带权限、带语义识别、带任务管理。
 
-## 用户如何感知它
+## 命令语义识别
 
-用户最常见的感知是：
-- Claude Code 会运行 bash / powershell / REPL 命令
-- 某些命令会弹出确认框，某些直接执行
-- 搜索类、读取类命令的输出常被折叠，不撑开界面
-- 长命令或耗时任务可以后台化，不阻塞交互
+BashTool 在执行之前会先分析命令的语义：这是只读命令还是有副作用的命令？
 
-## 实现链路
+`grep`、`find`、`cat`、`ls` 这类命令被识别为只读操作，可以直接执行，结果在界面上也会自动折叠，不撑开会话流。
 
-一条 shell 调用通常是：
+`rm`、`mv`、写文件、启动服务这类命令被识别为有副作用，会触发权限检查，可能需要用户确认。
 
-1. 模型调用 `BashTool`，传入 `command`、`description`（可选）、`timeout`（可选）、`run_in_background`（可选）
-2. 工具做命令语义分析：识别是 search/read/list 这类只读命令，还是有副作用的写操作
-3. 执行前做权限判断：deny rule 匹配、命令级安全规则、只读约束检查
-4. 确定 sandbox 策略：是否需要容器隔离
-5. 真正执行时挂到 `LocalShellTask` 任务体系，获得任务 ID 和输出文件路径
-6. 结果通过 tool result message 和 background hint 呈现给用户
+这个分类不是完美的，但它让权限系统可以对不同类型的命令有不同的默认策略，而不是一刀切。
 
-## 关键源码点
+## 长任务怎么处理
 
-[`tools/BashTool/BashTool.tsx`](/Users/antonio/Desktop/cc2.1.88/all/src/tools/BashTool/BashTool.tsx) 说明 BashTool 的本体不是 `exec`，而是"命令语义 + 权限 + 任务 + 展示"的总封装：
+有些命令跑完要几分钟甚至更长。如果同步等待，整个会话就卡在那里了。
 
-- 会识别 search/read/list/silent command，用于优化 UI 折叠策略（只读命令默认 collapse）
-- `run_in_background` 不是简单布尔开关，受环境变量和特性开关共同影响
-- sandbox 决策在工具层做，不是全局统一配置，可以按命令类型区分处理
-- 通过 `spawnShellTask`、`backgroundExistingForegroundTask` 等函数把 shell 纳入任务系统
-- 结果接入 tool result storage、preview、progress message 等展示机制
+Claude Code 的处理方式是把 shell 命令纳入任务体系。每个长任务都有一个 task id，输出写到专门的文件里。你可以：
+- 让它在后台跑，继续做别的事
+- 用 `attach` 重新连上去看实时输出
+- 用 `kill` 终止它
 
-**sandbox 策略**：`utils/sandbox/*` 里的逻辑决定某条命令是否需要容器隔离。不是所有命令都跑在 sandbox 里——sandbox 有性能成本，Claude Code 只在必要时启用。判断依据包括：命令类型、当前权限模式、是否有副作用。
+这样 shell 执行就从"等待返回"变成了"提交任务、查看进度"，适合真正的长时间操作。
 
-## 为什么这样做
+## Sandbox 是另一层保护
 
-如果 shell 只是裸 `exec`，Claude Code 会失去四样东西：
+除了权限规则，还有 sandbox 机制：某些命令可以在容器里执行，和主机环境隔离。
 
-**风险分级**：裸 exec 无法区分"搜索文件"和"删除目录"，都是同等权限。BashTool 的命令语义识别让两者有不同的确认策略。
+Sandbox 不是对所有命令都启用的，因为有性能成本。什么时候启用、启用哪种级别的隔离，取决于命令类型和当前的权限模式。权限规则和 sandbox 是两个独立的机制，可以组合使用：权限规则决定"这条命令允不允许运行"，sandbox 决定"运行时有没有隔离保护"。
 
-**可解释展示**：shell 命令原始输出通常是文本流，不适合直接塞进 UI。BashTool 对输出做格式化、截断、折叠，让长输出不破坏会话体验。
+## 为什么不直接让模型自己组装 shell 命令
 
-**长任务管理**：长时间运行的命令需要后台化、可查看进度、可终止。裸 exec 无法提供这些，任务系统才可以。
+理论上可以：模型直接生成 shell 命令，通过 `exec` 执行，结果以文本返回。简单直接。
 
-**一致体验**：如果 shell 体验和其他工具完全不同（没有权限检查、没有 diff 展示、没有任务追踪），用户在用 Claude Code 执行 shell 命令时会觉得"进入了另一个系统"。
+但这样做，系统对 shell 执行这件事完全没有感知。没有权限检查，没有任务管理，没有展示逻辑，没有长任务处理。出了问题，什么都捞不到。
 
-Claude Code 选择把 shell 正式产品化，是因为 shell 不是附属功能，而是 coding agent 的主战场之一。
-
-## 本章关键文件
-- [BashTool.tsx](/Users/antonio/Desktop/cc2.1.88/all/src/tools/BashTool/BashTool.tsx)
-- `tools/PowerShellTool/*`
-- `tools/REPLTool/*`
-- `utils/sandbox/*`
-- `tasks/LocalShellTask/*`
+把 shell 做成正式工具的代价是多了一层抽象，好处是 shell 执行变得可控、可见、可管理——这在 coding agent 里是刚需，不是可选功能。

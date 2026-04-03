@@ -1,62 +1,33 @@
 # 第 5 章 改文件与 Diff 展示
 
-## 这个功能是什么
+## 精准替换，而不是整文件覆盖
 
-改文件是 Claude Code 最核心的执行能力之一。但它不是"随便写磁盘"，而是"在权限、校验和可审阅前提下修改文件"。
+Claude Code 改文件的主要方式是精准替换：你提供要改的旧内容和新内容，工具找到旧内容在文件里的位置，替换掉。
 
-Diff 展示是这项能力的配套界面。没有 diff，文件编辑就失去可见性和信任基础——用户不知道系统改了什么，也没有办法判断改得对不对。
+这个设计选择背后有一个重要约束：`old_string` 必须在文件里唯一存在。如果同样的内容出现了两次，工具会拒绝执行，而不是随便改其中一处。
 
-## 用户如何感知它
+这一条规则防止了很多"改错地方"的情况。如果模型写出了一段模糊的 old_string，系统直接拒绝，而不是悄悄改了一个错误的位置然后让用户事后发现。
 
-用户会明显感知到：
-- Claude Code 会做精准替换，而不是盲改整文件
-- 修改前后能看到 diff，知道具体改了哪些行
-- 某些编辑会被拒绝或要求确认
-- 文件被外部改动时，编辑可能失败而不是强行覆盖
+整文件覆盖（FileWriteTool）也存在，但主要用于新建文件或者真的要完全重写的情况。一般的修改都应该用精准替换，改动范围更小，diff 更可读。
 
-## 实现链路
+## 编辑之前要过的关
 
-一条编辑链路通常是：
+在真正写文件之前，FileEditTool 会做一批前置检查：
 
-1. 模型调用 `FileEditTool`，传入 `file_path`、`old_string`、`new_string`
-2. 工具做 `file_path` 规范化和写权限检查
-3. 校验 `old_string` 在文件里是否唯一（防止误改）、文件大小、文件是否存在、是否被外部改动
-4. 通过后生成 patch，写回文件
-5. 把 diff 和结果通过统一消息机制显示给用户
+路径别名展开。先把 `~/`、相对路径等各种形式统一成绝对路径，防止路径别名绕过后续的权限规则。
 
-`FileWriteTool` 走类似链路，区别是整文件覆盖而不是精准替换，适用于新建文件或完全重写的场景。
+权限检查。看用户的规则里这个路径是否允许写入。
 
-## 关键源码点
+文件状态检查。如果文件在上次读取之后被外部程序修改了，工具会拒绝覆盖，而不是强行写入。这保护了用户在另一个窗口里做的改动。
 
-[`tools/FileEditTool/FileEditTool.ts`](/Users/antonio/Desktop/cc2.1.88/all/src/tools/FileEditTool/FileEditTool.ts) 暴露出 Claude Code 对编辑能力的强约束：
+大文件保护。超过 1GB 的文件直接拒绝，防止内存问题。
 
-- `strict: true`：输入 schema 不允许模糊参数，每个字段都有明确类型
-- `expandPath`：先展开路径别名，防止路径别名绕过后续校验
-- deny rule 和 write permission 检查：基于用户配置的权限规则决策
-- team memory secrets 拦截：防止把敏感内容写进共享 memory
-- 1 GiB 以上文件拦截：防止大文件写入导致 OOM
-- 文件不存在、文件已被外部改变、空文件创建等细分场景各有专门处理
-- 集成了 file history、git diff、LSP diagnostics 和 VS Code 通知
+这些检查都在写入之前做完。如果任何一项不通过，操作失败，原文件不变。
 
-这说明 FileEditTool 不是单一写文件动作，而是一整套"安全编辑管线"。
+## Diff 是信任的基础
 
-Diff 展示方面，`components/StructuredDiff*` 和 `components/FileEditToolDiff.tsx` 负责把 patch 结果渲染成用户可读的 diff 界面，直接显示在消息流里，不需要用户自己运行 `git diff`。
+每次成功的编辑，diff 都会出现在消息流里。用户不需要自己去比对，也不需要运行 `git diff`，直接在会话界面就能看到改了哪几行。
 
-## 为什么这样做
+这个设计不只是方便，而是系统可信度的基础。你不需要相信"agent 说它改对了"——你可以直接看改了什么。如果改得不对，当场就能发现，而不是等到跑测试才知道。
 
-如果编辑只依赖 shell，Claude Code 在产品层会失去两样最关键的东西：
-
-**可控的修改边界**：裸 `fs.write` 无法做前置校验，改错了也不知道。FileEditTool 要求 `old_string` 在文件里必须存在且唯一，从根本上防止了"改错地方"。
-
-**可读的结果展示**：shell 写文件不会自动生成 diff。没有 diff，用户要自己去对比前后差异，信任成本很高。
-
-把编辑能力做成一级工具的直接好处：
-- 细粒度前置校验，减少误操作
-- 稳定生成 diff，让修改透明可见
-- 拒绝、冲突、失败都进统一用户体验，不是悄悄失败
-
-## 本章关键文件
-- [FileEditTool.ts](/Users/antonio/Desktop/cc2.1.88/all/src/tools/FileEditTool/FileEditTool.ts)
-- `tools/FileWriteTool/*`
-- `components/StructuredDiff*`
-- `components/FileEditToolDiff.tsx`
+diff 展示还集成了 LSP diagnostics 和 VS Code 通知。改完文件，如果有类型错误或者语法问题，这些信息也会一起出现，不需要再手动检查。

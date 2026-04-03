@@ -1,66 +1,39 @@
 # 第 15 章 Plugins 与 Skills
 
-## 这个功能是什么
+## 两种扩展方式，一个共同机制
 
-Plugins 和 Skills 是 Claude Code 的两种高层扩展方式。它们不是协议级动态工具（那是 MCP），而是面向命令复用、工作流封装和内容注入的扩展层。
+Plugins 和 skills 是 Claude Code 的高层扩展方式，用来做"工作流复用"和"自定义 slash command"，不是接入外部系统（那是 MCP 的事）。
 
-核心机制是：**把 markdown 文件编译成命令对象**，并入命令注册表。
+两者的底层机制相同：写一个 markdown 文件，系统启动时扫描并编译成命令对象，并入命令注册表。用户用起来和内建命令一样，感知不到区别。
 
-## 用户如何感知它
+## Skill 是什么
 
-用户通常会感知到：
-- 某些 slash command 来自插件或 skill（如 `/cleanup_project`、`/cross_agent_review_loop`）
-- 某些工作流可以通过 skill 形式复用，不需要每次重写 prompt
-- 不改核心代码就能扩展系统行为
+一个 skill 就是一个 `SKILL.md` 文件，加上可选的辅助文件（脚本、模板、参考资料）。
 
-## 实现链路
+文件头部的 frontmatter 控制这个 skill 的行为：
+- `whenToUse`：告诉系统什么情况下应该用这个 skill
+- `allowedTools`：限制 skill 只能调用哪些工具
+- `model`、`effort`：指定用什么模型、花多大力气
+- `context: fork`：在独立的 subagent 里执行，不污染主上下文
 
-这套扩展的典型链路是：
+skill 加载时会被估算 token，纳入系统整体的上下文预算计算。如果 skill 文件太大，就会影响每次会话能用的上下文空间。
 
-1. 系统启动时扫描 plugin 目录和 skill 目录
-2. 读取 markdown 文件和 frontmatter 元数据
-3. 解析命令名、描述、参数、allowedTools、model 等配置
-4. 把它们转换成结构化 `Command` 对象
-5. 并入 `commands.ts` 的命令注册表，和内建命令统一管理
+## Plugin 是什么
 
-Skill 在加载时还会被估算 token，纳入系统整体上下文预算控制。
+Plugin 是打包好的一组 skill 和命令。安装一个 plugin，就得到了一批新命令，可以带 namespace（比如 `tdd-guard:setup`）。
 
-## 关键源码点
+Plugin 还可以携带 hooks——在特定事件（比如每次写文件之前、会话开始时）自动触发的脚本。tdd-guard 就是这样工作的：安装后，每次写文件之前都会跑一次 TDD 检查。
 
-[`utils/plugins/loadPluginCommands.ts`](/Users/antonio/Desktop/cc2.1.88/all/src/utils/plugins/loadPluginCommands.ts) 说明 plugin command 本质上是"从 markdown 编译成命令对象"：
-- 递归收集 markdown 文件
-- skill 目录里的 `SKILL.md` 有单独处理逻辑（frontmatter 字段更丰富）
-- 命令名按目录结构和 plugin name 生成 namespace（如 `plugin-name:command-name`）
-- frontmatter 控制参数、描述、shell 执行方式、model 选择等行为
+## Skill 和 MCP 的分工
 
-[`skills/loadSkillsDir.ts`](/Users/antonio/Desktop/cc2.1.88/all/src/skills/loadSkillsDir.ts) 说明 skill 不是简单的文本片段：
-- skill 有 `paths`、`hooks`、`allowedTools`、`whenToUse`、`model`、`effort`、`context` 等 frontmatter 字段
-- `context: fork` 可以让 skill 在独立 subagent 里执行，不污染主上下文
-- skill 按 setting source、managed path、plugin only policy 等条件筛选加载
-- skill 在加载时估算 token，用于系统整体预算控制
+Skill 适合封装"Claude Code 自己能完成的工作流"，比如"按这套标准审查 PR"、"用这个格式生成报告"。
 
-## Plugins 与 Skills 的区别
+MCP 适合"接入 Claude Code 本身没有能力触达的外部系统"，比如数据库、内部 API。
 
-两者都是从 markdown 加载，但定位不同：
+如果你想做的是"教 agent 怎么做某件事"，用 skill。如果你想做的是"给 agent 接上一个新系统"，用 MCP。
 
-| | Plugin | Skill |
-|--|--------|-------|
-| 主要用途 | 打包一组命令和工具 | 注入工作流上下文或行为指导 |
-| 加载方式 | 命令扫描 + namespace | skills 目录 + `SKILL.md` 文件 |
-| 执行上下文 | 命令层执行 | 可以 fork subagent 执行 |
-| Token 管理 | 不估算 | 估算 token，纳入预算 |
-| 触发方式 | 用户显式调用 slash command | 条件注入（`whenToUse` 字段） |
+## 为什么扩展内容也要遵守系统规则
 
-## 为什么这样做
+Skill 的 `allowedTools` 限制工具调用，skill 的 token 估算纳入预算，plugin 的 hooks 走统一的 hook 机制——这些不是限制扩展能力，而是让扩展内容能被系统治理。
 
-如果扩展能力只是脚本目录，Claude Code 很快会失去统一性——每个扩展自己管权限、自己管展示、自己管上下文，维护成本很高。
-
-把插件和技能加载做成结构化解析，收益是：
-- **扩展内容仍被命令系统理解**：namespace 隔离，不和内建命令冲突
-- **扩展仍被权限和上下文治理**：`allowedTools` 限制 skill 能调用哪些工具，token 估算纳入预算
-- **两种扩展层次并存**：plugin 做"功能包"，skill 做"行为指导"，各司其职
-
-## 本章关键文件
-- [loadPluginCommands.ts](/Users/antonio/Desktop/cc2.1.88/all/src/utils/plugins/loadPluginCommands.ts)
-- [loadSkillsDir.ts](/Users/antonio/Desktop/cc2.1.88/all/src/skills/loadSkillsDir.ts)
-- [commands.ts](/Users/antonio/Desktop/cc2.1.88/all/src/commands.ts)
+如果 skill 可以绕过权限检查，一个写得粗糙的第三方 skill 就能在你不知情的情况下做任何事。把扩展纳入同一套规则，是扩展生态能健康运作的前提。

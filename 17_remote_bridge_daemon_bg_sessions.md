@@ -1,64 +1,31 @@
 # 第 17 章 Remote、Bridge、Daemon、Bg Sessions
 
-## 这个功能是什么
+## Claude Code 不只是一个 REPL
 
-Claude Code 不把自己限制成"前台 terminal 里的一次性 REPL"。它还支持后台会话、桥接环境、远程控制和 supervisor 模式。
+大多数时候你用 Claude Code 的方式是：打开终端，开始对话，关掉终端，结束。
 
-这些能力合在一起，说明 Claude Code 的目标是长期运行的工作环境，而不是单次调用工具。
+但 Claude Code 还支持几种不同的运行模式，适合更复杂的使用场景：
 
-## 用户如何感知它
+**后台会话（bg sessions）**：任务放到后台跑，关掉终端也不会停。之后可以用 `attach` 重新连上去，用 `logs` 查看输出，用 `kill` 终止。适合长时间运行的任务。
 
-用户会在以下场景里感知这些模式：
-- 用 `ps/logs/attach/kill` 管理后台 session
-- 让任务挂后台继续跑，关掉终端也不丢失
-- 通过 bridge/remote-control 在另一个环境里控制 Claude Code
-- 用 daemon 维持一个长期 supervisor，管理多个会话
+**Bridge**：让另一个程序——比如 IDE 插件——通过标准协议控制 Claude Code。VS Code 插件就是这样和 Claude Code 通信的。Bridge 模式有自己的权限回调机制，允许 IDE 拦截并处理权限确认。
 
-## 实现链路
+**Daemon**：一个长期运行的 supervisor 进程，管理多个 Claude Code 会话的生命周期。适合需要在同一台机器上跑多个会话、需要持久状态的场景。
 
-这些模式的共同特点是：
+**Remote control**：从远端发送指令给本地的 Claude Code 实例。适合 CI/CD 流程或者自动化脚本。
 
-1. 都在入口层直接分流，不进入普通 REPL 初始化
-2. 都在加载主应用前决定自己的运行模式
-3. 各有自己的初始化序列（auth、policy、min-version 检查等）
+## 为什么这些模式在入口层分流
 
-## 关键源码点
+这些运行模式有一个共同点：它们的初始化要求和普通交互 REPL 不同。
 
-[`entrypoints/cli.tsx`](/Users/antonio/Desktop/cc2.1.88/all/src/entrypoints/cli.tsx) 把这些模式视为一级分支：
+Daemon 需要比 REPL 更早加载某些配置。Bridge 需要注册特殊的权限回调。后台会话需要把输出重定向到文件，不往 terminal 写。
 
-```
-remote-control / bridge  → bridgeMain()
-daemon                   → daemonMain()
-ps / logs / attach / kill → bg session management
---bg / --background       → background session handlers
-```
+如果把这些都当成普通命令处理，初始化过程里就会充满"如果是 bridge 模式就做这个，如果是 daemon 就做那个"的判断，代码会很乱。
 
-每个分支通常先做：
-- `enableConfigs()`：加载配置
-- auth / policy / min-version 检查：确保环境满足要求
-- 再单独进入各自的 main handler
+入口层分流让每种模式都走自己的初始化路径，互不干扰。普通 REPL 不会加载 bridge 相关的代码，bridge 模式不会走 REPL 的初始化流程。
 
-这说明 Claude Code 的产品判断是：这些不是"附加命令"，而是完全不同的运行模型，有独立的初始化要求。
+## 这些模式和 task 体系的关系
 
-**各模式的用途**：
-- **bridge**：让另一个进程（如 IDE 插件）通过标准协议控制 Claude Code，实现双向通信
-- **daemon**：长期运行的 supervisor 进程，管理多个 Claude Code 会话的生命周期
-- **bg sessions**：后台会话，独立于终端存在，`attach` 后可以继续交互
-- **remote-control**：从远端发送指令给本地 Claude Code 实例，适合 CI/CD 场景
+后台会话、remote agent 这些都和第 9 章讲的 task 体系相关。`remote_agent` 类型的 task 就是在远程环境里运行的 agent，通过 bridge 或 remote 机制通信。
 
-## 为什么这样做
-
-如果把后台会话、bridge、daemon 当成普通命令挂到 REPL 里，会出现状态污染：
-- 初始化要求不同（daemon 需要比 REPL 更早的 config 加载）
-- 权限要求不同（bridge 模式有 bridgePermissionCallbacks）
-- 输出模型不同（后台会话输出到文件，不是 terminal）
-- 生命周期也不同（daemon 持久运行，REPL 随用随退）
-
-入口层分流是更干净的做法：不同运行模型的代码路径完全独立，不会相互污染，也更容易单独测试和维护。
-
-## 本章关键文件
-- [cli.tsx](/Users/antonio/Desktop/cc2.1.88/all/src/entrypoints/cli.tsx)
-- `bridge/*`
-- `remote/*`
-- `daemon/*`
-- `cli/bg.js`
+从用户角度看，管理一个后台 session 和管理一个后台 task 体验类似：都可以 attach、kill、查看 logs。这是因为底层用的是同一套机制。

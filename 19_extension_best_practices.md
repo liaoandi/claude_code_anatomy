@@ -1,158 +1,39 @@
-# 第 19 章 扩展设计最佳实践
+# 第 19 章 扩展设计实践
 
-这一章是全书的总结性章节，面向想扩展 Claude Code 能力的读者。前 18 章讲的是"系统怎么做"，这一章讲"你应该怎么做"。
+## 先想清楚用哪种扩展方式
 
-## 三种扩展方式及其适用场景
+Claude Code 有三种扩展方式，选错了会比较麻烦。
 
-Claude Code 提供了三种不同层次的扩展机制，适合不同类型的需求：
+**Skill / Plugin**：适合"教 agent 怎么做某件事"——封装工作流、自定义命令、注入行为指导。成本最低，写 markdown 就行。但能做的事受限于 Claude Code 本身已有的工具能力。
 
-| 扩展方式 | 适合场景 | 接入成本 | 能力边界 |
-|---------|---------|---------|---------|
-| **Skill / Plugin** | 工作流复用、自定义 slash command、提示词封装 | 最低，写 markdown | 在现有工具能力范围内编排 |
-| **MCP Server** | 接入外部系统（数据库、API、SaaS）、动态暴露工具 | 中等，实现 MCP 协议 | 可以暴露全新工具和资源 |
-| **内建工具（源码级）** | 需要深度集成权限/消息/任务体系的能力 | 最高，需修改核心代码 | 完全控制，能融入所有系统层 |
+**MCP Server**：适合"给 agent 接上一个新系统"——数据库、内部 API、需要认证的 SaaS。你需要实现 MCP 协议，但换来的是可以暴露全新的工具和资源。
 
-**如何选择**：
-- 如果你只是想封装一段常用工作流或 prompt，选 Skill。
-- 如果你要接入一个外部系统（如数据库、Slack、JIRA），选 MCP Server。
-- 如果你的能力需要权限判断、自定义 diff 展示或深度任务集成，选内建工具（或基于 MCP 做轻量适配）。
+**内建工具（改源码）**：适合"需要深度集成到系统里的能力"——比如需要自定义权限逻辑、需要特殊的 diff 展示、需要和任务体系深度集成。成本最高，但控制最完整。
 
-## 写一个内建工具的标准结构
+选择标准很简单：如果你要接入外部系统，选 MCP；如果你只是想复用工作流，选 skill；只有在前两种都不够用的时候，才考虑改源码。
 
-每个内建工具需要实现以下接口，缺一不可：
+## 写一个好 Skill 的关键点
 
-```typescript
-// 1. 工具元信息
-name: string                    // 唯一标识，用于命令注册和消息显示
-description: string             // 模型看到的工具说明，决定何时调用
-inputSchema: ZodSchema          // 输入参数定义，strict: true 防止模糊输入
+**`whenToUse` 写清楚**。这个字段告诉系统什么情况下应该用这个 skill，写得模糊的话，系统要么永远用、要么永远不用。要具体描述触发场景，比如"当用户要审查 PR 时"，而不是"代码相关任务"。
 
-// 2. 权限检查（每次调用前触发）
-checkPermissions(input, context): PermissionResult
-// 返回 allow / ask / deny，配合 ApprovalUI 使用
+**控制 token 体积**。Skill 文件加载进上下文，如果很大，每次会话的上下文预算都会受影响。精炼是美德：只放必要的指导，参考资料用外部链接或者单独的 references 文件，不要全塞进 `SKILL.md`。
 
-// 3. 执行逻辑
-call(input, context): ToolResult
-// 执行实际操作，失败时抛出结构化错误，不要静默吞掉
+**`allowedTools` 不要留空**。不限制 allowed tools 的 skill 可以调用任何工具，包括你没想到的。明确列出这个 skill 需要的工具，既是安全考虑，也让别人看 skill 的时候能快速理解它的能力边界。
 
-// 4. 展示协议（消息层的一部分）
-renderToolUseMessage(input): ReactNode    // 工具被调用时显示什么
-renderToolResultMessage(result): ReactNode // 工具执行结果显示什么
-renderToolUseErrorMessage(error): ReactNode // 失败时显示什么
-```
+**考虑用 `context: fork`**。如果 skill 执行的任务比较长、会产生大量中间输出，用 fork 让它在独立的 subagent 里执行，主对话的上下文不会被污染。
 
-**几个常见错误**：
-- `inputSchema` 设置 `passthrough()`：除非是 MCP 工具模板，否则不要这样做。它会让模型传入任意参数，绕过类型安全。
-- `checkPermissions` 只做空实现：每个写操作或网络操作都应该有明确的权限策略。
-- `renderToolResultMessage` 返回 null：工具结果必须可见，不要让系统无声执行。
+## 写一个好 MCP Server 的关键点
 
-## 权限接入的正确姿势
+**认证在 server 侧处理**。MCP server 是你自己控制的进程，把认证逻辑放在里面。Claude Code 这边不需要知道你的 API key 或者 OAuth token，它只看到工具调用和返回结果。
 
-权限系统不是总开关，而是按调用上下文做细粒度决策。正确的做法是：
+**Tool schema 要精确**。MCP 工具的参数 schema 最终决定模型怎么调用这个工具。太宽松（比如只有一个 `query: string`），模型会猜参数格式，结果不稳定。参考内建工具的 Zod schema 风格，每个字段都有明确的类型和描述。
 
-```typescript
-checkPermissions(input, context) {
-  // 1. 先查 deny rule：如果明确被拒绝，直接 deny
-  if (isDenied(input.file_path, context.rules)) return { result: 'deny' }
+**区分 tool 和 resource**。能用 resource 表达的数据就不要做成 tool。resource 是只读的、无副作用的，权限系统可以给它更宽松的默认策略；tool 有副作用，应该触发确认。把 schema 查询做成 resource 而不是 tool，是一个常见的好实践。
 
-  // 2. 再查 allow rule：如果已明确授权，直接 allow
-  if (isAllowed(input.file_path, context.rules)) return { result: 'allow' }
+**测试权限边界**。Claude Code 会对 MCP tool 调用做权限判断。测试时不能只测"正常调用成功"，要测"调用被拒绝时 MCP server 怎么响应"，以及"server 返回错误时 Claude Code 怎么展示给用户"。
 
-  // 3. 没有匹配规则时，进入 ask（触发 ApprovalUI）
-  return {
-    result: 'ask',
-    message: `需要写入 ${input.file_path}`,
-    suggestions: buildSuggestions(input)  // 给用户提供快速规则建议
-  }
-}
-```
+## 一个需要记住的基本原则
 
-**权限规则示例**：
-```
-allow:Bash(git *:*)         # 允许所有 git 命令
-allow:FileEdit(/src/**:*)   # 允许编辑 src 下所有文件
-deny:Bash(rm -rf *:*)       # 拒绝危险删除命令
-ask:WebFetch(*.external.com:*) # 外部域名需要每次确认
-```
+不管用哪种扩展方式，扩展内容都在 Claude Code 的系统规则之内运作，没有例外。
 
-规则按 `deny > allow > ask` 优先级匹配，第一条命中的规则生效。
-
-## 消息展示的最佳实践
-
-工具的展示质量直接影响用户对系统的信任感。几个建议：
-
-**展示要对称**：`renderToolUseMessage` 和 `renderToolResultMessage` 应该成对设计。用户看到"准备做什么"，也要看到"做完了什么"。
-
-**失败要可读**：`renderToolUseErrorMessage` 不要只返回原始错误堆栈。把失败原因翻译成用户能理解的语言，并给出下一步建议。
-
-**可折叠的内容折叠**：搜索结果、读取内容这类大量重复输出，应该默认 collapse。参考 `Messages.tsx` 里的 `filterForBriefTool` 模式。
-
-**不要自己维护 UI 状态**：所有输出都通过消息系统，不要在工具里维护独立的 React 状态。工具是无状态的执行单元，状态由 provider 层管理。
-
-## 长任务要接入任务体系
-
-任何执行时间超过几秒的操作，都应该注册为 Task，而不是在 `call()` 里同步阻塞：
-
-```typescript
-// 错误做法：直接同步执行
-async call(input) {
-  const result = await longRunningOperation(input) // 阻塞主线程
-  return result
-}
-
-// 正确做法：注册为 Task
-async call(input, context) {
-  const task = await spawnTask({
-    type: 'local_agent',
-    command: input.command,
-    outputFile: generateOutputPath(),
-  })
-  return { taskId: task.id, status: 'started' }
-}
-```
-
-任务体系带来的好处：
-- 用户可以附着（attach）、终止（kill）、查看日志（logs）
-- 前台 UI 不被阻塞
-- 多任务可以并行，状态统一展示
-
-## MCP Server 开发的关键点
-
-如果你在写 MCP Server，有几件事需要注意：
-
-**Tool schema 要精确**：MCP 工具的 inputSchema 最终会影响模型调用质量。过于宽松的 schema（如 `object: {}` ）会让模型猜参数；过于严格会让工具用起来笨重。参考内建工具的 Zod schema 写法。
-
-**认证在 MCP Server 侧处理**：Claude Code 的 `WebFetchTool` 明确说明它不处理认证 URL。如果你要接入需要认证的外部系统，认证逻辑放在 MCP Server 里，不要依赖 Claude Code 帮你传 token。
-
-**资源和工具分开**：MCP 协议区分 `tool`（执行动作）和 `resource`（提供数据）。读取类操作优先实现为 resource，执行类操作实现为 tool。这样权限粒度更清晰。
-
-**测试要覆盖权限边界**：Claude Code 会对每个 MCP 工具调用做权限判断。测试时不能只测"正常调用"，要测"被拒绝时 MCP Server 怎么响应"。
-
-## 扩展的共同约束
-
-无论选哪种扩展方式，以下约束在 Claude Code 里都是硬性的：
-
-1. **扩展不绕过权限层**：你的工具或 MCP server 暴露的能力，必须能被用户的 permission rule 管控。不要在工具实现里绕过 `checkPermissions`。
-
-2. **扩展必须进消息流**：工具结果必须通过 `renderTool*Message` 进入消息系统，不要用 `console.log` 或 side effect 输出内容。
-
-3. **扩展要处理 token 预算**：skill 加载时会被估算 token，进入上下文预算计算。如果你的 skill 很大，考虑用 `context: fork` 隔离到 subagent 执行。
-
-4. **扩展要声明 feature flag**：如果你的能力只在特定场景开放，用 feature flag 控制注册，而不是在运行时用条件判断。
-
-## 一张核查清单
-
-写完一个新工具或 skill 后，过一遍这张清单：
-
-```
-□ inputSchema 有明确类型，没有 passthrough
-□ checkPermissions 有真实的权限策略
-□ call() 的失败路径有结构化错误，不静默吞掉
-□ renderToolUseMessage 和 renderToolResultMessage 都实现了
-□ renderToolUseErrorMessage 给出了可读的错误和建议
-□ 长任务通过 spawnTask 接入任务体系
-□ 没有在工具里维护独立 UI 状态
-□ 写操作通过 deny/allow 规则可被用户管控
-□ feature flag 控制了工具的可见性
-□ skill 的 token 估算在合理范围内
-```
+这不是限制，而是保证。一个无法被权限规则管控的扩展，对用户来说是不透明的风险；一个不进消息流的工具，让执行过程变成黑箱。遵守系统规则，扩展才能被信任。

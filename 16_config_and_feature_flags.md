@@ -1,51 +1,29 @@
 # 第 16 章 Config 与 Feature Flags
 
-## 这个功能是什么
+## 不只是参数配置
 
-Claude Code 的配置系统不只控制参数，还控制"哪些功能暴露给谁"。Feature flag 是它承载多产品线、多实验能力的骨架——同一份代码，不同开关，不同的产品形态。
+Claude Code 的配置系统做两件事：控制运行时参数（超时时间、模型选择、各种开关），以及控制哪些功能对哪些用户可见。
 
-## 用户如何感知它
+后者是 feature flag 系统。它让同一份代码可以对外表现出不同的产品形态——外部公开版、内部开发版、实验功能版、组织定制版，功能集各不相同，但底层都是同一套代码。
 
-用户通常间接感知到：
-- 不同环境、不同组织、不同构建的功能集不一样
-- 某些命令只在内部版或实验版出现
-- 某些运行模式在特定构建里被整体裁掉
+## Feature Flag 怎么工作
 
-极少数情况下用户会直接感知：通过 `/config` 查看或修改运行时配置。
+Feature flag 的判断发生在命令注册、工具初始化的时候，不是运行时的 if/else。
 
-## 实现链路
+命令注册时：`feature('SOME_FLAG') ? require('./some-command') : null`。Flag 为 false 时，模块根本不加载，命令也不出现在注册表里。用户看不到这个命令，Tab 补全里也没有。
 
-功能暴露控制通常发生在两层：
+工具层也类似：某些工具的输入 schema 字段，或者某些工具的存在本身，受 feature flag 控制。
 
-**入口层**：某些运行模式根本不被暴露，`feature(...)` 包裹整个分支，feature flag 为 false 时编译器可以裁掉整块代码。
+这种设计有一个好处：不同构建版本的包体积可以差异很大。外部版不会携带任何内部功能的代码，而不只是把它们隐藏起来。
 
-**命令层和工具层**：某些命令、参数或能力通过条件注册实现，feature flag 控制注册而不是运行时判断。
+## 配置的层级
 
-## 关键源码点
+配置有几个层级：用户级（`~/.claude/settings.json`）、项目级（`.claude/settings.json`）、组织级（通过管理平台下发）。
 
-[`entrypoints/cli.tsx`](/Users/antonio/Desktop/cc2.1.88/all/src/entrypoints/cli.tsx) 里很多 fast path 都包在 `feature(...)` 里，例如 `DAEMON`、`BRIDGE_MODE`、`CHICAGO_MCP`。这些不只是运行时判断，还是 dead code elimination 的依据。
+低层级的配置可以被高层级覆盖。组织可以锁定某些配置项，让用户无法修改。这对企业部署很重要：组织可以强制某些安全策略，同时让用户保留个性化配置的空间。
 
-[`commands.ts`](/Users/antonio/Desktop/cc2.1.88/all/src/commands.ts) 更明显：
-- 大量命令通过 `feature(...) ? require(...) : null` 注册——feature flag 为 false 时，模块根本不加载
-- `INTERNAL_ONLY_COMMANDS` 维护内部命令集合，不暴露给外部用户
-- 懒加载命令明显为减小主路径加载成本而设计
+## 一份代码，多条产品线
 
-再看 [`tools/AgentTool/AgentTool.tsx`](/Users/antonio/Desktop/cc2.1.88/all/src/tools/AgentTool/AgentTool.tsx) 和 [`tools/BashTool/BashTool.tsx`](/Users/antonio/Desktop/cc2.1.88/all/src/tools/BashTool/BashTool.tsx)：连输入 schema 的字段也受 feature flag 和环境变量影响，说明 feature flag 不只在命令层，还渗透到工具行为层。
+维护多个 fork 的问题是：每次改一个核心功能，所有 fork 都要同步，成本很高。Feature flag 的方案是把所有差异都做成开关，主干统一迭代，不同产品线通过配置区分。
 
-## 为什么这样做
-
-Claude Code 不是单一产品，更像一条产品族：
-- 外部公开版
-- 内部研发版
-- 实验功能版
-- 组织定制版
-
-没有 feature flag，这条产品族的代码库很难维持。有了 feature flag，系统才可能在一份主干上并行演化多条能力路线，而不是维护多个 fork。
-
-feature flag 结合 dead code elimination 还有另一个好处：不同构建版本的包体积可以差异很大，外部版不携带任何内部功能的代码。
-
-## 本章关键文件
-- [cli.tsx](/Users/antonio/Desktop/cc2.1.88/all/src/entrypoints/cli.tsx)
-- [commands.ts](/Users/antonio/Desktop/cc2.1.88/all/src/commands.ts)
-- [AgentTool.tsx](/Users/antonio/Desktop/cc2.1.88/all/src/tools/AgentTool/AgentTool.tsx)
-- [BashTool.tsx](/Users/antonio/Desktop/cc2.1.88/all/src/tools/BashTool/BashTool.tsx)
+代价是代码里散落着各种 `feature(...)` 判断，理解某个功能的完整行为需要知道在哪些 flag 组合下它是开着的。但对于一个需要同时维护多个产品版本的系统来说，这个复杂度是值得的。
