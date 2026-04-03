@@ -23,7 +23,7 @@
 - [第 3 章 Slash Commands 功能族](./03_slash_commands.md)
 
 **代码操作功能**
-- [第 4 章 读文件、搜文件、看上下文](./04_read_search_and_context.md)
+- [第 4 章 读文件、搜内容、找文件](./04_read_search_and_context.md)
 - [第 5 章 改文件与 Diff 展示](./05_editing_and_diff.md)
 - [第 6 章 Shell 执行](./06_shell_execution.md)
 
@@ -38,7 +38,7 @@
 - [第 12 章 Context 管理](./12_context_management.md)
 
 **外部连接能力**
-- [第 13 章 Web 与外部信息获取](./13_web_and_external_info.md)
+- [第 13 章 Web 访问与搜索](./13_web_and_external_info.md)
 - [第 14 章 MCP](./14_mcp.md)
 - [第 15 章 Plugins 与 Skills](./15_plugins_and_skills.md)
 

@@ -10,13 +10,10 @@ Task 是 Claude Code 对"长时间执行"的统一抽象。每个 task 有唯一
 
 ## 几种 task 类型
 
-`local_bash` 是本地 shell 命令，最简单，跑完就结束。
-
-`local_agent` 是在本地启动的子 agent。子 agent 有自己的上下文，可以独立读文件、改文件、跑命令，完成后把结果汇报给主 agent。这是 Claude Code 实现并行工作的基础——多个子 agent 同时处理不同部分，主 agent 汇总结果。
-
-`remote_agent` 是在远程环境启动的 agent，通过 bridge 通信。适合在 CI/CD 环境或者和主机隔离的容器里执行任务。
-
-`in_process_teammate` 是进程内的并行 agent，比 `local_agent` 开销更小，但隔离程度也更低。
+- **`local_bash`**：本地 shell 命令，最简单，跑完就结束。
+- **`local_agent`**：在本地启动的子 agent，有自己的上下文，可以独立读文件、改文件、跑命令，完成后把结果汇报给主 agent。这是 Claude Code 实现并行工作的基础——多个子 agent 同时处理不同部分，主 agent 汇总结果。
+- **`remote_agent`**：在远程环境启动的 agent，通过 bridge 通信。适合在 CI/CD 环境或者和主机隔离的容器里执行任务。
+- **`in_process_teammate`**：进程内的并行 agent，比 `local_agent` 开销更小，但隔离程度也更低。
 
 ## Agent 能干什么
 
