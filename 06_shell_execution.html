@@ -1,0 +1,255 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Shell 执行 - Claude Code 功能设计与实现</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="00_preface.html">前言</a></li><li class="chapter-item expanded affix "><a href="00b_architecture_overview.html">架构总览</a></li><li class="chapter-item expanded affix "><li class="part-title">主交互功能</li><li class="chapter-item expanded "><a href="01_dialog_and_command_input.html"><strong aria-hidden="true">1.</strong> 对话与命令输入</a></li><li class="chapter-item expanded "><a href="02_message_flow_and_session_ui.html"><strong aria-hidden="true">2.</strong> 消息流与会话界面</a></li><li class="chapter-item expanded "><a href="03_slash_commands.html"><strong aria-hidden="true">3.</strong> Slash Commands 功能族</a></li><li class="chapter-item expanded affix "><li class="part-title">代码操作功能</li><li class="chapter-item expanded "><a href="04_read_search_and_context.html"><strong aria-hidden="true">4.</strong> 读文件、搜内容、找文件</a></li><li class="chapter-item expanded "><a href="05_editing_and_diff.html"><strong aria-hidden="true">5.</strong> 改文件与 Diff 展示</a></li><li class="chapter-item expanded "><a href="06_shell_execution.html" class="active"><strong aria-hidden="true">6.</strong> Shell 执行</a></li><li class="chapter-item expanded affix "><li class="part-title">任务控制功能</li><li class="chapter-item expanded "><a href="07_plan_mode.html"><strong aria-hidden="true">7.</strong> Plan Mode</a></li><li class="chapter-item expanded "><a href="08_permissions_and_approval.html"><strong aria-hidden="true">8.</strong> Permissions 与 Approval</a></li><li class="chapter-item expanded "><a href="09_tasks_agents_and_teammates.html"><strong aria-hidden="true">9.</strong> Task、Agent、Teammate</a></li><li class="chapter-item expanded affix "><li class="part-title">记忆与上下文功能</li><li class="chapter-item expanded "><a href="10_memory.html"><strong aria-hidden="true">10.</strong> Memory 功能</a></li><li class="chapter-item expanded "><a href="11_session_resume_history.html"><strong aria-hidden="true">11.</strong> Session、Resume、History</a></li><li class="chapter-item expanded "><a href="12_context_management.html"><strong aria-hidden="true">12.</strong> Context 管理</a></li><li class="chapter-item expanded affix "><li class="part-title">外部连接能力</li><li class="chapter-item expanded "><a href="13_web_and_external_info.html"><strong aria-hidden="true">13.</strong> Web 访问与搜索</a></li><li class="chapter-item expanded "><a href="14_mcp.html"><strong aria-hidden="true">14.</strong> MCP</a></li><li class="chapter-item expanded "><a href="15_plugins_and_skills.html"><strong aria-hidden="true">15.</strong> Plugins 与 Skills</a></li><li class="chapter-item expanded affix "><li class="part-title">运行环境功能</li><li class="chapter-item expanded "><a href="16_config_and_feature_flags.html"><strong aria-hidden="true">16.</strong> Config 与 Feature Flags</a></li><li class="chapter-item expanded "><a href="17_remote_bridge_daemon_bg_sessions.html"><strong aria-hidden="true">17.</strong> Remote、Bridge、Daemon、Bg Sessions</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Claude Code 功能设计与实现</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/liaoandi/claude-code-insights" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="第-6-章-shell-执行"><a class="header" href="#第-6-章-shell-执行">第 6 章 Shell 执行</a></h1>
+<h2 id="shell-是最强也是最危险的能力"><a class="header" href="#shell-是最强也是最危险的能力">Shell 是最强也是最危险的能力</a></h2>
+<p>给 agent 开放 shell，它就能做几乎任何事：跑测试、安装依赖、启动服务、部署代码。但同样，<code>rm -rf</code>、<code>curl | bash</code>、访问生产数据库也都可以做。</p>
+<p>Claude Code 没有因为这种风险就限制 shell 能力，而是把 shell 做成了一个正式的工具，带权限、带语义识别、带任务管理。</p>
+<h2 id="命令语义识别"><a class="header" href="#命令语义识别">命令语义识别</a></h2>
+<p>BashTool 在执行之前会先分析命令的语义：这是只读命令还是有副作用的命令？</p>
+<p><code>grep</code>、<code>find</code>、<code>cat</code>、<code>ls</code> 这类命令被识别为只读操作，可以直接执行，结果在界面上也会自动折叠，不撑开会话流。</p>
+<p><code>rm</code>、<code>mv</code>、写文件、启动服务这类命令被识别为有副作用，会触发权限检查，可能需要用户确认。</p>
+<p>这个分类不是完美的，但它让权限系统可以对不同类型的命令有不同的默认策略，而不是一刀切。</p>
+<h2 id="长任务怎么处理"><a class="header" href="#长任务怎么处理">长任务怎么处理</a></h2>
+<p>有些命令跑完要几分钟甚至更长。如果同步等待，整个会话就卡在那里了。</p>
+<p>Claude Code 的处理方式是把 shell 命令纳入任务体系。每个长任务都有一个 task id，输出写到专门的文件里。你可以：</p>
+<ul>
+<li>让它在后台跑，继续做别的事</li>
+<li>用 <code>attach</code> 重新连上去看实时输出</li>
+<li>用 <code>kill</code> 终止它</li>
+</ul>
+<p>这样 shell 执行就从"等待返回"变成了"提交任务、查看进度"，适合真正的长时间操作。</p>
+<h2 id="sandbox-是另一层保护"><a class="header" href="#sandbox-是另一层保护">Sandbox 是另一层保护</a></h2>
+<p>除了权限规则，还有 sandbox 机制：某些命令可以在容器里执行，和主机环境隔离。</p>
+<p>Sandbox 不是对所有命令都启用的，因为有性能成本。什么时候启用、启用哪种级别的隔离，取决于命令类型和当前的权限模式。权限规则和 sandbox 是两个独立的机制，可以组合使用：权限规则决定"这条命令允不允许运行"，sandbox 决定"运行时有没有隔离"。</p>
+<h2 id="为什么不直接让模型自己组装-shell-命令"><a class="header" href="#为什么不直接让模型自己组装-shell-命令">为什么不直接让模型自己组装 shell 命令</a></h2>
+<p>理论上可以：模型直接生成 shell 命令，通过 <code>exec</code> 执行，结果以文本返回。简单直接。</p>
+<p>但这样做，系统对 shell 执行这件事完全没有感知。没有权限检查，没有任务管理，没有展示逻辑，没有长任务处理。出了问题，什么都捞不到。</p>
+<p>把 shell 做成正式工具的代价是多了一层抽象，好处是 shell 执行变得可控、可见、可管理——这在 coding agent 里是刚需，不是可选功能。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="05_editing_and_diff.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="07_plan_mode.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="05_editing_and_diff.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="07_plan_mode.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

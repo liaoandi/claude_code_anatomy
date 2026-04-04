@@ -1,0 +1,281 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Permissions 与 Approval - Claude Code 功能设计与实现</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="00_preface.html">前言</a></li><li class="chapter-item expanded affix "><a href="00b_architecture_overview.html">架构总览</a></li><li class="chapter-item expanded affix "><li class="part-title">主交互功能</li><li class="chapter-item expanded "><a href="01_dialog_and_command_input.html"><strong aria-hidden="true">1.</strong> 对话与命令输入</a></li><li class="chapter-item expanded "><a href="02_message_flow_and_session_ui.html"><strong aria-hidden="true">2.</strong> 消息流与会话界面</a></li><li class="chapter-item expanded "><a href="03_slash_commands.html"><strong aria-hidden="true">3.</strong> Slash Commands 功能族</a></li><li class="chapter-item expanded affix "><li class="part-title">代码操作功能</li><li class="chapter-item expanded "><a href="04_read_search_and_context.html"><strong aria-hidden="true">4.</strong> 读文件、搜内容、找文件</a></li><li class="chapter-item expanded "><a href="05_editing_and_diff.html"><strong aria-hidden="true">5.</strong> 改文件与 Diff 展示</a></li><li class="chapter-item expanded "><a href="06_shell_execution.html"><strong aria-hidden="true">6.</strong> Shell 执行</a></li><li class="chapter-item expanded affix "><li class="part-title">任务控制功能</li><li class="chapter-item expanded "><a href="07_plan_mode.html"><strong aria-hidden="true">7.</strong> Plan Mode</a></li><li class="chapter-item expanded "><a href="08_permissions_and_approval.html" class="active"><strong aria-hidden="true">8.</strong> Permissions 与 Approval</a></li><li class="chapter-item expanded "><a href="09_tasks_agents_and_teammates.html"><strong aria-hidden="true">9.</strong> Task、Agent、Teammate</a></li><li class="chapter-item expanded affix "><li class="part-title">记忆与上下文功能</li><li class="chapter-item expanded "><a href="10_memory.html"><strong aria-hidden="true">10.</strong> Memory 功能</a></li><li class="chapter-item expanded "><a href="11_session_resume_history.html"><strong aria-hidden="true">11.</strong> Session、Resume、History</a></li><li class="chapter-item expanded "><a href="12_context_management.html"><strong aria-hidden="true">12.</strong> Context 管理</a></li><li class="chapter-item expanded affix "><li class="part-title">外部连接能力</li><li class="chapter-item expanded "><a href="13_web_and_external_info.html"><strong aria-hidden="true">13.</strong> Web 访问与搜索</a></li><li class="chapter-item expanded "><a href="14_mcp.html"><strong aria-hidden="true">14.</strong> MCP</a></li><li class="chapter-item expanded "><a href="15_plugins_and_skills.html"><strong aria-hidden="true">15.</strong> Plugins 与 Skills</a></li><li class="chapter-item expanded affix "><li class="part-title">运行环境功能</li><li class="chapter-item expanded "><a href="16_config_and_feature_flags.html"><strong aria-hidden="true">16.</strong> Config 与 Feature Flags</a></li><li class="chapter-item expanded "><a href="17_remote_bridge_daemon_bg_sessions.html"><strong aria-hidden="true">17.</strong> Remote、Bridge、Daemon、Bg Sessions</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Claude Code 功能设计与实现</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/liaoandi/claude-code-insights" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="第-8-章-permissions-与-approval"><a class="header" href="#第-8-章-permissions-与-approval">第 8 章 Permissions 与 Approval</a></h1>
+<h2 id="这个功能解决什么问题"><a class="header" href="#这个功能解决什么问题">这个功能解决什么问题</a></h2>
+<p>给 AI agent 开放系统操作权限，本质上是一个信任问题。信任得太少，agent 没法干活；信任得太多，出了事没有后悔药。</p>
+<p>Claude Code 面对这个问题的答案是：<strong>不做全局信任，做细粒度规则</strong>。</p>
+<h2 id="最直观的体验"><a class="header" href="#最直观的体验">最直观的体验</a></h2>
+<p>用 Claude Code 改代码，有时会弹出一个确认框："准备写入 /src/config.ts，是否允许？"</p>
+<p>你可以：</p>
+<ul>
+<li>点允许，这次通过</li>
+<li>点允许，并勾选"以后 /src/ 下的文件都自动允许"</li>
+<li>点拒绝，Claude Code 会记录这次拒绝，但任务不会整个中断</li>
+</ul>
+<p>这个确认框就是 Approval，而背后决定"要不要弹出这个框"的逻辑就是权限系统。</p>
+<h2 id="权限是怎么工作的"><a class="header" href="#权限是怎么工作的">权限是怎么工作的</a></h2>
+<p>每个工具在执行之前都会先问自己一个问题：<strong>我现在要做的这件事，用户允许吗？</strong></p>
+<p>这个问题的答案来自规则匹配，有三种结果：</p>
+<ul>
+<li><strong>allow</strong>：直接执行，不打扰用户</li>
+<li><strong>deny</strong>：直接拒绝，不执行</li>
+<li><strong>ask</strong>：弹出确认框，等用户决定</li>
+</ul>
+<p>规则按 <code>deny &gt; allow &gt; ask</code> 优先级匹配，第一条命中的生效。如果一条规则都没匹配上，默认进入 ask。</p>
+<p>规则是用户自己写的（或者通过确认框积累下来的），长这样：</p>
+<pre><code>allow:Bash(git *:*)          # git 命令全部放行
+allow:FileEdit(/src/**:*)    # src 目录下的文件可以随便改
+deny:Bash(rm -rf *:*)        # 这条命令直接拒绝
+ask:WebFetch(*.external.com) # 外部网址每次都要问
+</code></pre>
+<h2 id="为什么不做成一个总开关"><a class="header" href="#为什么不做成一个总开关">为什么不做成一个总开关</a></h2>
+<p>最简单的设计是：要么"完全信任模式"（什么都不问），要么"严格模式"（每步都确认）。</p>
+<p>但这两种都不好用：</p>
+<ul>
+<li>完全信任：你不知道 agent 在干什么，改错了才发现</li>
+<li>每步确认：做一件事要点几十次确认，根本没法用</li>
+</ul>
+<p>Claude Code 选择的路是<strong>逐步积累授权</strong>。第一次做某件事问你，你点允许并选择"记住规则"，下次同类操作就不再问了。用着用着，你的规则表就变成了一份个人化的"信任配置"，反映你真实的风险偏好，而不是一刀切的全开或全关。</p>
+<h2 id="为什么权限判断在每个工具里而不是一个统一的地方"><a class="header" href="#为什么权限判断在每个工具里而不是一个统一的地方">为什么权限判断在每个工具里，而不是一个统一的地方</a></h2>
+<p>读文件、写文件、跑 shell 命令、访问网址——这四件事的风险完全不同，需要判断的信息也不同：</p>
+<ul>
+<li>写文件看的是<strong>路径</strong>（是不是 /etc/？是不是生产配置？）</li>
+<li>跑命令看的是<strong>命令内容</strong>（是搜索还是删除？）</li>
+<li>访问网址看的是<strong>域名</strong>（是可信站点还是随机 URL？）</li>
+</ul>
+<p>如果放在一个统一的地方判断，要么判断逻辑过于复杂，要么精度不够。放在每个工具里，每个工具按自己的业务语义做判断，更准确，也更容易维护。</p>
+<h2 id="拒绝之后发生什么"><a class="header" href="#拒绝之后发生什么">拒绝之后发生什么</a></h2>
+<p>权限被拒绝的时候，界面上能看到"这一步被拒了，原因是什么"，不是悄悄失败。你可以修改规则之后重试，不用从头再来，整个任务也不会因为一次拒绝就中断。</p>
+<p>拒绝不是终点，而是一个可以继续调整的节点。</p>
+<h2 id="权限系统的边界"><a class="header" href="#权限系统的边界">权限系统的边界</a></h2>
+<p>权限系统能做的是：控制 Claude Code 本身发起的操作。</p>
+<p>它管不了的是：你自己写的规则有没有漏洞，或者 MCP server 在它自己进程里做了什么。权限规则是针对 Claude Code 工具调用的过滤层，不是沙盒隔离。</p>
+<p>如果你需要更强的隔离，sandbox（通过容器隔离执行环境）是另一层机制，和权限规则独立工作。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="07_plan_mode.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="09_tasks_agents_and_teammates.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="07_plan_mode.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="09_tasks_agents_and_teammates.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

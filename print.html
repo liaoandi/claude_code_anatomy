@@ -1,0 +1,646 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Claude Code 功能设计与实现</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="00_preface.html">前言</a></li><li class="chapter-item expanded affix "><a href="00b_architecture_overview.html">架构总览</a></li><li class="chapter-item expanded affix "><li class="part-title">主交互功能</li><li class="chapter-item expanded "><a href="01_dialog_and_command_input.html"><strong aria-hidden="true">1.</strong> 对话与命令输入</a></li><li class="chapter-item expanded "><a href="02_message_flow_and_session_ui.html"><strong aria-hidden="true">2.</strong> 消息流与会话界面</a></li><li class="chapter-item expanded "><a href="03_slash_commands.html"><strong aria-hidden="true">3.</strong> Slash Commands 功能族</a></li><li class="chapter-item expanded affix "><li class="part-title">代码操作功能</li><li class="chapter-item expanded "><a href="04_read_search_and_context.html"><strong aria-hidden="true">4.</strong> 读文件、搜内容、找文件</a></li><li class="chapter-item expanded "><a href="05_editing_and_diff.html"><strong aria-hidden="true">5.</strong> 改文件与 Diff 展示</a></li><li class="chapter-item expanded "><a href="06_shell_execution.html"><strong aria-hidden="true">6.</strong> Shell 执行</a></li><li class="chapter-item expanded affix "><li class="part-title">任务控制功能</li><li class="chapter-item expanded "><a href="07_plan_mode.html"><strong aria-hidden="true">7.</strong> Plan Mode</a></li><li class="chapter-item expanded "><a href="08_permissions_and_approval.html"><strong aria-hidden="true">8.</strong> Permissions 与 Approval</a></li><li class="chapter-item expanded "><a href="09_tasks_agents_and_teammates.html"><strong aria-hidden="true">9.</strong> Task、Agent、Teammate</a></li><li class="chapter-item expanded affix "><li class="part-title">记忆与上下文功能</li><li class="chapter-item expanded "><a href="10_memory.html"><strong aria-hidden="true">10.</strong> Memory 功能</a></li><li class="chapter-item expanded "><a href="11_session_resume_history.html"><strong aria-hidden="true">11.</strong> Session、Resume、History</a></li><li class="chapter-item expanded "><a href="12_context_management.html"><strong aria-hidden="true">12.</strong> Context 管理</a></li><li class="chapter-item expanded affix "><li class="part-title">外部连接能力</li><li class="chapter-item expanded "><a href="13_web_and_external_info.html"><strong aria-hidden="true">13.</strong> Web 访问与搜索</a></li><li class="chapter-item expanded "><a href="14_mcp.html"><strong aria-hidden="true">14.</strong> MCP</a></li><li class="chapter-item expanded "><a href="15_plugins_and_skills.html"><strong aria-hidden="true">15.</strong> Plugins 与 Skills</a></li><li class="chapter-item expanded affix "><li class="part-title">运行环境功能</li><li class="chapter-item expanded "><a href="16_config_and_feature_flags.html"><strong aria-hidden="true">16.</strong> Config 与 Feature Flags</a></li><li class="chapter-item expanded "><a href="17_remote_bridge_daemon_bg_sessions.html"><strong aria-hidden="true">17.</strong> Remote、Bridge、Daemon、Bg Sessions</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Claude Code 功能设计与实现</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/liaoandi/claude-code-insights" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="前言"><a class="header" href="#前言">前言</a></h1>
+<p>Claude Code 有很多行为，用着用着会觉得理所当然，但仔细一想会发现不太对劲。</p>
+<p>比如改文件，为什么不能直接整文件覆盖，非要提供"要改的旧内容"？比如权限，为什么写文件要确认，但读文件不用，而访问某个网址又变成了域名级别的判断？比如 shell 执行，为什么 <code>grep</code> 和 <code>rm</code> 的体验完全不同——一个默认折叠输出，一个可能弹确认框？</p>
+<p>这些行为都不是随机的。它们背后有一套一致的设计逻辑，每个决定都是在某种取舍之下做出的。这本书讲的就是这套逻辑。</p>
+<p>读者预设是：你已经在用 Claude Code，不需要解释基础用法。你想知道的是"它为什么这样做"，而不是"它能做什么"。</p>
+<p>每章围绕一个功能域，重点放在实现原理和设计取舍上。源码路径偶尔出现，但不是重点——理解设计比认识文件路径更有用。建议先读架构总览，再按兴趣进入各章。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="架构总览"><a class="header" href="#架构总览">架构总览</a></h1>
+<p>理解一个系统最快的方式，是跟着一个具体操作走一遍，看它在系统里经历了什么。</p>
+<h2 id="一次文件编辑发生了什么"><a class="header" href="#一次文件编辑发生了什么">一次文件编辑发生了什么</a></h2>
+<p>假设你让 Claude Code 修改一个文件。从你按下回车，到 diff 出现在界面上，中间经过了这些：</p>
+<p>首先，你的输入被判断为自然语言任务，送给模型处理。模型决定要调用 FileEditTool。</p>
+<p>调用之前，FileEditTool 先问一句：这次编辑，用户允许吗？它检查你的权限规则，如果这个路径在允许范围内，直接继续；如果没有匹配规则，弹出确认框等你决定。</p>
+<p>权限通过后，工具执行编辑：校验 old_string 唯一存在、路径安全、文件没被外部改动，然后写入。</p>
+<p>写入之后，工具把结果打包成消息，包括 diff、成功状态、LSP 诊断信息。消息进入消息流，经过排序和分组，最终显示在你面前。</p>
+<p>如果这次编辑很耗时，或者是子 agent 做的，整个过程被包装成一个 task，有自己的 id 和状态，你可以随时查看进度。</p>
+<p>这一次操作，就触碰了系统里几乎所有的层。</p>
+<h2 id="从这个例子看到的结构"><a class="header" href="#从这个例子看到的结构">从这个例子看到的结构</a></h2>
+<p>把上面的流程抽象出来，就得到了系统的基本分层：</p>
+<ul>
+<li><strong>入口层</strong>：判断你说的是什么、当前是什么运行模式</li>
+<li><strong>命令层</strong>：slash command 的注册和执行</li>
+<li><strong>工具层</strong>：实际干活——FileEditTool、BashTool、WebFetchTool 等</li>
+<li><strong>权限层</strong>：横切所有工具，每次操作前的决策</li>
+<li><strong>消息层</strong>：把工具输出变成统一的消息，进入会话流</li>
+<li><strong>任务层</strong>：长时间执行的统一容器</li>
+<li><strong>状态层</strong>：memory、session、context、config</li>
+</ul>
+<p>这些层不是严格的调用栈，真实代码里会交织。但每层的职责是清楚的，出了问题一般能定位到哪一层在负责。</p>
+<h2 id="一个贯穿始终的设计选择"><a class="header" href="#一个贯穿始终的设计选择">一个贯穿始终的设计选择</a></h2>
+<p>读完这本书，你会发现 Claude Code 一遍一遍地做同一件事：把某种能力从"让模型用 shell 命令临时解决"变成"专门的工具，带权限检查和展示协议"。</p>
+<p>读文件可以跑 <code>cat</code>，但有 FileReadTool。搜索可以跑 <code>grep</code>，但有 GrepTool。联网可以跑 <code>curl</code>，但有 WebFetchTool。</p>
+<p>每次这样做，系统就多了一层，但也多了对这件事的感知和控制：知道花了多少 token、知道用户允不允许、知道怎么展示给用户看。</p>
+<p>理解了这个模式，后面每一章都会变得更好读。</p>
+<h2 id="各章导航"><a class="header" href="#各章导航">各章导航</a></h2>
+<ul>
+<li>第 1-3 章：输入和命令——用户怎么和系统交互</li>
+<li>第 4-6 章：核心工具——读、改、执行</li>
+<li>第 7-9 章：控制层——plan mode、权限、任务</li>
+<li>第 10-12 章：记忆——memory、session、context</li>
+<li>第 13-15 章：向外延伸——web、MCP、plugins/skills</li>
+<li>第 16-18 章：运行环境——config、后台模式、app 壳</li>
+<li>第 19 章：自己扩展 Claude Code</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="第-1-章-对话与命令输入"><a class="header" href="#第-1-章-对话与命令输入">第 1 章 对话与命令输入</a></h1>
+<h2 id="两种入口两种职责"><a class="header" href="#两种入口两种职责">两种入口，两种职责</a></h2>
+<p>Claude Code 有两个输入入口：自然语言和 slash command。它们看起来并列，但在系统里承担的角色完全不同。</p>
+<p>自然语言是"告诉 agent 要做什么"，结果由模型决定。slash command 是"触发一个确定性功能"，结果是可预期的。<code>/plan</code> 就是进入 plan mode，不管你怎么说，都是这个结果。</p>
+<p>保留这两个入口，是因为一个好用的 coding agent 需要同时满足两种需求：处理模糊的、表达性的任务，以及执行高频的、确定性的操作。只有自然语言，熟练用户会觉得不够稳；只有命令，又退回了传统 CLI。</p>
+<h2 id="启动的时候发生了什么"><a class="header" href="#启动的时候发生了什么">启动的时候发生了什么</a></h2>
+<p>Claude Code 启动时，第一件事不是加载主程序，而是判断"我现在是什么模式"。</p>
+<ol>
+<li><code>--version</code> 这类查询 flag：不加载任何模块，直接打印退出。</li>
+<li><code>daemon</code>、<code>bridge</code>、<code>ps/logs/attach/kill</code> 这类特殊模式：走各自的初始化路径，不进入普通对话流程。</li>
+<li>普通对话：才继续加载完整的主程序。</li>
+</ol>
+<p>这种分流设计的好处是：不同运行模式的初始化要求差异很大，分流比统一处理要干净得多。冷启动时间也因此更可控——很多模块用动态 <code>import()</code> 懒加载，不需要时根本不加载。</p>
+<h2 id="slash-command-是产品能力目录"><a class="header" href="#slash-command-是产品能力目录">Slash command 是产品能力目录</a></h2>
+<p><code>commands.ts</code> 里的命令注册表已经很大了，涵盖了 <code>/plan</code>、<code>/memory</code>、<code>/compact</code>、<code>/permissions</code>、<code>/mcp</code>、<code>/review</code> 等几十个命令。这个列表本质上就是 Claude Code 想对用户暴露的产品能力目录。</p>
+<p>几个值得注意的设计细节：</p>
+<ol>
+<li>
+<p>命令不是散乱的函数，而是结构化对象。每个命令有类型、描述、参数定义和执行逻辑，统一注册管理。</p>
+</li>
+<li>
+<p>很多命令通过 feature flag 条件注册。feature flag 为 false 时，模块根本不加载，也不会出现在命令列表里。这让同一份代码可以有不同的能力集，内部版和外部版的命令表可以差异很大。</p>
+</li>
+<li>
+<p>插件和 skill 的命令也并入这个注册表，和内建命令统一管理。从用户角度看，它们的体验是一致的；从代码角度看，它们都是命令对象，只是来源不同。</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="第-2-章-消息流与会话界面"><a class="header" href="#第-2-章-消息流与会话界面">第 2 章 消息流与会话界面</a></h1>
+<h2 id="消息是统一展示协议不是-ui-装饰"><a class="header" href="#消息是统一展示协议不是-ui-装饰">消息是统一展示协议，不是 UI 装饰</a></h2>
+<p>Claude Code 的界面看起来像聊天，但它的消息不是普通聊天消息。工具调用、文件变更、权限拒绝、diff、后台任务通知——所有这些都必须变成消息才能显示出来。</p>
+<p>这个设计的关键在于：工具不是"返回数据，然后让 UI 猜怎么画"，而是工具协议本身就包含展示方式。每个工具都要声明三件事：调用时显示什么、结果怎么显示、失败时显示什么。消息层和工具层之间有明确的协议边界，不是松散的耦合。</p>
+<p>这就是为什么 Claude Code 的界面更像任务控制台：你能持续看到 agent 在做什么，而不是只看到最终答案。</p>
+<h2 id="消息到达界面之前经历了什么"><a class="header" href="#消息到达界面之前经历了什么">消息到达界面之前经历了什么</a></h2>
+<p>原始消息和你看到的消息之间，有一个处理管道：</p>
+<ol>
+<li><strong>normalize</strong>：把不同来源、不同格式的消息统一成标准结构</li>
+<li><strong>reorder</strong>：调整显示顺序——某些消息在逻辑时序上和生成时序不一样</li>
+<li><strong>grouping</strong>：把相关消息归组，比如一次工具调用和它的结果放在一起</li>
+<li><strong>collapse</strong>：搜索结果、读取内容、后台任务通知这类输出默认折叠，不撑开界面</li>
+</ol>
+<p>Brief 模式还有额外的过滤逻辑，会把很多中间过程的文本内容丢掉，只保留关键输出。</p>
+<p>这个管道的存在说明一件事：显示给用户的会话轨迹是经过整理的，不是原始执行过程的直接映射。整理的目的是让人看得清楚，而不是完整记录每一个细节。</p>
+<h2 id="为什么要做成统一消息流"><a class="header" href="#为什么要做成统一消息流">为什么要做成统一消息流</a></h2>
+<p>不这么做的后果是：每类功能都得自己搭 UI 状态，各搭各的，维护成本高，体验也会碎片化。</p>
+<p>做成统一消息流的好处很实际：会话可以回放，因为所有执行历史都在消息里；状态可以审计，权限拒绝、工具调用、diff 都有记录；工具不需要自己实现展示逻辑，复用同一套容器就行。</p>
+<p>还有一个间接好处：消息流的设计让 remote viewer 场景成为可能——另一个客户端可以订阅同一条消息流，实时看到 agent 在做什么，不需要重新执行任何东西。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="第-3-章-slash-commands-功能族"><a class="header" href="#第-3-章-slash-commands-功能族">第 3 章 Slash Commands 功能族</a></h1>
+<h2 id="slash-command-解决的是什么问题"><a class="header" href="#slash-command-解决的是什么问题">Slash command 解决的是什么问题</a></h2>
+<p>用自然语言操作 AI 有一个内在问题：结果不确定。你说"帮我进入规划模式"，模型理不理解、怎么理解，每次可能不一样。</p>
+<p>slash command 解决的就是这个问题。<code>/plan</code> 永远是进入 plan mode，<code>/compact</code> 永远是压缩上下文，跟模型怎么想没关系。它给熟练用户提供了一条绕过自然语言不确定性的高速通道。</p>
+<p>这不是"AI 产品应该全用自然语言"和"还是用命令行吧"之间的妥协，而是两种模式各司其职的刻意设计。</p>
+<h2 id="命令是怎么工作的"><a class="header" href="#命令是怎么工作的">命令是怎么工作的</a></h2>
+<p>slash command 有几种不同的执行方式，取决于命令的性质：</p>
+<ol>
+<li><strong>交给模型处理</strong>：把用户意图包装成 prompt，模型再去调用工具。<code>/review</code> 就是这样——命令把"审查当前改动"的意图构造成 prompt，模型决定读哪些文件、怎么分析。</li>
+<li><strong>本地直接执行</strong>：不经过模型，直接返回 UI 组件，结果是确定性的。<code>/permissions</code> 打开权限面板、<code>/memory</code> 打开记忆文件，都是这类。</li>
+<li><strong>两者组合</strong>：先在本地做准备，再交给模型。<code>/compact</code> 就是先在本地计算当前上下文的分布，再用模型做实际的摘要压缩。</li>
+</ol>
+<p>这种分类让命令系统很灵活：不是所有命令都需要走一遍 LLM，能在本地确定性完成的，就在本地完成。</p>
+<h2 id="feature-flag-和命令可见性"><a class="header" href="#feature-flag-和命令可见性">Feature flag 和命令可见性</a></h2>
+<p>命令注册表里有一个重要机制：命令可以通过 feature flag 条件注册。</p>
+<p>实际效果是：某些命令只在内部版出现，某些只在实验版出现，某些只有在特定组织下才可见。从代码角度看，所有这些命令都在同一份代码里，但不同的构建、不同的环境下，命令列表是不同的。</p>
+<p>这让 Claude Code 可以在一份主干代码上并行演化多条产品路线，而不是维护多个 fork。代价是命令注册逻辑变复杂了，好处是功能迭代速度快得多。</p>
+<h2 id="插件和-skill-的命令怎么融入"><a class="header" href="#插件和-skill-的命令怎么融入">插件和 skill 的命令怎么融入</a></h2>
+<p>用户通过插件安装的 skill，最终也会并入同一个命令注册表。从用户的角度，通过 skill 安装的自定义命令和 <code>/compact</code> 这样的内建命令，使用体验完全一样。</p>
+<p>这是一个重要的设计决策：扩展能力和内建能力共享同一个接口层。用户不需要区分"这个命令是内建的还是安装的"，这条界限在使用层是透明的。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="第-4-章-读文件搜内容找文件"><a class="header" href="#第-4-章-读文件搜内容找文件">第 4 章 读文件、搜内容、找文件</a></h1>
+<p>Claude Code 把文件操作拆成了三个专门工具：FileReadTool 读取文件内容，GrepTool 按关键词搜索，GlobTool 按路径模式查找文件。三者各司其职，也经常配合使用。</p>
+<h2 id="为什么读文件不直接用-cat"><a class="header" href="#为什么读文件不直接用-cat">为什么读文件不直接用 cat</a></h2>
+<p>最简单的做法是：让 agent 自己跑 <code>cat</code>、<code>grep</code>、<code>find</code>。这完全可行，但 Claude Code 没有这么做。</p>
+<p>原因是：直接用 shell 命令读文件，系统对这件事没有任何感知。不知道读了多少 token、不知道这个文件有没有超大、不知道路径是不是安全的，也没办法针对不同文件类型做特殊处理。出了问题，什么日志都没有。</p>
+<p>所以 Claude Code 把读文件做成了专门的工具 FileReadTool，处理了一批 shell 命令处理不了的事情。</p>
+<ul>
+<li><strong>路径安全</strong>：<code>/dev/zero</code> 这样的特殊文件，读了就会无限阻塞进程，需要在读之前就识别并拦截。</li>
+<li><strong>Token 预算</strong>：大文件不能整块塞进上下文，工具会根据当前 token 预算决定读多少，或者建议用 offset/limit 分段读。</li>
+<li><strong>文件类型处理</strong>：PDF、Jupyter notebook、图片——这些不能像普通文本一样处理，需要走各自的解析逻辑才能变成模型能理解的内容。</li>
+<li><strong>读取事件通知</strong>：读文件这个动作会通知给其他服务，比如 context 预算追踪，这样系统能知道"刚才读了什么，花了多少 token"。</li>
+</ul>
+<h2 id="搜索有两个专门工具"><a class="header" href="#搜索有两个专门工具">搜索有两个专门工具</a></h2>
+<p><code>grep</code> 和 <code>find</code> 也是同样的道理——Claude Code 没有让 agent 直接用它们，而是做了两个专门的搜索工具：GrepTool 和 GlobTool。</p>
+<p>GrepTool 是"找内容"：你知道要找什么，但不知道它在哪个文件里。比如想找所有调用了某个函数的地方，或者想确认某个变量名在哪里被定义。搜索范围只限于你自己的代码，不会把 <code>node_modules</code> 这类依赖目录里的东西也翻出来。匹配太多时会截断，防止把上下文打爆。</p>
+<p>GlobTool 是"找文件"：你知道要找什么类型的文件，但不知道具体有哪些。比如想列出所有测试文件（<code>**/*.test.ts</code>）、所有 React 组件（<code>src/components/**/*.tsx</code>），或者某个模块的所有入口文件（<code>src/**/index.*</code>）。结果按修改时间排序，最近改动的排在前面。</p>
+<h2 id="三个工具配合使用"><a class="header" href="#三个工具配合使用">三个工具配合使用</a></h2>
+<p>实际使用中，FileReadTool、GrepTool、GlobTool 这三个工具经常配合：先用 GlobTool 找到相关文件列表，再用 GrepTool 确认哪些文件里有目标内容，最后用 FileReadTool 读取具体内容。</p>
+<p>这个分层查找的过程减少了不必要的 token 消耗——不需要把每个可能相关的文件都读进来，而是先缩小范围再精读。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="第-5-章-改文件与-diff-展示"><a class="header" href="#第-5-章-改文件与-diff-展示">第 5 章 改文件与 Diff 展示</a></h1>
+<h2 id="精准替换而不是整文件覆盖"><a class="header" href="#精准替换而不是整文件覆盖">精准替换，而不是整文件覆盖</a></h2>
+<p>Claude Code 改文件的主要方式是精准替换：你提供要改的旧内容和新内容，工具找到旧内容在文件里的位置，替换掉。</p>
+<p>这个设计选择背后有一个重要约束：<code>old_string</code> 必须在文件里唯一存在。如果同样的内容出现了两次，工具会拒绝执行，而不是随便改其中一处。</p>
+<p>这一条规则防止了很多"改错地方"的情况。如果模型写出了一段模糊的 <code>old_string</code>，系统直接拒绝，而不是悄悄改了一个错误的位置然后让用户事后发现。</p>
+<p>整文件覆盖（FileWriteTool）也存在，但主要用于新建文件或者真的要完全重写的情况。一般的修改都应该用精准替换，改动范围更小，diff 更可读。</p>
+<h2 id="编辑之前要过的关"><a class="header" href="#编辑之前要过的关">编辑之前要过的关</a></h2>
+<p>在真正写文件之前，FileEditTool 会做一批前置检查：</p>
+<ul>
+<li><strong>路径别名展开</strong>：先把 <code>~/</code>、相对路径等各种形式统一成绝对路径，防止路径别名绕过后续的权限规则。</li>
+<li><strong>权限检查</strong>：看用户的规则里这个路径是否允许写入。</li>
+<li><strong>文件状态检查</strong>：如果文件在上次读取之后被外部程序修改了，工具会拒绝覆盖，而不是强行写入。这保护了用户在另一个窗口里做的改动。</li>
+<li><strong>大文件保护</strong>：超过 1GB 的文件直接拒绝，防止内存问题。</li>
+</ul>
+<p>这些检查都在写入之前做完。如果任何一项不通过，操作失败，原文件不变。</p>
+<h2 id="diff-是信任的基础"><a class="header" href="#diff-是信任的基础">Diff 是信任的基础</a></h2>
+<p>每次成功的编辑，diff 都会出现在消息流里。用户不需要自己去比对，也不需要运行 <code>git diff</code>，直接在会话界面就能看到改了哪几行。</p>
+<p>这个设计不只是方便，而是系统可信度的基础。你不需要相信"agent 说它改对了"——你可以直接看改了什么。如果改得不对，当场就能发现，而不是等到跑测试才知道。</p>
+<p>改完文件之后，如果代码有类型错误或语法问题，这些报错也会一起出现在消息流里，不需要再切到编辑器里手动检查。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="第-6-章-shell-执行"><a class="header" href="#第-6-章-shell-执行">第 6 章 Shell 执行</a></h1>
+<h2 id="shell-是最强也是最危险的能力"><a class="header" href="#shell-是最强也是最危险的能力">Shell 是最强也是最危险的能力</a></h2>
+<p>给 agent 开放 shell，它就能做几乎任何事：跑测试、安装依赖、启动服务、部署代码。但同样，<code>rm -rf</code>、<code>curl | bash</code>、访问生产数据库也都可以做。</p>
+<p>Claude Code 没有因为这种风险就限制 shell 能力，而是把 shell 做成了一个正式的工具，带权限、带语义识别、带任务管理。</p>
+<h2 id="命令语义识别"><a class="header" href="#命令语义识别">命令语义识别</a></h2>
+<p>BashTool 在执行之前会先分析命令的语义：这是只读命令还是有副作用的命令？</p>
+<p><code>grep</code>、<code>find</code>、<code>cat</code>、<code>ls</code> 这类命令被识别为只读操作，可以直接执行，结果在界面上也会自动折叠，不撑开会话流。</p>
+<p><code>rm</code>、<code>mv</code>、写文件、启动服务这类命令被识别为有副作用，会触发权限检查，可能需要用户确认。</p>
+<p>这个分类不是完美的，但它让权限系统可以对不同类型的命令有不同的默认策略，而不是一刀切。</p>
+<h2 id="长任务怎么处理"><a class="header" href="#长任务怎么处理">长任务怎么处理</a></h2>
+<p>有些命令跑完要几分钟甚至更长。如果同步等待，整个会话就卡在那里了。</p>
+<p>Claude Code 的处理方式是把 shell 命令纳入任务体系。每个长任务都有一个 task id，输出写到专门的文件里。你可以：</p>
+<ul>
+<li>让它在后台跑，继续做别的事</li>
+<li>用 <code>attach</code> 重新连上去看实时输出</li>
+<li>用 <code>kill</code> 终止它</li>
+</ul>
+<p>这样 shell 执行就从"等待返回"变成了"提交任务、查看进度"，适合真正的长时间操作。</p>
+<h2 id="sandbox-是另一层保护"><a class="header" href="#sandbox-是另一层保护">Sandbox 是另一层保护</a></h2>
+<p>除了权限规则，还有 sandbox 机制：某些命令可以在容器里执行，和主机环境隔离。</p>
+<p>Sandbox 不是对所有命令都启用的，因为有性能成本。什么时候启用、启用哪种级别的隔离，取决于命令类型和当前的权限模式。权限规则和 sandbox 是两个独立的机制，可以组合使用：权限规则决定"这条命令允不允许运行"，sandbox 决定"运行时有没有隔离"。</p>
+<h2 id="为什么不直接让模型自己组装-shell-命令"><a class="header" href="#为什么不直接让模型自己组装-shell-命令">为什么不直接让模型自己组装 shell 命令</a></h2>
+<p>理论上可以：模型直接生成 shell 命令，通过 <code>exec</code> 执行，结果以文本返回。简单直接。</p>
+<p>但这样做，系统对 shell 执行这件事完全没有感知。没有权限检查，没有任务管理，没有展示逻辑，没有长任务处理。出了问题，什么都捞不到。</p>
+<p>把 shell 做成正式工具的代价是多了一层抽象，好处是 shell 执行变得可控、可见、可管理——这在 coding agent 里是刚需，不是可选功能。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="第-7-章-plan-mode"><a class="header" href="#第-7-章-plan-mode">第 7 章 Plan Mode</a></h1>
+<h2 id="先想清楚再动手怎么变成运行时约束"><a class="header" href="#先想清楚再动手怎么变成运行时约束">"先想清楚再动手"怎么变成运行时约束</a></h2>
+<p>做复杂任务之前先写一个计划，这个道理谁都懂。但如果只是在 prompt 里说"先规划再执行"，实际上没有任何保证——模型随时可能边想边做，在你还没看清楚的时候就开始改代码了。</p>
+<p>Plan mode 把这个约定变成了系统强制执行的状态。进入 plan mode 之后，写操作工具的权限上下文发生变化，模型想调用 FileEditTool 或者跑有副作用的 shell 命令，都会被拦住。这不是靠提示词约束，而是运行时约束。</p>
+<h2 id="进入和退出"><a class="header" href="#进入和退出">进入和退出</a></h2>
+<p><code>/plan</code> 切换到 plan mode。这不只是改了一个 UI 状态，而是写进了权限上下文，影响后续所有工具的执行策略。</p>
+<p>在 plan mode 里，模型可以读文件、搜索、思考、生成计划内容，但不能写文件、不能跑有副作用的命令。计划内容存在磁盘上的一个文件里，不是临时的内存变量——这意味着你可以用 <code>/plan open</code> 在外部编辑器里直接修改这个文件，手工调整计划，然后让模型按调整后的计划执行。</p>
+<p>确认计划没问题之后，退出 plan mode，模型重新获得写操作权限，进入执行阶段。你可以随时再次进入 plan mode 暂停，或者让整个执行过程跑完。</p>
+<h2 id="为什么是显式模式切换而不是自动判断"><a class="header" href="#为什么是显式模式切换而不是自动判断">为什么是显式模式切换，而不是自动判断</a></h2>
+<p>另一种设计是系统自动判断当前是在规划还是在执行，用户不需要手动切换。看起来更智能，但实际上把控制权从用户手里拿走了——你不确定系统现在是什么状态，也不确定它什么时候会开始真正改东西。对于风险较高的操作，这种不确定感很不舒服。</p>
+<p>显式模式切换的好处是状态对用户完全透明。你知道现在是规划状态，你决定什么时候进入执行状态。计划写到磁盘上，你可以审阅和修改，不是只能接受模型给出的方案。这是 Claude Code 在自动化程度和用户控制感之间的一个典型取舍。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="第-8-章-permissions-与-approval"><a class="header" href="#第-8-章-permissions-与-approval">第 8 章 Permissions 与 Approval</a></h1>
+<h2 id="这个功能解决什么问题"><a class="header" href="#这个功能解决什么问题">这个功能解决什么问题</a></h2>
+<p>给 AI agent 开放系统操作权限，本质上是一个信任问题。信任得太少，agent 没法干活；信任得太多，出了事没有后悔药。</p>
+<p>Claude Code 面对这个问题的答案是：<strong>不做全局信任，做细粒度规则</strong>。</p>
+<h2 id="最直观的体验"><a class="header" href="#最直观的体验">最直观的体验</a></h2>
+<p>用 Claude Code 改代码，有时会弹出一个确认框："准备写入 /src/config.ts，是否允许？"</p>
+<p>你可以：</p>
+<ul>
+<li>点允许，这次通过</li>
+<li>点允许，并勾选"以后 /src/ 下的文件都自动允许"</li>
+<li>点拒绝，Claude Code 会记录这次拒绝，但任务不会整个中断</li>
+</ul>
+<p>这个确认框就是 Approval，而背后决定"要不要弹出这个框"的逻辑就是权限系统。</p>
+<h2 id="权限是怎么工作的"><a class="header" href="#权限是怎么工作的">权限是怎么工作的</a></h2>
+<p>每个工具在执行之前都会先问自己一个问题：<strong>我现在要做的这件事，用户允许吗？</strong></p>
+<p>这个问题的答案来自规则匹配，有三种结果：</p>
+<ul>
+<li><strong>allow</strong>：直接执行，不打扰用户</li>
+<li><strong>deny</strong>：直接拒绝，不执行</li>
+<li><strong>ask</strong>：弹出确认框，等用户决定</li>
+</ul>
+<p>规则按 <code>deny &gt; allow &gt; ask</code> 优先级匹配，第一条命中的生效。如果一条规则都没匹配上，默认进入 ask。</p>
+<p>规则是用户自己写的（或者通过确认框积累下来的），长这样：</p>
+<pre><code>allow:Bash(git *:*)          # git 命令全部放行
+allow:FileEdit(/src/**:*)    # src 目录下的文件可以随便改
+deny:Bash(rm -rf *:*)        # 这条命令直接拒绝
+ask:WebFetch(*.external.com) # 外部网址每次都要问
+</code></pre>
+<h2 id="为什么不做成一个总开关"><a class="header" href="#为什么不做成一个总开关">为什么不做成一个总开关</a></h2>
+<p>最简单的设计是：要么"完全信任模式"（什么都不问），要么"严格模式"（每步都确认）。</p>
+<p>但这两种都不好用：</p>
+<ul>
+<li>完全信任：你不知道 agent 在干什么，改错了才发现</li>
+<li>每步确认：做一件事要点几十次确认，根本没法用</li>
+</ul>
+<p>Claude Code 选择的路是<strong>逐步积累授权</strong>。第一次做某件事问你，你点允许并选择"记住规则"，下次同类操作就不再问了。用着用着，你的规则表就变成了一份个人化的"信任配置"，反映你真实的风险偏好，而不是一刀切的全开或全关。</p>
+<h2 id="为什么权限判断在每个工具里而不是一个统一的地方"><a class="header" href="#为什么权限判断在每个工具里而不是一个统一的地方">为什么权限判断在每个工具里，而不是一个统一的地方</a></h2>
+<p>读文件、写文件、跑 shell 命令、访问网址——这四件事的风险完全不同，需要判断的信息也不同：</p>
+<ul>
+<li>写文件看的是<strong>路径</strong>（是不是 /etc/？是不是生产配置？）</li>
+<li>跑命令看的是<strong>命令内容</strong>（是搜索还是删除？）</li>
+<li>访问网址看的是<strong>域名</strong>（是可信站点还是随机 URL？）</li>
+</ul>
+<p>如果放在一个统一的地方判断，要么判断逻辑过于复杂，要么精度不够。放在每个工具里，每个工具按自己的业务语义做判断，更准确，也更容易维护。</p>
+<h2 id="拒绝之后发生什么"><a class="header" href="#拒绝之后发生什么">拒绝之后发生什么</a></h2>
+<p>权限被拒绝的时候，界面上能看到"这一步被拒了，原因是什么"，不是悄悄失败。你可以修改规则之后重试，不用从头再来，整个任务也不会因为一次拒绝就中断。</p>
+<p>拒绝不是终点，而是一个可以继续调整的节点。</p>
+<h2 id="权限系统的边界"><a class="header" href="#权限系统的边界">权限系统的边界</a></h2>
+<p>权限系统能做的是：控制 Claude Code 本身发起的操作。</p>
+<p>它管不了的是：你自己写的规则有没有漏洞，或者 MCP server 在它自己进程里做了什么。权限规则是针对 Claude Code 工具调用的过滤层，不是沙盒隔离。</p>
+<p>如果你需要更强的隔离，sandbox（通过容器隔离执行环境）是另一层机制，和权限规则独立工作。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="第-9-章-taskagentteammate"><a class="header" href="#第-9-章-taskagentteammate">第 9 章 Task、Agent、Teammate</a></h1>
+<h2 id="task-是什么"><a class="header" href="#task-是什么">Task 是什么</a></h2>
+<p>当 Claude Code 需要执行一个超过几秒的操作——跑一个 shell 命令、启动一个子 agent、连接一个远程任务——它不会直接执行然后等结果，而是创建一个 task。</p>
+<p>Task 是 Claude Code 对"长时间执行"的统一抽象。每个 task 有唯一 id、类型、状态，输出写到磁盘上的专用文件里。状态从 <code>pending</code> 到 <code>running</code>，最终到 <code>completed</code>、<code>failed</code> 或 <code>killed</code>。</p>
+<p>这个抽象的存在让前台 UI 和后台执行解耦：UI 只读 task 状态和输出文件，不关心底层是 bash 还是 agent 还是远程进程在跑。</p>
+<h2 id="几种-task-类型"><a class="header" href="#几种-task-类型">几种 task 类型</a></h2>
+<ul>
+<li><strong><code>local_bash</code></strong>：本地 shell 命令，最简单，跑完就结束。</li>
+<li><strong><code>local_agent</code></strong>：在本地启动的子 agent，有自己的上下文，可以独立读文件、改文件、跑命令，完成后把结果汇报给主 agent。这是 Claude Code 实现并行工作的基础——多个子 agent 同时处理不同部分，主 agent 汇总结果。</li>
+<li><strong><code>remote_agent</code></strong>：在远程环境启动的 agent，通过 bridge 通信。适合在 CI/CD 环境或者和主机隔离的容器里执行任务。</li>
+<li><strong><code>in_process_teammate</code></strong>：进程内的并行 agent，比 <code>local_agent</code> 开销更小，但隔离程度也更低。</li>
+</ul>
+<h2 id="agent-能干什么"><a class="header" href="#agent-能干什么">Agent 能干什么</a></h2>
+<p>AgentTool 是 Claude Code 的"让另一个 AI 来做这件事"的工具。</p>
+<p>调用时可以选择同步（等 agent 完成再继续）或者异步（提交任务，拿到 task id，继续干别的）。可以给 agent 分配一个独立的 git worktree，让它在自己的分支上工作，不影响主工作区。</p>
+<p>子 agent 的能力和主 agent 是一样的，可以读写文件、跑命令，有自己的权限上下文。但它是一个独立的执行单元，不共享主 agent 的对话历史，只接受任务描述和必要的上下文。</p>
+<h2 id="为什么要有这一层抽象"><a class="header" href="#为什么要有这一层抽象">为什么要有这一层抽象</a></h2>
+<p>没有 task 抽象的话，shell 命令、子 agent、远程任务都得各自管理自己的生命周期，各自实现进度显示、错误处理、输出收集。代码会很乱，用户体验也会碎片化。</p>
+<p>有了统一的 task 层：</p>
+<ul>
+<li>所有长时间操作都可以 attach、kill、查看 logs</li>
+<li>UI 只需要一套组件来显示任务状态，不管底层是什么</li>
+<li>执行者可以替换（比如从 local_agent 换成 remote_agent），UI 不用改</li>
+</ul>
+<p>多了一层抽象，多了复杂度，但换来的是整个系统的可管理性。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="第-10-章-memory-功能"><a class="header" href="#第-10-章-memory-功能">第 10 章 Memory 功能</a></h1>
+<h2 id="memory-要解决的问题"><a class="header" href="#memory-要解决的问题">Memory 要解决的问题</a></h2>
+<p>每次开启新会话，Claude Code 对上次发生的事情一无所知。这对短任务问题不大，但对长期使用的人来说很麻烦——你得反复解释项目背景、重申偏好、重新介绍约定。</p>
+<p>Memory 的目的是让这些信息持久化，下次用的时候不用再说一遍。</p>
+<h2 id="memory-是一些-markdown-文件"><a class="header" href="#memory-是一些-markdown-文件">Memory 是一些 Markdown 文件</a></h2>
+<p>Claude Code 的 memory 没有数据库，没有向量检索，就是几个 markdown 文件。你可以直接用 <code>/memory</code> 打开来编辑，加、删、改都行。</p>
+<p>这个设计的好处是透明：你能看到 memory 里存了什么，能直接控制它，不是一个不透明的黑箱在背后记住一些东西。</p>
+<p>memory 文件有三个层级：</p>
+<ol>
+<li>个人 memory：只对你自己生效，跨所有项目</li>
+<li>项目 memory：只对你自己生效，但只在当前项目里加载——换了项目就不带入</li>
+<li>team memory：通过 API 同步，团队所有成员共享（需要启用对应 feature）</li>
+</ol>
+<p>系统启动时会把这些文件加载进上下文，所以 agent 能"知道"这些信息。</p>
+<h2 id="后台自动提取"><a class="header" href="#后台自动提取">后台自动提取</a></h2>
+<p>除了手工编辑，会话结束后系统会自动做一次 memory 提取——把这次会话里值得长期保留的内容写入 memory 文件。</p>
+<p>提取不是每轮都发生，而是有触发条件：当前会话消耗的 token 超过一定量，或者工具调用次数达到阈值。这两个条件都是在估计"这次会话发生了足够多的事情，值得提取"。</p>
+<p>提取本身是由一个 forked subagent 在后台做的，不阻塞主对话。提取结束后，新内容追加进 memory 文件。</p>
+<h2 id="为什么提取用-subagent而不是简单地截取文本"><a class="header" href="#为什么提取用-subagent而不是简单地截取文本">为什么提取用 subagent，而不是简单地截取文本</a></h2>
+<p>直接把对话的最后几轮截下来存进 memory，实现最简单，但效果差。</p>
+<p>有价值的信息往往散落在整个会话里：第 5 轮发现了一个重要约定，第 15 轮确认了一个技术决策，第 28 轮遇到了一个坑。简单截取只能拿到最近的内容，拿不到这些散落的关键点。</p>
+<p>用 subagent 做提取的好处是：它能读完整个会话历史，判断什么值得保留、以什么形式保留，而不只是截取最近几轮。提取结果更准确，代价是比简单截取更耗资源。</p>
+<h2 id="memory-不是万能的"><a class="header" href="#memory-不是万能的">Memory 不是万能的</a></h2>
+<p>Memory 文件会被加载进每次会话的上下文，但这也意味着它占用 token。如果 memory 文件很大、包含大量不相关的历史记录，反而会稀释上下文，让 agent 在噪声里找有用信息。</p>
+<p>保持 memory 文件精炼、定期手工清理不再相关的内容，是让 memory 真正好用的关键。这件事系统帮不了你，得靠你自己判断。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="第-11-章-sessionresumehistory"><a class="header" href="#第-11-章-sessionresumehistory">第 11 章 Session、Resume、History</a></h1>
+<h2 id="三个相关但不同的概念"><a class="header" href="#三个相关但不同的概念">三个相关但不同的概念</a></h2>
+<p>Claude Code 有三种方式处理"过去发生的事"，用途各不相同：</p>
+<ul>
+<li><strong>Input History</strong>：你之前输入过的内容。上下方向键可以翻，跨会话也能用。就像 shell 的历史记录，只存输入，不存对话内容。</li>
+<li><strong>Session Resume</strong>：恢复之前的一次完整对话，包括所有消息、工具调用、上下文。用 <code>/resume</code> 或者启动时选择历史线程。</li>
+<li><strong>Remote History</strong>：在 remote viewer 场景里，往上滚可以看到更早的消息，按需加载，不是一次性全部拉取。</li>
+</ul>
+<h2 id="为什么不把所有历史都放在上下文里"><a class="header" href="#为什么不把所有历史都放在上下文里">为什么不把所有历史都放在上下文里</a></h2>
+<p>一个朴素的想法是：把整个对话历史都放在当前上下文里，这样 agent 什么都"记得"。</p>
+<p>这在短会话里没问题。但长会话积累的历史很快就会超出模型上下文窗口的限制，而且把几百轮历史全塞进去，大部分都是不相关的噪声，反而让 agent 更难找到真正有用的信息。</p>
+<p>Claude Code 的处理方式是分层存储：最近的消息在上下文里，更老的消息在磁盘上，需要的时候按需加载。Session Resume 是把一个旧的上下文重新激活，不是把所有历史合并进来。</p>
+<h2 id="远程历史的懒加载"><a class="header" href="#远程历史的懒加载">远程历史的懒加载</a></h2>
+<p>在有远程会话的场景里，消息历史通过 API 分页加载。初次打开拉取最新的一页，往上滚到一定位置时再拉更老的一页，以此类推。</p>
+<p>这里有一个 UX 细节值得注意：加载更老的消息时，新内容是往上插入的，但界面不应该因此跳动，让用户突然不知道自己在看哪里了。这通过 scroll anchor 机制解决——插入前记住当前可见消息的位置，插入后恢复到相同位置。</p>
+<p>边界状态（正在加载、加载失败、到了最开头）用特殊的 sentinel message 表示，这样 UI 逻辑不需要单独维护这些状态，直接跟着消息流走。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="第-12-章-context-管理"><a class="header" href="#第-12-章-context-管理">第 12 章 Context 管理</a></h1>
+<h2 id="上下文窗口是有限资源"><a class="header" href="#上下文窗口是有限资源">上下文窗口是有限资源</a></h2>
+<p>模型能"看到"的内容有上限。对话历史、读进来的文件、工具调用结果、memory 文件、skill 定义——这些都在消耗这个上限。用完了，就没法继续了。</p>
+<p>Claude Code 把这个资源的管理做成了显式功能，而不是让用户自己猜"为什么它突然忘了之前说的话"。</p>
+<h2 id="你能看到上下文花在哪里"><a class="header" href="#你能看到上下文花在哪里">你能看到上下文花在哪里</a></h2>
+<p><code>/context</code> 会显示当前上下文的使用分布：多少在对话历史里，多少在 memory 文件里，多少在 MCP tool 定义里，多少在 skill 里，还有多少剩余。</p>
+<p>这个可视化的价值不是帮你优化 token 用量，而是让系统行为变透明。如果 agent 好像没注意到某件事，你可以看看那件事是不是已经被压缩掉了；如果上下文快满了，你知道该做什么，而不是等到突然报错。</p>
+<h2 id="compact-是怎么工作的"><a class="header" href="#compact-是怎么工作的">Compact 是怎么工作的</a></h2>
+<p>Compact 有两种触发方式：</p>
+<ol>
+<li><strong>手动</strong>：<code>/compact</code> 立即触发，你可以在觉得上下文太乱的时候主动清理。</li>
+<li><strong>自动</strong>：当上下文用量接近模型上限时，系统自动触发一次 compact，然后继续对话。你会在消息流里看到一条提示，说明刚才发生了压缩——不是悄悄进行的。如果不想要自动 compact，可以在设置里关掉。</li>
+</ol>
+<p>压缩的逻辑不是随机丢弃，而是有优先级的：</p>
+<ul>
+<li>最近几轮对话完整保留，不压缩</li>
+<li>工具调用结果保留摘要，原始输出可以丢</li>
+<li>被后续对话引用的内容保留，没有被引用的可以丢</li>
+<li>纯文本的中间回复，多轮合并成摘要</li>
+</ul>
+<p>被压缩的内容会打上标记，界面上能看到"这里有内容被摘要了"，不是悄悄消失。</p>
+<h2 id="context-collapse"><a class="header" href="#context-collapse">Context Collapse</a></h2>
+<p>Context collapse 比 compact 更激进：把多轮内容（包括工具调用链）折叠成一个 summary block。适合长任务的阶段切换点——当前阶段完成了，折叠历史，清空空间，新阶段开始时只保留一个简短的"之前做了什么"的摘要。</p>
+<p>Context collapse 没有用户命令，完全自动触发：系统在每次 API 调用前判断是否需要折叠，也会在遇到上下文溢出错误时自动触发。启用 context collapse 后，自动 compact 会被关掉——两者解决同一个问题，不会同时运行。手动 <code>/compact</code> 不受影响，仍然可用。</p>
+<h2 id="为什么压缩要可见"><a class="header" href="#为什么压缩要可见">为什么压缩要可见</a></h2>
+<p>Compact 可以做成完全静默的——自动触发，不通知用户，对话继续。很多系统就是这样做的。</p>
+<p>问题是：你不知道压缩发生了，也不知道什么被丢掉了。如果因此出了问题——agent 忘了一个重要约束，或者重复做了已经做过的事——你很难判断是 agent 的问题还是上下文压缩导致的问题。</p>
+<p>Claude Code 选择让压缩可见：自动触发时会在消息流里留下记录，被压缩的内容会打上标记，<code>/context</code> 能看到上下文花在哪里。代价是多了一些需要了解的概念，好处是出了问题你知道从哪里查。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="第-13-章-web-访问与搜索"><a class="header" href="#第-13-章-web-访问与搜索">第 13 章 Web 访问与搜索</a></h1>
+<h2 id="agent-怎么获取外部信息"><a class="header" href="#agent-怎么获取外部信息">Agent 怎么获取外部信息</a></h2>
+<p>写代码经常需要查资料：看文档、找示例、确认某个 API 的参数。Claude Code 有两个内建工具处理这件事：WebFetchTool（拉取指定 URL 的内容）和 WebSearchTool（先搜索再拉取）。</p>
+<p>两个工具解决的是不同的问题。WebFetchTool 适合你已经知道要看哪个页面的情况：提供 URL，拉取内容。WebSearchTool 则是你知道要找什么但不知道从哪里找：先搜索得到一批候选结果，再从中拉取最相关的内容。</p>
+<p>这两个工具是内建的，受同一套权限和消息机制管控，不是让 agent 自己写 curl 命令去联网。</p>
+<h2 id="为什么要有-prompt-参数"><a class="header" href="#为什么要有-prompt-参数">为什么要有 prompt 参数</a></h2>
+<p>调用这两个工具时都需要提供 prompt——"你想从页面里得到什么"。</p>
+<p>这个设计有点反直觉：直接拿页面内容不就好了，为什么还要说明目的？</p>
+<p>原因是上下文成本。一个完整的文档页面可能有几万 token，但你实际需要的可能只是其中一个函数的参数说明。有了 prompt，工具在返回内容之前会先做一轮过滤，只返回和 prompt 相关的部分，而不是把整个页面塞进上下文。</p>
+<h2 id="域名级权限控制"><a class="header" href="#域名级权限控制">域名级权限控制</a></h2>
+<p>和所有其他工具一样，Web 工具在执行前也过权限系统。但和文件路径、shell 命令不同，Web 权限是按域名控制的。</p>
+<p>某些域名可以配置为预授权，直接放行，不弹确认框。某些域名需要每次确认。某些域名直接拒绝。</p>
+<p>被拦截时，系统会给出快速规则建议，一键添加白名单，不用自己手写规则。</p>
+<h2 id="这两个工具不处理认证"><a class="header" href="#这两个工具不处理认证">这两个工具不处理认证</a></h2>
+<p>WebFetchTool 和 WebSearchTool 都不会帮你登录、不会携带 session cookie、不会处理 OAuth。遇到需要认证的 URL，会直接失败，并提示应该用专门的 MCP tool 来处理。</p>
+<p>这是一个清晰的边界划分：这两个工具适合抓公开的网页内容；需要认证的外部系统，应该通过 MCP Server 接入，认证逻辑放在 MCP Server 侧。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="第-14-章-mcp"><a class="header" href="#第-14-章-mcp">第 14 章 MCP</a></h1>
+<h2 id="为什么需要一个扩展协议"><a class="header" href="#为什么需要一个扩展协议">为什么需要一个扩展协议</a></h2>
+<p>Claude Code 内建的工具覆盖了文件、shell、web——这已经很强了，但总有它覆盖不到的地方：你的数据库、你们公司的内部 API、特定的 SaaS 工具。</p>
+<p>一种解法是：把这些都硬编码进 Claude Code。但这显然不现实，外部系统千变万化，不可能全部内建。</p>
+<p>MCP（Model Context Protocol）是另一种解法：定义一套协议，让外部系统自己实现这套协议，然后在运行时接入。Claude Code 只需要理解协议，不需要提前认识每个具体的系统。</p>
+<h2 id="mcp-工具和内建工具有什么不同"><a class="header" href="#mcp-工具和内建工具有什么不同">MCP 工具和内建工具有什么不同</a></h2>
+<p>内建工具在编译时就确定了——代码里写死了有哪些工具、每个工具能做什么。WebFetchTool 就是典型的内建工具：功能固定，适合抓公开网页，但没有认证能力。</p>
+<p>MCP 工具是运行时动态出现的。你连接一个 MCP server，Claude Code 把它声明的能力注册进来，之后就可以调用了。断开连接，这些能力就消失了。需要认证的系统——数据库、内部 API、需要登录的 SaaS——走 MCP 更合适：认证逻辑放在你的 MCP server 里，Claude Code 这边只看到一个普通的 tool 调用。</p>
+<p>实现上，<code>MCPTool</code> 是一个模板——名字、描述、参数 schema、执行逻辑，都在连接时被 server 返回的信息覆盖。同一个模板，连接不同的 MCP server，就变成不同的工具。</p>
+<h2 id="toolresourcecommand-三种能力"><a class="header" href="#toolresourcecommand-三种能力">Tool、Resource、Command 三种能力</a></h2>
+<p>说"MCP server 提供工具"其实只说了一半。协议定义了三种能力，区别在于谁来触发、发生在什么阶段：</p>
+<ul>
+<li><strong>Tool</strong>：模型决定调用。任务执行过程中，模型判断需要做某件事，主动调用 tool，拿到结果再继续。比如查询数据库、发送消息。有参数、有返回值、可能有副作用。</li>
+<li><strong>Resource</strong>：模型主动读取，用来获取背景信息。不产生副作用，更像一个可以按需读取的文件——比如数据库的 schema、项目文档的目录。风险比 tool 低，权限策略也可以更宽松。</li>
+<li><strong>Command</strong>：用户触发，不是模型自己决定的。MCP server 暴露的 command 会直接并入 Claude Code 的命令注册表，用户可以像用内建的 <code>/xxx</code> 一样调用它。</li>
+</ul>
+<h2 id="写-mcp-server-的几个关键点"><a class="header" href="#写-mcp-server-的几个关键点">写 MCP Server 的几个关键点</a></h2>
+<p><strong>认证在 server 侧处理</strong>。MCP server 是你自己控制的进程，把认证逻辑放在里面。Claude Code 这边不需要知道你的 API key 或者 OAuth token，它只看到工具调用和返回结果。</p>
+<p><strong>Tool schema 要精确</strong>。MCP 工具的参数 schema 最终决定模型怎么调用这个工具。太宽松（比如只有一个 <code>query: string</code>），模型会猜参数格式，结果不稳定。每个字段都应该有明确的类型和描述。</p>
+<p><strong>区分 tool 和 resource</strong>。能用 resource 表达的数据就不要做成 tool。resource 是只读的、无副作用的，权限系统可以给它更宽松的默认策略；tool 有副作用，应该触发确认。把 schema 查询做成 resource 而不是 tool，是一个常见的好实践。</p>
+<p><strong>测试权限边界</strong>。Claude Code 会对 MCP tool 调用做权限判断。测试时不能只测"正常调用成功"，要测"调用被拒绝时 MCP server 怎么响应"，以及"server 返回错误时 Claude Code 怎么展示给用户"。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="第-15-章-plugins-与-skills"><a class="header" href="#第-15-章-plugins-与-skills">第 15 章 Plugins 与 Skills</a></h1>
+<h2 id="一个共同机制两种扩展方式"><a class="header" href="#一个共同机制两种扩展方式">一个共同机制，两种扩展方式</a></h2>
+<p>Plugins 和 skills 是 Claude Code 的高层扩展方式，用来做"工作流复用"和"自定义 slash command"，不是接入外部系统（那是 MCP 的事）。</p>
+<p>两者的底层机制相同：写一个 markdown 文件，系统启动时扫描并编译成命令对象，并入命令注册表。用户用起来和内建命令一样，感知不到区别。</p>
+<h2 id="skill-是什么"><a class="header" href="#skill-是什么">Skill 是什么</a></h2>
+<p>一个 skill 就是一个 <code>SKILL.md</code> 文件，加上可选的辅助文件（脚本、模板、参考资料）。</p>
+<p>文件头部的 frontmatter 控制这个 skill 的行为：</p>
+<ul>
+<li><code>whenToUse</code>：告诉系统什么情况下应该用这个 skill</li>
+<li><code>allowedTools</code>：限制 skill 只能调用哪些工具</li>
+<li><code>model</code>、<code>effort</code>：指定用什么模型、花多大力气</li>
+<li><code>context: fork</code>：在独立的 subagent 里执行，不污染主上下文</li>
+</ul>
+<p>skill 加载时会被估算 token，纳入系统整体的上下文预算计算。如果 skill 文件太大，就会影响每次会话能用的上下文空间。</p>
+<p>skill 适合封装"Claude Code 自己能完成的工作流"，比如"按这套标准审查 PR"、"用这个格式生成报告"。如果要接入 Claude Code 本身没有能力触达的外部系统（比如数据库、内部 API），那是 MCP 的事，不是 skill 能做的。</p>
+<h2 id="plugin-是什么"><a class="header" href="#plugin-是什么">Plugin 是什么</a></h2>
+<p>Plugin 是 skill 的打包形式。一个 plugin 可以包含多个 skill 和命令，安装之后统一以 plugin 名称作为命令前缀，比如 <code>/review:start</code>、<code>/review:summary</code>。</p>
+<p>和单独的 skill 相比，plugin 多了一个能力：携带 hooks。hooks 是绑定到系统事件的自动触发脚本，不需要用户主动调用。比如每次写文件之前自动跑一次 lint 检查，或者每次会话开始时自动加载某个配置。安装 plugin 之后，这些行为就静默地生效了。</p>
+<h2 id="为什么扩展内容也要遵守系统规则"><a class="header" href="#为什么扩展内容也要遵守系统规则">为什么扩展内容也要遵守系统规则</a></h2>
+<p>Skill 的 <code>allowedTools</code> 限制工具调用，skill 的 token 估算纳入预算，plugin 的 hooks 走统一的 hook 机制——这些不是限制扩展能力，而是让扩展内容能被系统治理。</p>
+<p>如果 skill 可以绕过权限检查，一个写得粗糙的第三方 skill 就能在你不知情的情况下做任何事。把扩展纳入同一套规则，是扩展生态能健康运作的前提。</p>
+<h2 id="写-skill-的几个关键点"><a class="header" href="#写-skill-的几个关键点">写 Skill 的几个关键点</a></h2>
+<p><strong><code>whenToUse</code> 写清楚</strong>。这个字段告诉系统什么情况下应该用这个 skill，写得模糊的话，系统要么永远用、要么永远不用。要具体描述触发场景，比如"当用户要审查 PR 时"，而不是"代码相关任务"。</p>
+<p><strong>控制 token 体积</strong>。Skill 文件加载进上下文，如果很大，每次会话的上下文预算都会受影响。只放必要的指导，参考资料用单独的 references 文件，不要全塞进 <code>SKILL.md</code>。</p>
+<p><strong><code>allowedTools</code> 不要留空</strong>。不限制 allowed tools 的 skill 可以调用任何工具，包括你没想到的。明确列出这个 skill 需要的工具，既是安全考虑，也让别人一眼看清楚它的能力边界。</p>
+<p><strong>考虑用 <code>context: fork</code></strong>。如果 skill 执行的任务比较长、会产生大量中间输出，用 fork 让它在独立的 subagent 里执行，主对话的上下文不会被污染。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="第-16-章-config-与-feature-flags"><a class="header" href="#第-16-章-config-与-feature-flags">第 16 章 Config 与 Feature Flags</a></h1>
+<h2 id="不只是参数配置"><a class="header" href="#不只是参数配置">不只是参数配置</a></h2>
+<p>Claude Code 的配置系统做两件事：控制运行时参数（超时时间、模型选择、各种开关），以及通过 feature flag 控制哪些功能对哪些用户可见。后者让同一份代码可以对外表现出不同的产品形态——外部公开版、内部开发版、实验功能版、组织定制版，功能集各不相同，但底层都是同一套代码。</p>
+<h2 id="feature-flag-怎么工作"><a class="header" href="#feature-flag-怎么工作">Feature Flag 怎么工作</a></h2>
+<p>Feature flag 的判断发生在命令注册、工具初始化的时候，不是运行时的 if/else。</p>
+<p>Flag 为 false 时，模块根本不加载，命令不出现在注册表里，Tab 补全里也看不到。工具层同理——某些工具的存在本身，受 feature flag 控制。</p>
+<p>这种设计有一个好处：不同构建版本的包体积可以差异很大。外部版不会携带任何内部功能的代码，而不只是把它们隐藏起来。</p>
+<h2 id="配置的层级"><a class="header" href="#配置的层级">配置的层级</a></h2>
+<p>配置有三个层级：用户级（本地全局生效）、项目级（只在当前项目生效）、组织级（通过管理平台下发）。</p>
+<p>低层级的配置可以被高层级覆盖。组织可以锁定某些配置项，让用户无法修改。这对企业部署很重要：组织可以强制某些安全策略，同时让用户保留个性化配置的空间。</p>
+<h2 id="一份代码多条产品线"><a class="header" href="#一份代码多条产品线">一份代码，多条产品线</a></h2>
+<p>如果没有 feature flag，维护多个产品版本的常见做法是拉多个 fork——外部版一个、内部版一个、实验版一个，各自维护。问题是每次改一个核心功能，所有 fork 都要同步，成本越来越高。</p>
+<p>Feature flag 的方案是：只有一份代码，差异全部做成开关，主干统一迭代，不同产品线通过配置区分。代价是代码里会散落着各种条件判断，理解某个功能的完整行为需要知道在哪些 flag 组合下它是开着的。但对于需要同时维护多个产品版本的系统来说，这个复杂度是值得的。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="第-17-章-remotebridgedaemonbg-sessions"><a class="header" href="#第-17-章-remotebridgedaemonbg-sessions">第 17 章 Remote、Bridge、Daemon、Bg Sessions</a></h1>
+<h2 id="claude-code-不只是一个对话窗口"><a class="header" href="#claude-code-不只是一个对话窗口">Claude Code 不只是一个对话窗口</a></h2>
+<p>大多数时候你用 Claude Code 的方式是：打开终端，开始对话，关掉终端，结束。</p>
+<p>但 Claude Code 还支持几种不同的运行模式：</p>
+<ul>
+<li><strong>Bg Sessions（后台会话）</strong>：任务放到后台运行，关掉终端也不会停。可以随时用 <code>attach</code> 重新连上查看进度，用 <code>logs</code> 看历史输出，用 <code>kill</code> 终止。适合耗时较长的任务。</li>
+<li><strong>Bridge</strong>：让另一个程序通过标准协议控制 Claude Code。VS Code 插件就是走这条路和 Claude Code 通信的。Bridge 模式有独立的权限回调机制，IDE 可以拦截权限确认并自行处理。</li>
+<li><strong>Daemon</strong>：一个持续运行的后台进程，负责管理多个 Claude Code 会话的生命周期。适合需要同时跑多个会话、或者需要跨会话保持状态的场景。</li>
+<li><strong>Remote Control</strong>：从远端向本地的 Claude Code 实例发送指令，适合嵌入 CI/CD 流程或自动化脚本。</li>
+</ul>
+<h2 id="为什么这些模式在入口层分流"><a class="header" href="#为什么这些模式在入口层分流">为什么这些模式在入口层分流</a></h2>
+<p>这些运行模式有一个共同点：它们的初始化要求和普通交互模式不同。</p>
+<p>Daemon 需要比普通模式更早加载某些配置。Bridge 需要注册特殊的权限回调。后台会话需要把输出重定向到文件，不往 terminal 写。</p>
+<p>如果把这些都当成普通命令处理，初始化过程里就会充满"如果是 bridge 模式就做这个，如果是 daemon 就做那个"的判断，代码会很乱。</p>
+<p>入口层分流让每种模式都走自己的初始化路径，互不干扰。普通对话模式不会加载 bridge 相关的代码，bridge 模式不会走普通对话的初始化流程。</p>
+<h2 id="这些模式和-task-体系的关系"><a class="header" href="#这些模式和-task-体系的关系">这些模式和 task 体系的关系</a></h2>
+<p>后台会话、remote agent 这些都和第 9 章讲的 task 体系相关。<code>remote_agent</code> 类型的 task 就是在远程环境里运行的 agent，通过 bridge 或 remote 机制通信。</p>
+<p>从用户角度看，管理一个后台 session 和管理一个后台 task 体验类似：都可以 attach、kill、查看 logs。这是因为底层用的是同一套机制。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>
