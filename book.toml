@@ -1,0 +1,9 @@
+[book]
+title = "Claude Code 功能设计与实现"
+authors = ["liaoandi"]
+language = "zh"
+src = "src"
+
+[output.html]
+git-repository-url = "https://github.com/liaoandi/claude-code-insights"
+git-repository-icon = "fa-github"
