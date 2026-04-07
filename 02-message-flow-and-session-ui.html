@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Plugins 与 Skills - Claude Code 功能设计与实现</title>
+        <title>消息流与会话界面 - Claude Code 功能设计与实现</title>
 
 
         <!-- Custom HTML head -->
@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="00_preface.html">前言</a></li><li class="chapter-item expanded affix "><a href="00b_architecture_overview.html">架构总览</a></li><li class="chapter-item expanded affix "><li class="part-title">主交互功能</li><li class="chapter-item expanded "><a href="01_dialog_and_command_input.html"><strong aria-hidden="true">1.</strong> 对话与命令输入</a></li><li class="chapter-item expanded "><a href="02_message_flow_and_session_ui.html"><strong aria-hidden="true">2.</strong> 消息流与会话界面</a></li><li class="chapter-item expanded "><a href="03_slash_commands.html"><strong aria-hidden="true">3.</strong> Slash Commands 功能族</a></li><li class="chapter-item expanded affix "><li class="part-title">代码操作功能</li><li class="chapter-item expanded "><a href="04_read_search_and_context.html"><strong aria-hidden="true">4.</strong> 读文件、搜内容、找文件</a></li><li class="chapter-item expanded "><a href="05_editing_and_diff.html"><strong aria-hidden="true">5.</strong> 改文件与 Diff 展示</a></li><li class="chapter-item expanded "><a href="06_shell_execution.html"><strong aria-hidden="true">6.</strong> Shell 执行</a></li><li class="chapter-item expanded affix "><li class="part-title">任务控制功能</li><li class="chapter-item expanded "><a href="07_plan_mode.html"><strong aria-hidden="true">7.</strong> Plan Mode</a></li><li class="chapter-item expanded "><a href="08_permissions_and_approval.html"><strong aria-hidden="true">8.</strong> Permissions 与 Approval</a></li><li class="chapter-item expanded "><a href="09_tasks_agents_and_teammates.html"><strong aria-hidden="true">9.</strong> Task、Agent、Teammate</a></li><li class="chapter-item expanded affix "><li class="part-title">记忆与上下文功能</li><li class="chapter-item expanded "><a href="10_memory.html"><strong aria-hidden="true">10.</strong> Memory 功能</a></li><li class="chapter-item expanded "><a href="11_session_resume_history.html"><strong aria-hidden="true">11.</strong> Session、Resume、History</a></li><li class="chapter-item expanded "><a href="12_context_management.html"><strong aria-hidden="true">12.</strong> Context 管理</a></li><li class="chapter-item expanded affix "><li class="part-title">外部连接能力</li><li class="chapter-item expanded "><a href="13_web_and_external_info.html"><strong aria-hidden="true">13.</strong> Web 访问与搜索</a></li><li class="chapter-item expanded "><a href="14_mcp.html"><strong aria-hidden="true">14.</strong> MCP</a></li><li class="chapter-item expanded "><a href="15_plugins_and_skills.html" class="active"><strong aria-hidden="true">15.</strong> Plugins 与 Skills</a></li><li class="chapter-item expanded affix "><li class="part-title">运行环境功能</li><li class="chapter-item expanded "><a href="16_config_and_feature_flags.html"><strong aria-hidden="true">16.</strong> Config 与 Feature Flags</a></li><li class="chapter-item expanded "><a href="17_remote_bridge_daemon_bg_sessions.html"><strong aria-hidden="true">17.</strong> Remote、Bridge、Daemon、Bg Sessions</a></li><li class="chapter-item expanded affix "><li class="part-title">结语</li><li class="chapter-item expanded "><a href="18_conclusion.html"><strong aria-hidden="true">18.</strong> 从这些设计里读到什么</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="00-preface.html">前言</a></li><li class="chapter-item expanded affix "><a href="00b-architecture-overview.html">架构总览</a></li><li class="chapter-item expanded affix "><li class="part-title">主交互功能</li><li class="chapter-item expanded "><a href="01-dialog-and-command-input.html"><strong aria-hidden="true">1.</strong> 对话与命令输入</a></li><li class="chapter-item expanded "><a href="02-message-flow-and-session-ui.html" class="active"><strong aria-hidden="true">2.</strong> 消息流与会话界面</a></li><li class="chapter-item expanded "><a href="03-slash-commands.html"><strong aria-hidden="true">3.</strong> Slash Commands 功能族</a></li><li class="chapter-item expanded affix "><li class="part-title">代码操作功能</li><li class="chapter-item expanded "><a href="04-read-search-and-context.html"><strong aria-hidden="true">4.</strong> 读文件、搜内容、找文件</a></li><li class="chapter-item expanded "><a href="05-editing-and-diff.html"><strong aria-hidden="true">5.</strong> 改文件与 Diff 展示</a></li><li class="chapter-item expanded "><a href="06-shell-execution.html"><strong aria-hidden="true">6.</strong> Shell 执行</a></li><li class="chapter-item expanded affix "><li class="part-title">任务控制功能</li><li class="chapter-item expanded "><a href="07-plan-mode.html"><strong aria-hidden="true">7.</strong> Plan Mode</a></li><li class="chapter-item expanded "><a href="08-permissions-and-approval.html"><strong aria-hidden="true">8.</strong> Permissions 与 Approval</a></li><li class="chapter-item expanded "><a href="09-tasks-agents-and-teammates.html"><strong aria-hidden="true">9.</strong> Task、Agent、Teammate</a></li><li class="chapter-item expanded affix "><li class="part-title">记忆与上下文功能</li><li class="chapter-item expanded "><a href="10-memory.html"><strong aria-hidden="true">10.</strong> Memory 功能</a></li><li class="chapter-item expanded "><a href="11-session-resume-history.html"><strong aria-hidden="true">11.</strong> Session、Resume、History</a></li><li class="chapter-item expanded "><a href="12-context-management.html"><strong aria-hidden="true">12.</strong> Context 管理</a></li><li class="chapter-item expanded affix "><li class="part-title">外部连接能力</li><li class="chapter-item expanded "><a href="13-web-and-external-info.html"><strong aria-hidden="true">13.</strong> Web 访问与搜索</a></li><li class="chapter-item expanded "><a href="14-mcp.html"><strong aria-hidden="true">14.</strong> MCP</a></li><li class="chapter-item expanded "><a href="15-plugins-and-skills.html"><strong aria-hidden="true">15.</strong> Plugins 与 Skills</a></li><li class="chapter-item expanded affix "><li class="part-title">运行环境功能</li><li class="chapter-item expanded "><a href="16-config-and-feature-flags.html"><strong aria-hidden="true">16.</strong> Config 与 Feature Flags</a></li><li class="chapter-item expanded "><a href="17-remote-bridge-daemon-bg-sessions.html"><strong aria-hidden="true">17.</strong> Remote、Bridge、Daemon、Bg Sessions</a></li><li class="chapter-item expanded affix "><li class="part-title">结语</li><li class="chapter-item expanded "><a href="18-conclusion.html"><strong aria-hidden="true">18.</strong> 从这些设计里读到什么</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -176,17 +176,35 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="plugins-与-skills"><a class="header" href="#plugins-与-skills">Plugins 与 Skills</a></h1>
+                        <h1 id="第-2-章-消息流与会话界面"><a class="header" href="#第-2-章-消息流与会话界面">第 2 章 消息流与会话界面</a></h1>
+<h2 id="消息是统一展示协议不是-ui-装饰"><a class="header" href="#消息是统一展示协议不是-ui-装饰">消息是统一展示协议，不是 UI 装饰</a></h2>
+<p>Claude Code 的界面看起来像聊天，但它的消息不是普通聊天消息。工具调用、文件变更、权限拒绝、diff、后台任务通知——所有这些都必须变成消息才能显示出来。</p>
+<p>这个设计的关键在于：工具不是"返回数据，然后让 UI 猜怎么画"，而是工具协议本身就包含展示方式。每个工具都要声明三件事：调用时显示什么、结果怎么显示、失败时显示什么。消息层和工具层之间有明确的协议边界，不是松散的耦合。</p>
+<p>这就是为什么 Claude Code 的界面更像任务控制台：你能持续看到 agent 在做什么，而不是只看到最终答案。</p>
+<h2 id="消息到达界面之前经历了什么"><a class="header" href="#消息到达界面之前经历了什么">消息到达界面之前经历了什么</a></h2>
+<p>原始消息和你看到的消息之间，有一个处理管道：</p>
+<ol>
+<li><strong>normalize</strong>：把不同来源、不同格式的消息统一成标准结构</li>
+<li><strong>reorder</strong>：调整显示顺序——某些消息在逻辑时序上和生成时序不一样</li>
+<li><strong>grouping</strong>：把相关消息归组，比如一次工具调用和它的结果放在一起</li>
+<li><strong>collapse</strong>：搜索结果、读取内容、后台任务通知这类输出默认折叠，不撑开界面</li>
+</ol>
+<p>Brief 模式还有额外的过滤逻辑，会把很多中间过程的文本内容丢掉，只保留关键输出。</p>
+<p>这个管道的存在说明一件事：显示给用户的会话轨迹是经过整理的，不是原始执行过程的直接映射。整理的目的是让人看得清楚，而不是完整记录每一个细节。</p>
+<h2 id="为什么要做成统一消息流"><a class="header" href="#为什么要做成统一消息流">为什么要做成统一消息流</a></h2>
+<p>不这么做的后果是：每类功能都得自己搭 UI 状态，各搭各的，维护成本高，体验也会碎片化。</p>
+<p>做成统一消息流的好处很实际：会话可以回放，因为所有执行历史都在消息里；状态可以审计，权限拒绝、工具调用、diff 都有记录；工具不需要自己实现展示逻辑，复用同一套容器就行。</p>
+<p>还有一个间接好处：消息流的设计让 remote viewer 场景成为可能——另一个客户端可以订阅同一条消息流，实时看到 agent 在做什么，不需要重新执行任何东西。</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="14_mcp.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="01-dialog-and-command-input.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="16_config_and_feature_flags.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="03-slash-commands.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -196,11 +214,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="14_mcp.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="01-dialog-and-command-input.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="16_config_and_feature_flags.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="03-slash-commands.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

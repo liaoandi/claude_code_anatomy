@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Permissions 与 Approval - Claude Code 功能设计与实现</title>
+        <title>MCP - Claude Code 功能设计与实现</title>
 
 
         <!-- Custom HTML head -->
@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="00_preface.html">前言</a></li><li class="chapter-item expanded affix "><a href="00b_architecture_overview.html">架构总览</a></li><li class="chapter-item expanded affix "><li class="part-title">主交互功能</li><li class="chapter-item expanded "><a href="01_dialog_and_command_input.html"><strong aria-hidden="true">1.</strong> 对话与命令输入</a></li><li class="chapter-item expanded "><a href="02_message_flow_and_session_ui.html"><strong aria-hidden="true">2.</strong> 消息流与会话界面</a></li><li class="chapter-item expanded "><a href="03_slash_commands.html"><strong aria-hidden="true">3.</strong> Slash Commands 功能族</a></li><li class="chapter-item expanded affix "><li class="part-title">代码操作功能</li><li class="chapter-item expanded "><a href="04_read_search_and_context.html"><strong aria-hidden="true">4.</strong> 读文件、搜内容、找文件</a></li><li class="chapter-item expanded "><a href="05_editing_and_diff.html"><strong aria-hidden="true">5.</strong> 改文件与 Diff 展示</a></li><li class="chapter-item expanded "><a href="06_shell_execution.html"><strong aria-hidden="true">6.</strong> Shell 执行</a></li><li class="chapter-item expanded affix "><li class="part-title">任务控制功能</li><li class="chapter-item expanded "><a href="07_plan_mode.html"><strong aria-hidden="true">7.</strong> Plan Mode</a></li><li class="chapter-item expanded "><a href="08_permissions_and_approval.html" class="active"><strong aria-hidden="true">8.</strong> Permissions 与 Approval</a></li><li class="chapter-item expanded "><a href="09_tasks_agents_and_teammates.html"><strong aria-hidden="true">9.</strong> Task、Agent、Teammate</a></li><li class="chapter-item expanded affix "><li class="part-title">记忆与上下文功能</li><li class="chapter-item expanded "><a href="10_memory.html"><strong aria-hidden="true">10.</strong> Memory 功能</a></li><li class="chapter-item expanded "><a href="11_session_resume_history.html"><strong aria-hidden="true">11.</strong> Session、Resume、History</a></li><li class="chapter-item expanded "><a href="12_context_management.html"><strong aria-hidden="true">12.</strong> Context 管理</a></li><li class="chapter-item expanded affix "><li class="part-title">外部连接能力</li><li class="chapter-item expanded "><a href="13_web_and_external_info.html"><strong aria-hidden="true">13.</strong> Web 访问与搜索</a></li><li class="chapter-item expanded "><a href="14_mcp.html"><strong aria-hidden="true">14.</strong> MCP</a></li><li class="chapter-item expanded "><a href="15_plugins_and_skills.html"><strong aria-hidden="true">15.</strong> Plugins 与 Skills</a></li><li class="chapter-item expanded affix "><li class="part-title">运行环境功能</li><li class="chapter-item expanded "><a href="16_config_and_feature_flags.html"><strong aria-hidden="true">16.</strong> Config 与 Feature Flags</a></li><li class="chapter-item expanded "><a href="17_remote_bridge_daemon_bg_sessions.html"><strong aria-hidden="true">17.</strong> Remote、Bridge、Daemon、Bg Sessions</a></li><li class="chapter-item expanded affix "><li class="part-title">结语</li><li class="chapter-item expanded "><a href="18_conclusion.html"><strong aria-hidden="true">18.</strong> 从这些设计里读到什么</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="00-preface.html">前言</a></li><li class="chapter-item expanded affix "><a href="00b-architecture-overview.html">架构总览</a></li><li class="chapter-item expanded affix "><li class="part-title">主交互功能</li><li class="chapter-item expanded "><a href="01-dialog-and-command-input.html"><strong aria-hidden="true">1.</strong> 对话与命令输入</a></li><li class="chapter-item expanded "><a href="02-message-flow-and-session-ui.html"><strong aria-hidden="true">2.</strong> 消息流与会话界面</a></li><li class="chapter-item expanded "><a href="03-slash-commands.html"><strong aria-hidden="true">3.</strong> Slash Commands 功能族</a></li><li class="chapter-item expanded affix "><li class="part-title">代码操作功能</li><li class="chapter-item expanded "><a href="04-read-search-and-context.html"><strong aria-hidden="true">4.</strong> 读文件、搜内容、找文件</a></li><li class="chapter-item expanded "><a href="05-editing-and-diff.html"><strong aria-hidden="true">5.</strong> 改文件与 Diff 展示</a></li><li class="chapter-item expanded "><a href="06-shell-execution.html"><strong aria-hidden="true">6.</strong> Shell 执行</a></li><li class="chapter-item expanded affix "><li class="part-title">任务控制功能</li><li class="chapter-item expanded "><a href="07-plan-mode.html"><strong aria-hidden="true">7.</strong> Plan Mode</a></li><li class="chapter-item expanded "><a href="08-permissions-and-approval.html"><strong aria-hidden="true">8.</strong> Permissions 与 Approval</a></li><li class="chapter-item expanded "><a href="09-tasks-agents-and-teammates.html"><strong aria-hidden="true">9.</strong> Task、Agent、Teammate</a></li><li class="chapter-item expanded affix "><li class="part-title">记忆与上下文功能</li><li class="chapter-item expanded "><a href="10-memory.html"><strong aria-hidden="true">10.</strong> Memory 功能</a></li><li class="chapter-item expanded "><a href="11-session-resume-history.html"><strong aria-hidden="true">11.</strong> Session、Resume、History</a></li><li class="chapter-item expanded "><a href="12-context-management.html"><strong aria-hidden="true">12.</strong> Context 管理</a></li><li class="chapter-item expanded affix "><li class="part-title">外部连接能力</li><li class="chapter-item expanded "><a href="13-web-and-external-info.html"><strong aria-hidden="true">13.</strong> Web 访问与搜索</a></li><li class="chapter-item expanded "><a href="14-mcp.html" class="active"><strong aria-hidden="true">14.</strong> MCP</a></li><li class="chapter-item expanded "><a href="15-plugins-and-skills.html"><strong aria-hidden="true">15.</strong> Plugins 与 Skills</a></li><li class="chapter-item expanded affix "><li class="part-title">运行环境功能</li><li class="chapter-item expanded "><a href="16-config-and-feature-flags.html"><strong aria-hidden="true">16.</strong> Config 与 Feature Flags</a></li><li class="chapter-item expanded "><a href="17-remote-bridge-daemon-bg-sessions.html"><strong aria-hidden="true">17.</strong> Remote、Bridge、Daemon、Bg Sessions</a></li><li class="chapter-item expanded affix "><li class="part-title">结语</li><li class="chapter-item expanded "><a href="18-conclusion.html"><strong aria-hidden="true">18.</strong> 从这些设计里读到什么</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -176,17 +176,37 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="permissions-与-approval"><a class="header" href="#permissions-与-approval">Permissions 与 Approval</a></h1>
+                        <h1 id="第-14-章-mcp"><a class="header" href="#第-14-章-mcp">第 14 章 MCP</a></h1>
+<h2 id="为什么需要一个扩展协议"><a class="header" href="#为什么需要一个扩展协议">为什么需要一个扩展协议</a></h2>
+<p>Claude Code 内建的工具覆盖了文件、shell、web——这已经很强了，但总有它覆盖不到的地方：你的数据库、你们公司的内部 API、特定的 SaaS 工具。</p>
+<p>一种解法是：把这些都硬编码进 Claude Code。但这显然不现实，外部系统千变万化，不可能全部内建。</p>
+<p>MCP（Model Context Protocol）是另一种解法：定义一套协议，让外部系统自己实现这套协议，然后在运行时接入。Claude Code 只需要理解协议，不需要提前认识每个具体的系统。</p>
+<h2 id="mcp-工具和内建工具有什么不同"><a class="header" href="#mcp-工具和内建工具有什么不同">MCP 工具和内建工具有什么不同</a></h2>
+<p>内建工具在编译时就确定了——代码里写死了有哪些工具、每个工具能做什么。WebFetchTool 就是典型的内建工具：功能固定，适合抓公开网页，但没有认证能力。</p>
+<p>MCP 工具是运行时动态出现的。你连接一个 MCP server，Claude Code 把它声明的能力注册进来，之后就可以调用了。断开连接，这些能力就消失了。需要认证的系统——数据库、内部 API、需要登录的 SaaS——走 MCP 更合适：认证逻辑放在你的 MCP server 里，Claude Code 这边只看到一个普通的 tool 调用。</p>
+<p>实现上，<code>MCPTool</code> 是一个模板——名字、描述、参数 schema、执行逻辑，都在连接时被 server 返回的信息覆盖。同一个模板，连接不同的 MCP server，就变成不同的工具。</p>
+<h2 id="toolresourcecommand-三种能力"><a class="header" href="#toolresourcecommand-三种能力">Tool、Resource、Command 三种能力</a></h2>
+<p>说"MCP server 提供工具"其实只说了一半。协议定义了三种能力，区别在于谁来触发、发生在什么阶段：</p>
+<ul>
+<li><strong>Tool</strong>：模型决定调用。任务执行过程中，模型判断需要做某件事，主动调用 tool，拿到结果再继续。比如查询数据库、发送消息。有参数、有返回值、可能有副作用。</li>
+<li><strong>Resource</strong>：模型主动读取，用来获取背景信息。不产生副作用，更像一个可以按需读取的文件——比如数据库的 schema、项目文档的目录。风险比 tool 低，权限策略也可以更宽松。</li>
+<li><strong>Command</strong>：用户触发，不是模型自己决定的。MCP server 暴露的 command 会直接并入 Claude Code 的命令注册表，用户可以像用内建的 <code>/xxx</code> 一样调用它。</li>
+</ul>
+<h2 id="写-mcp-server-的几个关键点"><a class="header" href="#写-mcp-server-的几个关键点">写 MCP Server 的几个关键点</a></h2>
+<p><strong>认证在 server 侧处理</strong>。MCP server 是你自己控制的进程，把认证逻辑放在里面。Claude Code 这边不需要知道你的 API key 或者 OAuth token，它只看到工具调用和返回结果。</p>
+<p><strong>Tool schema 要精确</strong>。MCP 工具的参数 schema 最终决定模型怎么调用这个工具。太宽松（比如只有一个 <code>query: string</code>），模型会猜参数格式，结果不稳定。每个字段都应该有明确的类型和描述。</p>
+<p><strong>区分 tool 和 resource</strong>。能用 resource 表达的数据就不要做成 tool。resource 是只读的、无副作用的，权限系统可以给它更宽松的默认策略；tool 有副作用，应该触发确认。把 schema 查询做成 resource 而不是 tool，是一个常见的好实践。</p>
+<p><strong>测试权限边界</strong>。Claude Code 会对 MCP tool 调用做权限判断。测试时不能只测"正常调用成功"，要测"调用被拒绝时 MCP server 怎么响应"，以及"server 返回错误时 Claude Code 怎么展示给用户"。</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="07_plan_mode.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="13-web-and-external-info.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="09_tasks_agents_and_teammates.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="15-plugins-and-skills.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -196,11 +216,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="07_plan_mode.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="13-web-and-external-info.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="09_tasks_agents_and_teammates.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="15-plugins-and-skills.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
