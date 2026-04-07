@@ -5,5 +5,5 @@ language = "zh"
 src = "src"
 
 [output.html]
-git-repository-url = "https://github.com/liaoandi/claude-code-insights"
+git-repository-url = "https://github.com/liaoandi/claude_code_insights"
 git-repository-icon = "fa-github"
