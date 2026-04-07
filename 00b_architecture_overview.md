@@ -49,5 +49,4 @@
 - 第 7-9 章：控制层——plan mode、权限、任务
 - 第 10-12 章：记忆——memory、session、context
 - 第 13-15 章：向外延伸——web、MCP、plugins/skills
-- 第 16-18 章：运行环境——config、后台模式、app 壳
-- 第 19 章：自己扩展 Claude Code
+- 第 16-17 章：运行环境——config、后台模式

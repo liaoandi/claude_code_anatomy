@@ -1,7 +1,5 @@
 # Claude Code 功能设计与实现
 
-这是一套基于本地源码树 `/Users/antonio/Desktop/cc2.1.88/all/src` 编写的 Claude Code 功能导读。
-
 目标不是按目录解释每个文件，而是回答：
 - Claude Code 有哪些核心功能
 - 这些功能怎么设计和实现

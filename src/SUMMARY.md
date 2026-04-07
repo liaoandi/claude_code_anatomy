@@ -37,3 +37,7 @@
 
 - [Config 与 Feature Flags](16_config_and_feature_flags.md)
 - [Remote、Bridge、Daemon、Bg Sessions](17_remote_bridge_daemon_bg_sessions.md)
+
+# 结语
+
+- [从这些设计里读到什么](18_conclusion.md)
