@@ -147,7 +147,7 @@
                         <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                        <a href="https://github.com/liaoandi/claude-code-insights" title="Git repository" aria-label="Git repository">
+                        <a href="https://github.com/liaoandi/claude_code_insights" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
 
@@ -176,25 +176,7 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="第-4-章-读文件搜内容找文件"><a class="header" href="#第-4-章-读文件搜内容找文件">第 4 章 读文件、搜内容、找文件</a></h1>
-<p>Claude Code 把文件操作拆成了三个专门工具：FileReadTool 读取文件内容，GrepTool 按关键词搜索，GlobTool 按路径模式查找文件。三者各司其职，也经常配合使用。</p>
-<h2 id="为什么读文件不直接用-cat"><a class="header" href="#为什么读文件不直接用-cat">为什么读文件不直接用 cat</a></h2>
-<p>最简单的做法是：让 agent 自己跑 <code>cat</code>、<code>grep</code>、<code>find</code>。这完全可行，但 Claude Code 没有这么做。</p>
-<p>原因是：直接用 shell 命令读文件，系统对这件事没有任何感知。不知道读了多少 token、不知道这个文件有没有超大、不知道路径是不是安全的，也没办法针对不同文件类型做特殊处理。出了问题，什么日志都没有。</p>
-<p>所以 Claude Code 把读文件做成了专门的工具 FileReadTool，处理了一批 shell 命令处理不了的事情。</p>
-<ul>
-<li><strong>路径安全</strong>：<code>/dev/zero</code> 这样的特殊文件，读了就会无限阻塞进程，需要在读之前就识别并拦截。</li>
-<li><strong>Token 预算</strong>：大文件不能整块塞进上下文，工具会根据当前 token 预算决定读多少，或者建议用 offset/limit 分段读。</li>
-<li><strong>文件类型处理</strong>：PDF、Jupyter notebook、图片——这些不能像普通文本一样处理，需要走各自的解析逻辑才能变成模型能理解的内容。</li>
-<li><strong>读取事件通知</strong>：读文件这个动作会通知给其他服务，比如 context 预算追踪，这样系统能知道"刚才读了什么，花了多少 token"。</li>
-</ul>
-<h2 id="搜索有两个专门工具"><a class="header" href="#搜索有两个专门工具">搜索有两个专门工具</a></h2>
-<p><code>grep</code> 和 <code>find</code> 也是同样的道理——Claude Code 没有让 agent 直接用它们，而是做了两个专门的搜索工具：GrepTool 和 GlobTool。</p>
-<p>GrepTool 是"找内容"：你知道要找什么，但不知道它在哪个文件里。比如想找所有调用了某个函数的地方，或者想确认某个变量名在哪里被定义。搜索范围只限于你自己的代码，不会把 <code>node_modules</code> 这类依赖目录里的东西也翻出来。匹配太多时会截断，防止把上下文打爆。</p>
-<p>GlobTool 是"找文件"：你知道要找什么类型的文件，但不知道具体有哪些。比如想列出所有测试文件（<code>**/*.test.ts</code>）、所有 React 组件（<code>src/components/**/*.tsx</code>），或者某个模块的所有入口文件（<code>src/**/index.*</code>）。结果按修改时间排序，最近改动的排在前面。</p>
-<h2 id="三个工具配合使用"><a class="header" href="#三个工具配合使用">三个工具配合使用</a></h2>
-<p>实际使用中，FileReadTool、GrepTool、GlobTool 这三个工具经常配合：先用 GlobTool 找到相关文件列表，再用 GrepTool 确认哪些文件里有目标内容，最后用 FileReadTool 读取具体内容。</p>
-<p>这个分层查找的过程减少了不必要的 token 消耗——不需要把每个可能相关的文件都读进来，而是先缩小范围再精读。</p>
+                        <h1 id="读文件搜内容找文件"><a class="header" href="#读文件搜内容找文件">读文件、搜内容、找文件</a></h1>
 
                     </main>
 

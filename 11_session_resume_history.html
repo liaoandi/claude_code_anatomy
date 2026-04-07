@@ -147,7 +147,7 @@
                         <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                        <a href="https://github.com/liaoandi/claude-code-insights" title="Git repository" aria-label="Git repository">
+                        <a href="https://github.com/liaoandi/claude_code_insights" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
 
@@ -176,22 +176,7 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="第-11-章-sessionresumehistory"><a class="header" href="#第-11-章-sessionresumehistory">第 11 章 Session、Resume、History</a></h1>
-<h2 id="三个相关但不同的概念"><a class="header" href="#三个相关但不同的概念">三个相关但不同的概念</a></h2>
-<p>Claude Code 有三种方式处理"过去发生的事"，用途各不相同：</p>
-<ul>
-<li><strong>Input History</strong>：你之前输入过的内容。上下方向键可以翻，跨会话也能用。就像 shell 的历史记录，只存输入，不存对话内容。</li>
-<li><strong>Session Resume</strong>：恢复之前的一次完整对话，包括所有消息、工具调用、上下文。用 <code>/resume</code> 或者启动时选择历史线程。</li>
-<li><strong>Remote History</strong>：在 remote viewer 场景里，往上滚可以看到更早的消息，按需加载，不是一次性全部拉取。</li>
-</ul>
-<h2 id="为什么不把所有历史都放在上下文里"><a class="header" href="#为什么不把所有历史都放在上下文里">为什么不把所有历史都放在上下文里</a></h2>
-<p>一个朴素的想法是：把整个对话历史都放在当前上下文里，这样 agent 什么都"记得"。</p>
-<p>这在短会话里没问题。但长会话积累的历史很快就会超出模型上下文窗口的限制，而且把几百轮历史全塞进去，大部分都是不相关的噪声，反而让 agent 更难找到真正有用的信息。</p>
-<p>Claude Code 的处理方式是分层存储：最近的消息在上下文里，更老的消息在磁盘上，需要的时候按需加载。Session Resume 是把一个旧的上下文重新激活，不是把所有历史合并进来。</p>
-<h2 id="远程历史的懒加载"><a class="header" href="#远程历史的懒加载">远程历史的懒加载</a></h2>
-<p>在有远程会话的场景里，消息历史通过 API 分页加载。初次打开拉取最新的一页，往上滚到一定位置时再拉更老的一页，以此类推。</p>
-<p>这里有一个 UX 细节值得注意：加载更老的消息时，新内容是往上插入的，但界面不应该因此跳动，让用户突然不知道自己在看哪里了。这通过 scroll anchor 机制解决——插入前记住当前可见消息的位置，插入后恢复到相同位置。</p>
-<p>边界状态（正在加载、加载失败、到了最开头）用特殊的 sentinel message 表示，这样 UI 逻辑不需要单独维护这些状态，直接跟着消息流走。</p>
+                        <h1 id="sessionresumehistory"><a class="header" href="#sessionresumehistory">Session、Resume、History</a></h1>
 
                     </main>
 

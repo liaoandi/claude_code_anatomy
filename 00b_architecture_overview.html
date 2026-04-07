@@ -147,7 +147,7 @@
                         <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                        <a href="https://github.com/liaoandi/claude-code-insights" title="Git repository" aria-label="Git repository">
+                        <a href="https://github.com/liaoandi/claude_code_insights" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
 
@@ -177,41 +177,6 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="架构总览"><a class="header" href="#架构总览">架构总览</a></h1>
-<p>理解一个系统最快的方式，是跟着一个具体操作走一遍，看它在系统里经历了什么。</p>
-<h2 id="一次文件编辑发生了什么"><a class="header" href="#一次文件编辑发生了什么">一次文件编辑发生了什么</a></h2>
-<p>假设你让 Claude Code 修改一个文件。从你按下回车，到 diff 出现在界面上，中间经过了这些：</p>
-<p>首先，你的输入被判断为自然语言任务，送给模型处理。模型决定要调用 FileEditTool。</p>
-<p>调用之前，FileEditTool 先问一句：这次编辑，用户允许吗？它检查你的权限规则，如果这个路径在允许范围内，直接继续；如果没有匹配规则，弹出确认框等你决定。</p>
-<p>权限通过后，工具执行编辑：校验 old_string 唯一存在、路径安全、文件没被外部改动，然后写入。</p>
-<p>写入之后，工具把结果打包成消息，包括 diff、成功状态、LSP 诊断信息。消息进入消息流，经过排序和分组，最终显示在你面前。</p>
-<p>如果这次编辑很耗时，或者是子 agent 做的，整个过程被包装成一个 task，有自己的 id 和状态，你可以随时查看进度。</p>
-<p>这一次操作，就触碰了系统里几乎所有的层。</p>
-<h2 id="从这个例子看到的结构"><a class="header" href="#从这个例子看到的结构">从这个例子看到的结构</a></h2>
-<p>把上面的流程抽象出来，就得到了系统的基本分层：</p>
-<ul>
-<li><strong>入口层</strong>：判断你说的是什么、当前是什么运行模式</li>
-<li><strong>命令层</strong>：slash command 的注册和执行</li>
-<li><strong>工具层</strong>：实际干活——FileEditTool、BashTool、WebFetchTool 等</li>
-<li><strong>权限层</strong>：横切所有工具，每次操作前的决策</li>
-<li><strong>消息层</strong>：把工具输出变成统一的消息，进入会话流</li>
-<li><strong>任务层</strong>：长时间执行的统一容器</li>
-<li><strong>状态层</strong>：memory、session、context、config</li>
-</ul>
-<p>这些层不是严格的调用栈，真实代码里会交织。但每层的职责是清楚的，出了问题一般能定位到哪一层在负责。</p>
-<h2 id="一个贯穿始终的设计选择"><a class="header" href="#一个贯穿始终的设计选择">一个贯穿始终的设计选择</a></h2>
-<p>读完这本书，你会发现 Claude Code 一遍一遍地做同一件事：把某种能力从"让模型用 shell 命令临时解决"变成"专门的工具，带权限检查和展示协议"。</p>
-<p>读文件可以跑 <code>cat</code>，但有 FileReadTool。搜索可以跑 <code>grep</code>，但有 GrepTool。联网可以跑 <code>curl</code>，但有 WebFetchTool。</p>
-<p>每次这样做，系统就多了一层，但也多了对这件事的感知和控制：知道花了多少 token、知道用户允不允许、知道怎么展示给用户看。</p>
-<p>理解了这个模式，后面每一章都会变得更好读。</p>
-<h2 id="各章导航"><a class="header" href="#各章导航">各章导航</a></h2>
-<ul>
-<li>第 1-3 章：输入和命令——用户怎么和系统交互</li>
-<li>第 4-6 章：核心工具——读、改、执行</li>
-<li>第 7-9 章：控制层——plan mode、权限、任务</li>
-<li>第 10-12 章：记忆——memory、session、context</li>
-<li>第 13-15 章：向外延伸——web、MCP、plugins/skills</li>
-<li>第 16-17 章：运行环境——config、后台模式</li>
-</ul>
 
                     </main>
 

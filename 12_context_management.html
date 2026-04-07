@@ -147,7 +147,7 @@
                         <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                        <a href="https://github.com/liaoandi/claude-code-insights" title="Git repository" aria-label="Git repository">
+                        <a href="https://github.com/liaoandi/claude_code_insights" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
 
@@ -176,34 +176,7 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="第-12-章-context-管理"><a class="header" href="#第-12-章-context-管理">第 12 章 Context 管理</a></h1>
-<h2 id="上下文窗口是有限资源"><a class="header" href="#上下文窗口是有限资源">上下文窗口是有限资源</a></h2>
-<p>模型能"看到"的内容有上限。对话历史、读进来的文件、工具调用结果、memory 文件、skill 定义——这些都在消耗这个上限。用完了，就没法继续了。</p>
-<p>Claude Code 把这个资源的管理做成了显式功能，而不是让用户自己猜"为什么它突然忘了之前说的话"。</p>
-<h2 id="你能看到上下文花在哪里"><a class="header" href="#你能看到上下文花在哪里">你能看到上下文花在哪里</a></h2>
-<p><code>/context</code> 会显示当前上下文的使用分布：多少在对话历史里，多少在 memory 文件里，多少在 MCP tool 定义里，多少在 skill 里，还有多少剩余。</p>
-<p>这个可视化的价值不是帮你优化 token 用量，而是让系统行为变透明。如果 agent 好像没注意到某件事，你可以看看那件事是不是已经被压缩掉了；如果上下文快满了，你知道该做什么，而不是等到突然报错。</p>
-<h2 id="compact-是怎么工作的"><a class="header" href="#compact-是怎么工作的">Compact 是怎么工作的</a></h2>
-<p>Compact 有两种触发方式：</p>
-<ol>
-<li><strong>手动</strong>：<code>/compact</code> 立即触发，你可以在觉得上下文太乱的时候主动清理。</li>
-<li><strong>自动</strong>：当上下文用量接近模型上限时，系统自动触发一次 compact，然后继续对话。你会在消息流里看到一条提示，说明刚才发生了压缩——不是悄悄进行的。如果不想要自动 compact，可以在设置里关掉。</li>
-</ol>
-<p>压缩的逻辑不是随机丢弃，而是有优先级的：</p>
-<ul>
-<li>最近几轮对话完整保留，不压缩</li>
-<li>工具调用结果保留摘要，原始输出可以丢</li>
-<li>被后续对话引用的内容保留，没有被引用的可以丢</li>
-<li>纯文本的中间回复，多轮合并成摘要</li>
-</ul>
-<p>被压缩的内容会打上标记，界面上能看到"这里有内容被摘要了"，不是悄悄消失。</p>
-<h2 id="context-collapse"><a class="header" href="#context-collapse">Context Collapse</a></h2>
-<p>Context collapse 比 compact 更激进：把多轮内容（包括工具调用链）折叠成一个 summary block。适合长任务的阶段切换点——当前阶段完成了，折叠历史，清空空间，新阶段开始时只保留一个简短的"之前做了什么"的摘要。</p>
-<p>Context collapse 没有用户命令，完全自动触发：系统在每次 API 调用前判断是否需要折叠，也会在遇到上下文溢出错误时自动触发。启用 context collapse 后，自动 compact 会被关掉——两者解决同一个问题，不会同时运行。手动 <code>/compact</code> 不受影响，仍然可用。</p>
-<h2 id="为什么压缩要可见"><a class="header" href="#为什么压缩要可见">为什么压缩要可见</a></h2>
-<p>Compact 可以做成完全静默的——自动触发，不通知用户，对话继续。很多系统就是这样做的。</p>
-<p>问题是：你不知道压缩发生了，也不知道什么被丢掉了。如果因此出了问题——agent 忘了一个重要约束，或者重复做了已经做过的事——你很难判断是 agent 的问题还是上下文压缩导致的问题。</p>
-<p>Claude Code 选择让压缩可见：自动触发时会在消息流里留下记录，被压缩的内容会打上标记，<code>/context</code> 能看到上下文花在哪里。代价是多了一些需要了解的概念，好处是出了问题你知道从哪里查。</p>
+                        <h1 id="context-管理"><a class="header" href="#context-管理">Context 管理</a></h1>
 
                     </main>
 

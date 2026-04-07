@@ -147,7 +147,7 @@
                         <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                        <a href="https://github.com/liaoandi/claude-code-insights" title="Git repository" aria-label="Git repository">
+                        <a href="https://github.com/liaoandi/claude_code_insights" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
 
@@ -176,33 +176,7 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="第-1-章-对话与命令输入"><a class="header" href="#第-1-章-对话与命令输入">第 1 章 对话与命令输入</a></h1>
-<h2 id="两种入口两种职责"><a class="header" href="#两种入口两种职责">两种入口，两种职责</a></h2>
-<p>Claude Code 有两个输入入口：自然语言和 slash command。它们看起来并列，但在系统里承担的角色完全不同。</p>
-<p>自然语言是"告诉 agent 要做什么"，结果由模型决定。slash command 是"触发一个确定性功能"，结果是可预期的。<code>/plan</code> 就是进入 plan mode，不管你怎么说，都是这个结果。</p>
-<p>保留这两个入口，是因为一个好用的 coding agent 需要同时满足两种需求：处理模糊的、表达性的任务，以及执行高频的、确定性的操作。只有自然语言，熟练用户会觉得不够稳；只有命令，又退回了传统 CLI。</p>
-<h2 id="启动的时候发生了什么"><a class="header" href="#启动的时候发生了什么">启动的时候发生了什么</a></h2>
-<p>Claude Code 启动时，第一件事不是加载主程序，而是判断"我现在是什么模式"。</p>
-<ol>
-<li><code>--version</code> 这类查询 flag：不加载任何模块，直接打印退出。</li>
-<li><code>daemon</code>、<code>bridge</code>、<code>ps/logs/attach/kill</code> 这类特殊模式：走各自的初始化路径，不进入普通对话流程。</li>
-<li>普通对话：才继续加载完整的主程序。</li>
-</ol>
-<p>这种分流设计的好处是：不同运行模式的初始化要求差异很大，分流比统一处理要干净得多。冷启动时间也因此更可控——很多模块用动态 <code>import()</code> 懒加载，不需要时根本不加载。</p>
-<h2 id="slash-command-是产品能力目录"><a class="header" href="#slash-command-是产品能力目录">Slash command 是产品能力目录</a></h2>
-<p><code>commands.ts</code> 里的命令注册表已经很大了，涵盖了 <code>/plan</code>、<code>/memory</code>、<code>/compact</code>、<code>/permissions</code>、<code>/mcp</code>、<code>/review</code> 等几十个命令。这个列表本质上就是 Claude Code 想对用户暴露的产品能力目录。</p>
-<p>几个值得注意的设计细节：</p>
-<ol>
-<li>
-<p>命令不是散乱的函数，而是结构化对象。每个命令有类型、描述、参数定义和执行逻辑，统一注册管理。</p>
-</li>
-<li>
-<p>很多命令通过 feature flag 条件注册。feature flag 为 false 时，模块根本不加载，也不会出现在命令列表里。这让同一份代码可以有不同的能力集，内部版和外部版的命令表可以差异很大。</p>
-</li>
-<li>
-<p>插件和 skill 的命令也并入这个注册表，和内建命令统一管理。从用户角度看，它们的体验是一致的；从代码角度看，它们都是命令对象，只是来源不同。</p>
-</li>
-</ol>
+                        <h1 id="对话与命令输入"><a class="header" href="#对话与命令输入">对话与命令输入</a></h1>
 
                     </main>
 
