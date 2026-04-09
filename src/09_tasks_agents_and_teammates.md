@@ -13,7 +13,7 @@ Task 是 Claude Code 对"长时间执行"的统一抽象。每个 task 有唯一
 - **`local_bash`**：本地 shell 命令，最简单，跑完就结束。
 - **`local_agent`**：在本地启动的子 agent，有自己的上下文，可以独立读文件、改文件、跑命令，完成后把结果汇报给主 agent。这是 Claude Code 实现并行工作的基础——多个子 agent 同时处理不同部分，主 agent 汇总结果。
 - **`remote_agent`**：在远程环境启动的 agent，通过 bridge 通信。适合在 CI/CD 环境或者和主机隔离的容器里执行任务。
-- **`in_process_teammate`**：进程内的并行 agent，比 `local_agent` 开销更小，但隔离程度也更低。
+- **`in_process_teammate`**：在同一个进程里运行的并行 agent。和 `local_agent` 的关键区别是：它有自己的消息循环，可以通过 `SendMessage` 和主 agent 实时通信，而不只是在完成后返回结果。适合需要持续协作的场景，代价是隔离程度更低。
 
 ## Agent 能干什么
 
@@ -31,5 +31,7 @@ AgentTool 是 Claude Code 的"让另一个 AI 来做这件事"的工具。
 - 所有长时间操作都可以 attach、kill、查看 logs
 - UI 只需要一套组件来显示任务状态，不管底层是什么
 - 执行者可以替换（比如从 local_agent 换成 remote_agent），UI 不用改
+
+还有一个自动行为：当一个会话里完成了多个 task 之后，系统会自动启动一个验证 agent 回头检查工作质量，不需要用户主动触发。
 
 多了一层抽象，多了复杂度，但换来的是整个系统的可管理性。

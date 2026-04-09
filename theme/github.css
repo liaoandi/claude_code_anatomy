@@ -1,0 +1,235 @@
+/* GitHub-style theme for mdBook */
+
+:root {
+    --sidebar-width: 260px;
+    --page-padding: 32px;
+    --content-max-width: 980px;
+}
+
+/* Light theme - GitHub colors */
+.light {
+    --bg: #ffffff;
+    --fg: #1f2328;
+    --sidebar-bg: #f6f8fa;
+    --sidebar-fg: #1f2328;
+    --sidebar-active: #0969da;
+    --sidebar-spacer: #d0d7de;
+    --links: #0969da;
+    --inline-code-color: #1f2328;
+    --theme-popup-bg: #ffffff;
+    --theme-popup-border: #d0d7de;
+    --quote-bg: #f6f8fa;
+    --quote-border: #d0d7de;
+    --table-border-color: #d0d7de;
+    --table-header-bg: #f6f8fa;
+    --searchbar-border-color: #d0d7de;
+    --searchbar-bg: #f6f8fa;
+}
+
+/* Body */
+html {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    font-size: 16px;
+    color: var(--fg);
+}
+
+.content {
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    padding: 0 var(--page-padding);
+    line-height: 1.6;
+}
+
+/* Headings - GitHub style */
+.content h1 {
+    font-size: 2em;
+    font-weight: 600;
+    padding-bottom: 0.3em;
+    border-bottom: 1px solid var(--sidebar-spacer);
+    margin-top: 24px;
+    margin-bottom: 16px;
+}
+
+.content h2 {
+    font-size: 1.5em;
+    font-weight: 600;
+    padding-bottom: 0.3em;
+    border-bottom: 1px solid var(--sidebar-spacer);
+    margin-top: 24px;
+    margin-bottom: 16px;
+}
+
+.content h3 {
+    font-size: 1.25em;
+    font-weight: 600;
+    margin-top: 24px;
+    margin-bottom: 16px;
+}
+
+.content h4 {
+    font-size: 1em;
+    font-weight: 600;
+    margin-top: 24px;
+    margin-bottom: 16px;
+}
+
+/* Paragraphs */
+.content p {
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+/* Links */
+.content a {
+    color: var(--links);
+    text-decoration: none;
+}
+
+.content a:hover {
+    text-decoration: underline;
+}
+
+/* Inline code - GitHub style */
+.content code:not(.hljs) {
+    padding: 0.2em 0.4em;
+    margin: 0;
+    font-size: 85%;
+    white-space: break-spaces;
+    background-color: rgba(175, 184, 193, 0.2);
+    border-radius: 6px;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+/* Code blocks */
+.content pre {
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+    background-color: #f6f8fa;
+    border-radius: 6px;
+    margin-bottom: 16px;
+}
+
+.content pre code {
+    background: none;
+    padding: 0;
+    font-size: 100%;
+    border-radius: 0;
+}
+
+/* Blockquotes - GitHub style */
+.content blockquote {
+    padding: 0 1em;
+    color: #656d76;
+    border-left: 0.25em solid var(--quote-border);
+    margin: 0 0 16px 0;
+}
+
+.content blockquote p {
+    margin-bottom: 0;
+}
+
+/* Lists */
+.content ul, .content ol {
+    padding-left: 2em;
+    margin-bottom: 16px;
+}
+
+.content li {
+    margin-top: 0.25em;
+}
+
+.content li + li {
+    margin-top: 0.25em;
+}
+
+/* Tables - GitHub style */
+.content table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+    display: block;
+    width: max-content;
+    max-width: 100%;
+    overflow: auto;
+}
+
+.content table th {
+    font-weight: 600;
+    padding: 6px 13px;
+    border: 1px solid var(--table-border-color);
+    background-color: var(--table-header-bg);
+}
+
+.content table td {
+    padding: 6px 13px;
+    border: 1px solid var(--table-border-color);
+}
+
+.content table tr:nth-child(2n) {
+    background-color: #f6f8fa;
+}
+
+/* Strong / Bold */
+.content strong {
+    font-weight: 600;
+}
+
+/* Horizontal rules */
+.content hr {
+    height: 0.25em;
+    padding: 0;
+    margin: 24px 0;
+    background-color: var(--sidebar-spacer);
+    border: 0;
+}
+
+/* Sidebar adjustments */
+.sidebar {
+    background-color: var(--sidebar-bg);
+    font-size: 14px;
+}
+
+.sidebar .sidebar-scrollbox {
+    padding: 10px 20px;
+}
+
+.sidebar ol.chapter li a {
+    color: var(--sidebar-fg);
+    padding: 5px 0;
+}
+
+.sidebar ol.chapter li a.active {
+    color: var(--sidebar-active);
+    font-weight: 600;
+}
+
+/* Navigation buttons */
+.nav-chapters {
+    font-size: 14px;
+    opacity: 0.6;
+}
+
+.nav-chapters:hover {
+    opacity: 1;
+    color: var(--links);
+}
+
+/* Menu bar */
+#menu-bar {
+    border-bottom: 1px solid var(--sidebar-spacer);
+    background-color: var(--bg);
+}
+
+/* Search */
+#searchbar {
+    border: 1px solid var(--searchbar-border-color);
+    border-radius: 6px;
+    background-color: var(--searchbar-bg);
+}
+
+/* Hide theme picker - force light theme */
+#theme-list {
+    display: none;
+}

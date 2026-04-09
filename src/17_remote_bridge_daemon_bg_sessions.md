@@ -26,3 +26,5 @@ Daemon 需要比普通模式更早加载某些配置。Bridge 需要注册特殊
 后台会话、remote agent 这些都和第 9 章讲的 task 体系相关。`remote_agent` 类型的 task 就是在远程环境里运行的 agent，通过 bridge 或 remote 机制通信。
 
 从用户角度看，管理一个后台 session 和管理一个后台 task 体验类似：都可以 attach、kill、查看 logs。这是因为底层用的是同一套机制。
+
+这里面没有传统的 Unix daemon——bridge loop 本身就是持久进程，通过一个指针文件让其他进程发现活跃会话，绕开了经典 daemon 模式的复杂性。

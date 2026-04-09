@@ -5,5 +5,8 @@ language = "zh"
 src = "src"
 
 [output.html]
+default-theme = "light"
+preferred-dark-theme = "light"
+additional-css = ["theme/github.css"]
 git-repository-url = "https://github.com/liaoandi/claude_code_anatomy"
 git-repository-icon = "fa-github"
