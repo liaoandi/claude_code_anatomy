@@ -30,6 +30,7 @@
         <link rel="stylesheet" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/github.css">
 
     </head>
     <body class="sidebar-visible no-js">
@@ -37,7 +38,7 @@
         <!-- Provide site root to javascript -->
         <script>
             var path_to_root = "";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
@@ -89,7 +90,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="00-preface.html">前言</a></li><li class="chapter-item expanded affix "><a href="00b-architecture-overview.html">架构总览</a></li><li class="chapter-item expanded affix "><li class="part-title">主交互功能</li><li class="chapter-item expanded "><a href="01-dialog-and-command-input.html"><strong aria-hidden="true">1.</strong> 对话与命令输入</a></li><li class="chapter-item expanded "><a href="02-message-flow-and-session-ui.html"><strong aria-hidden="true">2.</strong> 消息流与会话界面</a></li><li class="chapter-item expanded "><a href="03-slash-commands.html"><strong aria-hidden="true">3.</strong> Slash Commands 功能族</a></li><li class="chapter-item expanded affix "><li class="part-title">代码操作功能</li><li class="chapter-item expanded "><a href="04-read-search-and-context.html"><strong aria-hidden="true">4.</strong> 读文件、搜内容、找文件</a></li><li class="chapter-item expanded "><a href="05-editing-and-diff.html"><strong aria-hidden="true">5.</strong> 改文件与 Diff 展示</a></li><li class="chapter-item expanded "><a href="06-shell-execution.html"><strong aria-hidden="true">6.</strong> Shell 执行</a></li><li class="chapter-item expanded affix "><li class="part-title">任务控制功能</li><li class="chapter-item expanded "><a href="07-plan-mode.html"><strong aria-hidden="true">7.</strong> Plan Mode</a></li><li class="chapter-item expanded "><a href="08-permissions-and-approval.html"><strong aria-hidden="true">8.</strong> Permissions 与 Approval</a></li><li class="chapter-item expanded "><a href="09-tasks-agents-and-teammates.html"><strong aria-hidden="true">9.</strong> Task、Agent、Teammate</a></li><li class="chapter-item expanded affix "><li class="part-title">记忆与上下文功能</li><li class="chapter-item expanded "><a href="10-memory.html"><strong aria-hidden="true">10.</strong> Memory 功能</a></li><li class="chapter-item expanded "><a href="11-session-resume-history.html"><strong aria-hidden="true">11.</strong> Session、Resume、History</a></li><li class="chapter-item expanded "><a href="12-context-management.html"><strong aria-hidden="true">12.</strong> Context 管理</a></li><li class="chapter-item expanded affix "><li class="part-title">外部连接能力</li><li class="chapter-item expanded "><a href="13-web-and-external-info.html"><strong aria-hidden="true">13.</strong> Web 访问与搜索</a></li><li class="chapter-item expanded "><a href="14-mcp.html"><strong aria-hidden="true">14.</strong> MCP</a></li><li class="chapter-item expanded "><a href="15-plugins-and-skills.html"><strong aria-hidden="true">15.</strong> Plugins 与 Skills</a></li><li class="chapter-item expanded affix "><li class="part-title">运行环境功能</li><li class="chapter-item expanded "><a href="16-config-and-feature-flags.html"><strong aria-hidden="true">16.</strong> Config 与 Feature Flags</a></li><li class="chapter-item expanded "><a href="17-remote-bridge-daemon-bg-sessions.html"><strong aria-hidden="true">17.</strong> Remote、Bridge、Daemon、Bg Sessions</a></li><li class="chapter-item expanded affix "><li class="part-title">结语</li><li class="chapter-item expanded "><a href="18-conclusion.html"><strong aria-hidden="true">18.</strong> 从这些设计里读到什么</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="00_preface.html">前言</a></li><li class="chapter-item expanded affix "><a href="00b_architecture_overview.html">架构总览</a></li><li class="chapter-item expanded affix "><li class="part-title">主交互功能</li><li class="chapter-item expanded "><a href="01_dialog_and_command_input.html"><strong aria-hidden="true">1.</strong> 对话与命令输入</a></li><li class="chapter-item expanded "><a href="02_message_flow_and_session_ui.html"><strong aria-hidden="true">2.</strong> 消息流与会话界面</a></li><li class="chapter-item expanded "><a href="03_slash_commands.html"><strong aria-hidden="true">3.</strong> Slash Commands 功能族</a></li><li class="chapter-item expanded affix "><li class="part-title">代码操作功能</li><li class="chapter-item expanded "><a href="04_read_search_and_context.html"><strong aria-hidden="true">4.</strong> 读文件、搜内容、找文件</a></li><li class="chapter-item expanded "><a href="05_editing_and_diff.html"><strong aria-hidden="true">5.</strong> 改文件与 Diff 展示</a></li><li class="chapter-item expanded "><a href="06_shell_execution.html"><strong aria-hidden="true">6.</strong> Shell 执行</a></li><li class="chapter-item expanded affix "><li class="part-title">任务控制功能</li><li class="chapter-item expanded "><a href="07_plan_mode.html"><strong aria-hidden="true">7.</strong> Plan Mode</a></li><li class="chapter-item expanded "><a href="08_permissions_and_approval.html"><strong aria-hidden="true">8.</strong> Permissions 与 Approval</a></li><li class="chapter-item expanded "><a href="09_tasks_agents_and_teammates.html"><strong aria-hidden="true">9.</strong> Task、Agent、Teammate</a></li><li class="chapter-item expanded affix "><li class="part-title">记忆与上下文功能</li><li class="chapter-item expanded "><a href="10_memory.html"><strong aria-hidden="true">10.</strong> Memory 功能</a></li><li class="chapter-item expanded "><a href="11_session_resume_history.html"><strong aria-hidden="true">11.</strong> Session、Resume、History</a></li><li class="chapter-item expanded "><a href="12_context_management.html"><strong aria-hidden="true">12.</strong> Context 管理</a></li><li class="chapter-item expanded affix "><li class="part-title">外部连接能力</li><li class="chapter-item expanded "><a href="13_web_and_external_info.html"><strong aria-hidden="true">13.</strong> Web 访问与搜索</a></li><li class="chapter-item expanded "><a href="14_mcp.html"><strong aria-hidden="true">14.</strong> MCP</a></li><li class="chapter-item expanded "><a href="15_plugins_and_skills.html"><strong aria-hidden="true">15.</strong> Plugins 与 Skills</a></li><li class="chapter-item expanded affix "><li class="part-title">运行环境功能</li><li class="chapter-item expanded "><a href="16_config_and_feature_flags.html"><strong aria-hidden="true">16.</strong> Config 与 Feature Flags</a></li><li class="chapter-item expanded "><a href="17_remote_bridge_daemon_bg_sessions.html"><strong aria-hidden="true">17.</strong> Remote、Bridge、Daemon、Bg Sessions</a></li><li class="chapter-item expanded affix "><li class="part-title">结语</li><li class="chapter-item expanded "><a href="18_conclusion.html"><strong aria-hidden="true">18.</strong> 从这些设计里读到什么</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -231,7 +232,7 @@
 <li><code>daemon</code>、<code>bridge</code>、<code>ps/logs/attach/kill</code> 这类特殊模式：走各自的初始化路径，不进入普通对话流程。</li>
 <li>普通对话：才继续加载完整的主程序。</li>
 </ol>
-<p>这种分流设计的好处是：不同运行模式的初始化要求差异很大，分流比统一处理要干净得多。冷启动时间也因此更可控——很多模块用动态 <code>import()</code> 懒加载，不需要时根本不加载。</p>
+<p>这种分流设计的好处是：不同运行模式的初始化要求差异很大，分流比统一处理要干净得多。冷启动时间也因此更可控——很多模块用动态 <code>import()</code> 懒加载，不需要时根本不加载。分流其实比上面列的还多——根据启动参数不同，同一个包还可以作为 Chrome 自动化或 Computer Use 的 MCP server 启动，扮演完全不同的角色。</p>
 <h2 id="slash-command-是产品能力目录"><a class="header" href="#slash-command-是产品能力目录">Slash command 是产品能力目录</a></h2>
 <p><code>commands.ts</code> 里的命令注册表已经很大了，涵盖了 <code>/plan</code>、<code>/memory</code>、<code>/compact</code>、<code>/permissions</code>、<code>/mcp</code>、<code>/review</code> 等几十个命令。这个列表本质上就是 Claude Code 想对用户暴露的产品能力目录。</p>
 <p>几个值得注意的设计细节：</p>
@@ -292,11 +293,12 @@
 <p>原因是：直接用 shell 命令读文件，系统对这件事没有任何感知。不知道读了多少 token、不知道这个文件有没有超大、不知道路径是不是安全的，也没办法针对不同文件类型做特殊处理。出了问题，什么日志都没有。</p>
 <p>所以 Claude Code 把读文件做成了专门的工具 FileReadTool，处理了一批 shell 命令处理不了的事情。</p>
 <ul>
-<li><strong>路径安全</strong>：<code>/dev/zero</code> 这样的特殊文件，读了就会无限阻塞进程，需要在读之前就识别并拦截。</li>
-<li><strong>Token 预算</strong>：大文件不能整块塞进上下文，工具会根据当前 token 预算决定读多少，或者建议用 offset/limit 分段读。</li>
-<li><strong>文件类型处理</strong>：PDF、Jupyter notebook、图片——这些不能像普通文本一样处理，需要走各自的解析逻辑才能变成模型能理解的内容。</li>
+<li><strong>路径安全</strong>：<code>/dev/zero</code>、<code>/dev/random</code>、<code>/dev/tty</code> 等十几个特殊文件，读了要么无限阻塞进程，要么产生无穷输出，需要在读之前就识别并拦截。</li>
+<li><strong>Token 预算</strong>：大文件不能整块塞进上下文。默认每次最多读 2,000 行或 25,000 tokens，超出的部分建议用 offset/limit 分段读。</li>
+<li><strong>文件类型处理</strong>：PDF（每次最多读 20 页）、Jupyter notebook、图片（超大图会逐级降质和缩小，直到塞得进上下文）——这些不能像普通文本一样处理，需要走各自的解析逻辑。</li>
 <li><strong>读取事件通知</strong>：读文件这个动作会通知给其他服务，比如 context 预算追踪，这样系统能知道"刚才读了什么，花了多少 token"。</li>
 </ul>
+<p>还有一个用户感知不到的优化：如果一个文件自上次读取后没有被修改过，Read 工具会直接告诉模型"文件没变"，不再重复读取内容，省下不必要的 token 消耗。</p>
 <h2 id="搜索有两个专门工具"><a class="header" href="#搜索有两个专门工具">搜索有两个专门工具</a></h2>
 <p><code>grep</code> 和 <code>find</code> 也是同样的道理——Claude Code 没有让 agent 直接用它们，而是做了两个专门的搜索工具：GrepTool 和 GlobTool。</p>
 <p>GrepTool 是"找内容"：你知道要找什么，但不知道它在哪个文件里。比如想找所有调用了某个函数的地方，或者想确认某个变量名在哪里被定义。搜索范围只限于你自己的代码，不会把 <code>node_modules</code> 这类依赖目录里的东西也翻出来。匹配太多时会截断，防止把上下文打爆。</p>
@@ -309,12 +311,14 @@
 <p>Claude Code 改文件的主要方式是精准替换：你提供要改的旧内容和新内容，工具找到旧内容在文件里的位置，替换掉。</p>
 <p>这个设计选择背后有一个重要约束：<code>old_string</code> 必须在文件里唯一存在。如果同样的内容出现了两次，工具会拒绝执行，而不是随便改其中一处。</p>
 <p>这一条规则防止了很多"改错地方"的情况。如果模型写出了一段模糊的 <code>old_string</code>，系统直接拒绝，而不是悄悄改了一个错误的位置然后让用户事后发现。</p>
+<p>不过如果精确匹配失败，系统还会做一次行尾符归一化的重试——把 CRLF 统一成 LF 后再找一遍。这解决了一个常见的跨平台问题：从 Windows 同事那拿到的文件，行尾符可能和你看到的不一样，编辑不应该因此失败。</p>
 <p>整文件覆盖（FileWriteTool）也存在，但主要用于新建文件或者真的要完全重写的情况。一般的修改都应该用精准替换，改动范围更小，diff 更可读。</p>
 <h2 id="编辑之前要过的关"><a class="header" href="#编辑之前要过的关">编辑之前要过的关</a></h2>
 <p>在真正写文件之前，FileEditTool 会做一批前置检查：</p>
 <ul>
 <li><strong>路径别名展开</strong>：先把 <code>~/</code>、相对路径等各种形式统一成绝对路径，防止路径别名绕过后续的权限规则。</li>
 <li><strong>权限检查</strong>：看用户的规则里这个路径是否允许写入。</li>
+<li><strong>必须先读过文件</strong>：如果这个文件从来没被 Read 工具读取过，编辑直接被拒。这是"先看再改"的硬性要求，确保模型不会凭想象修改一个它没看过的文件。</li>
 <li><strong>文件状态检查</strong>：如果文件在上次读取之后被外部程序修改了，工具会拒绝覆盖，而不是强行写入。这保护了用户在另一个窗口里做的改动。</li>
 <li><strong>大文件保护</strong>：超过 1GB 的文件直接拒绝，防止内存问题。</li>
 </ul>
@@ -340,7 +344,7 @@
 <li>用 <code>attach</code> 重新连上去看实时输出</li>
 <li>用 <code>kill</code> 终止它</li>
 </ul>
-<p>这样 shell 执行就从"等待返回"变成了"提交任务、查看进度"，适合真正的长时间操作。</p>
+<p>默认超时是 2 分钟，最长可以给到 10 分钟。如果一条命令在 2 秒内没有产生任何输出，系统会考虑自动把它放到后台，不需要你手动操作。这样 shell 执行就从"等待返回"变成了"提交任务、查看进度"，适合真正的长时间操作。</p>
 <h2 id="sandbox-是另一层保护"><a class="header" href="#sandbox-是另一层保护">Sandbox 是另一层保护</a></h2>
 <p>除了权限规则，还有 sandbox 机制：某些命令可以在容器里执行，和主机环境隔离。</p>
 <p>Sandbox 不是对所有命令都启用的，因为有性能成本。什么时候启用、启用哪种级别的隔离，取决于命令类型和当前的权限模式。权限规则和 sandbox 是两个独立的机制，可以组合使用：权限规则决定"这条命令允不允许运行"，sandbox 决定"运行时有没有隔离"。</p>
@@ -406,6 +410,7 @@ ask:WebFetch(*.external.com) # 外部网址每次都要问
 <h2 id="拒绝之后发生什么"><a class="header" href="#拒绝之后发生什么">拒绝之后发生什么</a></h2>
 <p>权限被拒绝的时候，界面上能看到"这一步被拒了，原因是什么"，不是悄悄失败。你可以修改规则之后重试，不用从头再来，整个任务也不会因为一次拒绝就中断。</p>
 <p>拒绝不是终点，而是一个可以继续调整的节点。</p>
+<p>类似的细粒度也体现在 Shell 命令上：<code>find -exec</code> 会被拦住但 <code>find -name</code> 不会，<code>sed -i</code> 被单独标记为有副作用。格式化工具执行完后，系统还会主动刷新编辑工具的文件缓存。甚至 Windows 路径攻击（UNC 路径触发凭证泄露）也在防御范围内。</p>
 <h2 id="权限系统的边界"><a class="header" href="#权限系统的边界">权限系统的边界</a></h2>
 <p>权限系统能做的是：控制 Claude Code 本身发起的操作。</p>
 <p>它管不了的是：你自己写的规则有没有漏洞，或者 MCP server 在它自己进程里做了什么。权限规则是针对 Claude Code 工具调用的过滤层，不是沙盒隔离。</p>
@@ -420,7 +425,7 @@ ask:WebFetch(*.external.com) # 外部网址每次都要问
 <li><strong><code>local_bash</code></strong>：本地 shell 命令，最简单，跑完就结束。</li>
 <li><strong><code>local_agent</code></strong>：在本地启动的子 agent，有自己的上下文，可以独立读文件、改文件、跑命令，完成后把结果汇报给主 agent。这是 Claude Code 实现并行工作的基础——多个子 agent 同时处理不同部分，主 agent 汇总结果。</li>
 <li><strong><code>remote_agent</code></strong>：在远程环境启动的 agent，通过 bridge 通信。适合在 CI/CD 环境或者和主机隔离的容器里执行任务。</li>
-<li><strong><code>in_process_teammate</code></strong>：进程内的并行 agent，比 <code>local_agent</code> 开销更小，但隔离程度也更低。</li>
+<li><strong><code>in_process_teammate</code></strong>：在同一个进程里运行的并行 agent。和 <code>local_agent</code> 的关键区别是：它有自己的消息循环，可以通过 <code>SendMessage</code> 和主 agent 实时通信，而不只是在完成后返回结果。适合需要持续协作的场景，代价是隔离程度更低。</li>
 </ul>
 <h2 id="agent-能干什么"><a class="header" href="#agent-能干什么">Agent 能干什么</a></h2>
 <p>AgentTool 是 Claude Code 的"让另一个 AI 来做这件事"的工具。</p>
@@ -434,6 +439,7 @@ ask:WebFetch(*.external.com) # 外部网址每次都要问
 <li>UI 只需要一套组件来显示任务状态，不管底层是什么</li>
 <li>执行者可以替换（比如从 local_agent 换成 remote_agent），UI 不用改</li>
 </ul>
+<p>还有一个自动行为：当一个会话里完成了多个 task 之后，系统会自动启动一个验证 agent 回头检查工作质量，不需要用户主动触发。</p>
 <p>多了一层抽象，多了复杂度，但换来的是整个系统的可管理性。</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="第-10-章-memory-功能"><a class="header" href="#第-10-章-memory-功能">第 10 章 Memory 功能</a></h1>
 <h2 id="memory-要解决的问题"><a class="header" href="#memory-要解决的问题">Memory 要解决的问题</a></h2>
@@ -442,24 +448,26 @@ ask:WebFetch(*.external.com) # 外部网址每次都要问
 <h2 id="memory-是一些-markdown-文件"><a class="header" href="#memory-是一些-markdown-文件">Memory 是一些 Markdown 文件</a></h2>
 <p>Claude Code 的 memory 没有数据库，没有向量检索，就是几个 markdown 文件。你可以直接用 <code>/memory</code> 打开来编辑，加、删、改都行。</p>
 <p>这个设计的好处是透明：你能看到 memory 里存了什么，能直接控制它，不是一个不透明的黑箱在背后记住一些东西。</p>
-<p>memory 文件有三个层级：</p>
+<p>memory 文件有五个层级：</p>
 <ol>
-<li>个人 memory：只对你自己生效，跨所有项目</li>
-<li>项目 memory：只对你自己生效，但只在当前项目里加载——换了项目就不带入</li>
+<li>个人 memory：<code>~/.claude/CLAUDE.md</code>，只对你自己生效，跨所有项目</li>
+<li>项目共享 memory：项目根目录的 <code>CLAUDE.md</code>，提交到仓库，团队可见</li>
+<li>项目个人 memory：项目根目录的 <code>CLAUDE.local.md</code>，不提交，只对你自己在这个项目里生效</li>
+<li>企业 memory：通过管理平台下发的 <code>CLAUDE.md</code>，组织级别的统一约束</li>
 <li>team memory：通过 API 同步，团队所有成员共享（需要启用对应 feature）</li>
 </ol>
 <p>系统启动时会把这些文件加载进上下文，所以 agent 能"知道"这些信息。</p>
 <h2 id="后台自动提取"><a class="header" href="#后台自动提取">后台自动提取</a></h2>
 <p>除了手工编辑，会话结束后系统会自动做一次 memory 提取——把这次会话里值得长期保留的内容写入 memory 文件。</p>
-<p>提取不是每轮都发生，而是有触发条件：当前会话消耗的 token 超过一定量，或者工具调用次数达到阈值。这两个条件都是在估计"这次会话发生了足够多的事情，值得提取"。</p>
-<p>提取本身是由一个 forked subagent 在后台做的，不阻塞主对话。提取结束后，新内容追加进 memory 文件。</p>
+<p>提取不是每轮都发生，而是有触发条件：会话累计消耗超过 10,000 tokens 之后才开始考虑，此后每增加 5,000 tokens 且至少发生 3 次工具调用就触发一次。这两个条件组合在一起，估计的是"这次会话发生了足够多的事情，值得提取"。</p>
+<p>提取本身是由一个 forked subagent 在后台做的，不阻塞主对话。提取出来的内容会被整理进一个固定的模板结构——从 Session Title 到 Files and Functions 到 Worklog，一共 10 个段落，总预算 12,000 tokens。这个模板决定了"记什么、怎么组织"，也解释了为什么自动提取的 memory 风格总是很统一。</p>
 <h2 id="为什么提取用-subagent而不是简单地截取文本"><a class="header" href="#为什么提取用-subagent而不是简单地截取文本">为什么提取用 subagent，而不是简单地截取文本</a></h2>
 <p>直接把对话的最后几轮截下来存进 memory，实现最简单，但效果差。</p>
 <p>有价值的信息往往散落在整个会话里：第 5 轮发现了一个重要约定，第 15 轮确认了一个技术决策，第 28 轮遇到了一个坑。简单截取只能拿到最近的内容，拿不到这些散落的关键点。</p>
 <p>用 subagent 做提取的好处是：它能读完整个会话历史，判断什么值得保留、以什么形式保留，而不只是截取最近几轮。提取结果更准确，代价是比简单截取更耗资源。</p>
 <h2 id="memory-不是万能的"><a class="header" href="#memory-不是万能的">Memory 不是万能的</a></h2>
 <p>Memory 文件会被加载进每次会话的上下文，但这也意味着它占用 token。如果 memory 文件很大、包含大量不相关的历史记录，反而会稀释上下文，让 agent 在噪声里找有用信息。</p>
-<p>保持 memory 文件精炼、定期手工清理不再相关的内容，是让 memory 真正好用的关键。这件事系统帮不了你，得靠你自己判断。</p>
+<p>保持 memory 文件精炼、定期清理不再相关的内容，是让 memory 真正好用的关键。系统已经开始在这方面做尝试——有一个叫 auto-dream 的后台机制，会自动修剪过期的 memory 和合并重复条目——但目前还在早期阶段，大部分维护工作仍然得靠你自己判断。</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="第-11-章-sessionresumehistory"><a class="header" href="#第-11-章-sessionresumehistory">第 11 章 Session、Resume、History</a></h1>
 <h2 id="三个相关但不同的概念"><a class="header" href="#三个相关但不同的概念">三个相关但不同的概念</a></h2>
 <p>Claude Code 有三种方式处理"过去发生的事"，用途各不相同：</p>
@@ -487,7 +495,7 @@ ask:WebFetch(*.external.com) # 外部网址每次都要问
 <p>Compact 有两种触发方式：</p>
 <ol>
 <li><strong>手动</strong>：<code>/compact</code> 立即触发，你可以在觉得上下文太乱的时候主动清理。</li>
-<li><strong>自动</strong>：当上下文用量接近模型上限时，系统自动触发一次 compact，然后继续对话。你会在消息流里看到一条提示，说明刚才发生了压缩——不是悄悄进行的。如果不想要自动 compact，可以在设置里关掉。</li>
+<li><strong>自动</strong>：当上下文 token 数接近有效窗口上限时（大约在上限前 13,000 tokens 的位置），系统自动触发一次 compact，然后继续对话。你会在消息流里看到一条提示，说明刚才发生了压缩——不是悄悄进行的。如果不想要自动 compact，可以在设置里关掉。如果 compact 连续失败 3 次，系统也会自己停下来，不再反复尝试。</li>
 </ol>
 <p>压缩的逻辑不是随机丢弃，而是有优先级的：</p>
 <ul>
@@ -499,7 +507,7 @@ ask:WebFetch(*.external.com) # 外部网址每次都要问
 <p>被压缩的内容会打上标记，界面上能看到"这里有内容被摘要了"，不是悄悄消失。</p>
 <h2 id="context-collapse"><a class="header" href="#context-collapse">Context Collapse</a></h2>
 <p>Context collapse 比 compact 更激进：把多轮内容（包括工具调用链）折叠成一个 summary block。适合长任务的阶段切换点——当前阶段完成了，折叠历史，清空空间，新阶段开始时只保留一个简短的"之前做了什么"的摘要。</p>
-<p>Context collapse 没有用户命令，完全自动触发：系统在每次 API 调用前判断是否需要折叠，也会在遇到上下文溢出错误时自动触发。启用 context collapse 后，自动 compact 会被关掉——两者解决同一个问题，不会同时运行。手动 <code>/compact</code> 不受影响，仍然可用。</p>
+<p>Context collapse 没有用户命令，完全自动触发：系统在每次 API 调用前判断是否需要折叠，也会在遇到上下文溢出错误时自动触发。Collapse 和 auto-compact 是独立的机制，可以同时运行——前者专门压缩 Read/Search 工具的输出，后者摘要整体对话历史，各管各的。手动 <code>/compact</code> 不受影响，仍然可用。</p>
 <h2 id="为什么压缩要可见"><a class="header" href="#为什么压缩要可见">为什么压缩要可见</a></h2>
 <p>Compact 可以做成完全静默的——自动触发，不通知用户，对话继续。很多系统就是这样做的。</p>
 <p>问题是：你不知道压缩发生了，也不知道什么被丢掉了。如果因此出了问题——agent 忘了一个重要约束，或者重复做了已经做过的事——你很难判断是 agent 的问题还是上下文压缩导致的问题。</p>
@@ -508,14 +516,14 @@ ask:WebFetch(*.external.com) # 外部网址每次都要问
 <h2 id="agent-怎么获取外部信息"><a class="header" href="#agent-怎么获取外部信息">Agent 怎么获取外部信息</a></h2>
 <p>写代码经常需要查资料：看文档、找示例、确认某个 API 的参数。Claude Code 有两个内建工具处理这件事：WebFetchTool（拉取指定 URL 的内容）和 WebSearchTool（先搜索再拉取）。</p>
 <p>两个工具解决的是不同的问题。WebFetchTool 适合你已经知道要看哪个页面的情况：提供 URL，拉取内容。WebSearchTool 则是你知道要找什么但不知道从哪里找：先搜索得到一批候选结果，再从中拉取最相关的内容。</p>
-<p>这两个工具是内建的，受同一套权限和消息机制管控，不是让 agent 自己写 curl 命令去联网。</p>
+<p>这两个工具是内建的，受同一套权限和消息机制管控，不是让 agent 自己写 curl 命令去联网。不过两者的实现方式不同：WebFetchTool 在本地抓取页面，WebSearchTool 则是服务端工具——搜索请求发给 Anthropic 的 API 完成，CLI 只负责展示结果。</p>
 <h2 id="为什么要有-prompt-参数"><a class="header" href="#为什么要有-prompt-参数">为什么要有 prompt 参数</a></h2>
 <p>调用这两个工具时都需要提供 prompt——"你想从页面里得到什么"。</p>
 <p>这个设计有点反直觉：直接拿页面内容不就好了，为什么还要说明目的？</p>
-<p>原因是上下文成本。一个完整的文档页面可能有几万 token，但你实际需要的可能只是其中一个函数的参数说明。有了 prompt，工具在返回内容之前会先做一轮过滤，只返回和 prompt 相关的部分，而不是把整个页面塞进上下文。</p>
+<p>原因是上下文成本。一个完整的文档页面可能有几万 token，但你实际需要的可能只是其中一个函数的参数说明。有了 prompt，工具会用一次额外的模型调用对页面内容做过滤，只返回和 prompt 相关的部分，而不是把整个页面塞进上下文。即使不过滤，内容也会被截断到 10 万字符以内。</p>
 <h2 id="域名级权限控制"><a class="header" href="#域名级权限控制">域名级权限控制</a></h2>
 <p>和所有其他工具一样，Web 工具在执行前也过权限系统。但和文件路径、shell 命令不同，Web 权限是按域名控制的。</p>
-<p>某些域名可以配置为预授权，直接放行，不弹确认框。某些域名需要每次确认。某些域名直接拒绝。</p>
+<p>实际上有 90 多个域名是预授权的——主要是各语言和框架的官方文档站，像 <code>docs.python.org</code>、<code>react.dev</code>、<code>docs.aws.amazon.com</code> 这些。访问这些站点不需要确认。其他域名要么每次确认，要么直接拒绝。</p>
 <p>被拦截时，系统会给出快速规则建议，一键添加白名单，不用自己手写规则。</p>
 <h2 id="这两个工具不处理认证"><a class="header" href="#这两个工具不处理认证">这两个工具不处理认证</a></h2>
 <p>WebFetchTool 和 WebSearchTool 都不会帮你登录、不会携带 session cookie、不会处理 OAuth。遇到需要认证的 URL，会直接失败，并提示应该用专门的 MCP tool 来处理。</p>
@@ -554,11 +562,12 @@ ask:WebFetch(*.external.com) # 外部网址每次都要问
 <li><code>model</code>、<code>effort</code>：指定用什么模型、花多大力气</li>
 <li><code>context: fork</code>：在独立的 subagent 里执行，不污染主上下文</li>
 </ul>
-<p>skill 加载时会被估算 token，纳入系统整体的上下文预算计算。如果 skill 文件太大，就会影响每次会话能用的上下文空间。</p>
+<p>skill 加载时会被估算 token，纳入上下文预算——默认大约占上下文窗口的 1%。如果 skill 太多或者描述太长，系统会先按比例截短，实在放不下就只保留名称。所以 skill 文件不是越详细越好，精炼的描述反而能让更多 skill 共存。</p>
 <p>skill 适合封装"Claude Code 自己能完成的工作流"，比如"按这套标准审查 PR"、"用这个格式生成报告"。如果要接入 Claude Code 本身没有能力触达的外部系统（比如数据库、内部 API），那是 MCP 的事，不是 skill 能做的。</p>
 <h2 id="plugin-是什么"><a class="header" href="#plugin-是什么">Plugin 是什么</a></h2>
 <p>Plugin 是 skill 的打包形式。一个 plugin 可以包含多个 skill 和命令，安装之后统一以 plugin 名称作为命令前缀，比如 <code>/review:start</code>、<code>/review:summary</code>。</p>
 <p>和单独的 skill 相比，plugin 多了一个能力：携带 hooks。hooks 是绑定到系统事件的自动触发脚本，不需要用户主动调用。比如每次写文件之前自动跑一次 lint 检查，或者每次会话开始时自动加载某个配置。安装 plugin 之后，这些行为就静默地生效了。</p>
+<p>可以绑定的事件远不只是"工具调用前后"。系统支持 28 种 hook 事件，覆盖了从会话启动、权限请求、子 agent 启动、task 完成、配置变更、文件变化到 worktree 创建等几乎所有值得拦截的时刻。这意味着 plugin 可以对系统行为做非常细粒度的定制，而不只是在工具调用前后加一段逻辑。</p>
 <h2 id="为什么扩展内容也要遵守系统规则"><a class="header" href="#为什么扩展内容也要遵守系统规则">为什么扩展内容也要遵守系统规则</a></h2>
 <p>Skill 的 <code>allowedTools</code> 限制工具调用，skill 的 token 估算纳入预算，plugin 的 hooks 走统一的 hook 机制——这些不是限制扩展能力，而是让扩展内容能被系统治理。</p>
 <p>如果 skill 可以绕过权限检查，一个写得粗糙的第三方 skill 就能在你不知情的情况下做任何事。把扩展纳入同一套规则，是扩展生态能健康运作的前提。</p>
@@ -575,11 +584,12 @@ ask:WebFetch(*.external.com) # 外部网址每次都要问
 <p>Flag 为 false 时，模块根本不加载，命令不出现在注册表里，Tab 补全里也看不到。工具层同理——某些工具的存在本身，受 feature flag 控制。</p>
 <p>这种设计有一个好处：不同构建版本的包体积可以差异很大。外部版不会携带任何内部功能的代码，而不只是把它们隐藏起来。</p>
 <h2 id="配置的层级"><a class="header" href="#配置的层级">配置的层级</a></h2>
-<p>配置有三个层级：用户级（本地全局生效）、项目级（只在当前项目生效）、组织级（通过管理平台下发）。</p>
-<p>低层级的配置可以被高层级覆盖。组织可以锁定某些配置项，让用户无法修改。这对企业部署很重要：组织可以强制某些安全策略，同时让用户保留个性化配置的空间。</p>
+<p>配置有五个层级，从高到低：企业策略（通过管理平台下发，优先级最高）、用户级（<code>~/.claude/settings.json</code>）、项目共享级（<code>.claude/settings.json</code>，提交到仓库）、项目本地级（<code>.claude/settings.local.json</code>，不提交）、以及服务端 feature flag。</p>
+<p>高层级可以覆盖低层级。企业策略还可以锁定某些配置项，让用户无法修改——比如强制禁用某些工具、限制只能连接指定组织。这对企业部署很重要：组织可以强制安全策略，同时让用户保留个性化配置的空间。</p>
 <h2 id="一份代码多条产品线"><a class="header" href="#一份代码多条产品线">一份代码，多条产品线</a></h2>
 <p>如果没有 feature flag，维护多个产品版本的常见做法是拉多个 fork——外部版一个、内部版一个、实验版一个，各自维护。问题是每次改一个核心功能，所有 fork 都要同步，成本越来越高。</p>
 <p>Feature flag 的方案是：只有一份代码，差异全部做成开关，主干统一迭代，不同产品线通过配置区分。代价是代码里会散落着各种条件判断，理解某个功能的完整行为需要知道在哪些 flag 组合下它是开着的。但对于需要同时维护多个产品版本的系统来说，这个复杂度是值得的。</p>
+<p>从源码里能印证这一点：大约 100 个 feature flag，还有 19 个不出现在 <code>/help</code> 里的隐藏命令——<code>/ultraplan</code>、<code>/teleport</code>、<code>/autofix-pr</code>、<code>/buddy</code> 等，都是正在演化中的产品线留下的痕迹。</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="第-17-章-remotebridgedaemonbg-sessions"><a class="header" href="#第-17-章-remotebridgedaemonbg-sessions">第 17 章 Remote、Bridge、Daemon、Bg Sessions</a></h1>
 <h2 id="claude-code-不只是一个对话窗口"><a class="header" href="#claude-code-不只是一个对话窗口">Claude Code 不只是一个对话窗口</a></h2>
 <p>大多数时候你用 Claude Code 的方式是：打开终端，开始对话，关掉终端，结束。</p>
@@ -598,29 +608,46 @@ ask:WebFetch(*.external.com) # 外部网址每次都要问
 <h2 id="这些模式和-task-体系的关系"><a class="header" href="#这些模式和-task-体系的关系">这些模式和 task 体系的关系</a></h2>
 <p>后台会话、remote agent 这些都和第 9 章讲的 task 体系相关。<code>remote_agent</code> 类型的 task 就是在远程环境里运行的 agent，通过 bridge 或 remote 机制通信。</p>
 <p>从用户角度看，管理一个后台 session 和管理一个后台 task 体验类似：都可以 attach、kill、查看 logs。这是因为底层用的是同一套机制。</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="结语从这些设计里读到什么"><a class="header" href="#结语从这些设计里读到什么">结语：从这些设计里读到什么</a></h1>
-<p>读完17章，可以回过头来问一个问题：Claude Code 是一个什么样的系统？</p>
+<p>这里面没有传统的 Unix daemon——bridge loop 本身就是持久进程，通过一个指针文件让其他进程发现活跃会话，绕开了经典 daemon 模式的复杂性。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="结语设计哲学与产品原则"><a class="header" href="#结语设计哲学与产品原则">结语：设计哲学与产品原则</a></h1>
+<p>读完 17 章，可以回过头来问一个问题：Claude Code 是一个什么样的系统？</p>
 <h2 id="三个反复出现的选择"><a class="header" href="#三个反复出现的选择">三个反复出现的选择</a></h2>
 <p><strong>把能力做成工具，而不是让模型自由发挥。</strong></p>
-<p>读文件可以跑 <code>cat</code>，改文件可以跑 <code>sed</code>，联网可以跑 <code>curl</code>。Claude Code 选择了另一条路：每种能力都做成专门的工具，带权限检查、带展示协议、带审计记录。这让系统变重了，但每个动作都在系统的感知范围内。</p>
-<p>这不是偶然的技术选择，而是一个关于 agent 边界的判断：<strong>自动化程度越高，可见性就越重要</strong>。</p>
+<p>读文件可以跑 <code>cat</code>，改文件可以跑 <code>sed</code>，联网可以跑 <code>curl</code>。Claude Code 每次都选择了另一条路：做成专门的工具，带权限、带展示协议、带审计。系统变重了，但每个动作都在感知范围内。</p>
 <p><strong>让用户保持控制感，而不是追求最大自动化。</strong></p>
-<p>Plan mode 要显式切换，权限要用户积累，context 压缩要可见，compact 和 collapse 都会在界面上留下标记。每一处设计，Claude Code 都在抵抗"让系统完全自主"的诱惑。</p>
-<p>这背后有一个朴素的判断：当 agent 能力足够强的时候，用户最需要的不是更多自动化，而是在关键节点的控制权。</p>
+<p>Plan mode 要显式切换，权限要逐步积累，context 压缩要可见。每一处设计都在抵抗"让系统完全自主"的诱惑。当 agent 能力足够强的时候，用户最需要的不是更多自动化，而是在关键节点的控制权。</p>
 <p><strong>扩展能力必须遵守系统规则。</strong></p>
 <p>MCP server 暴露的工具走同一套权限判断，skill 的 token 纳入预算，plugin 的 hooks 走统一机制。没有"高级用户可以绕过"的后门。</p>
-<p>这让扩展生态可以被信任——你安装的任何 skill 或 plugin，都不会比内建工具拥有更多特权。</p>
+<p>这三个选择是从使用体验就能观察到的。但打开源码之后，会发现这些选择背后有一套更明确的原则体系。</p>
+<h2 id="写在-prompt-里的原则"><a class="header" href="#写在-prompt-里的原则">写在 Prompt 里的原则</a></h2>
+<p>Claude Code 的 system prompt、安全分类器和 agent 指令里，嵌入了一组设计原则。它们不直接决定某个功能长什么样，但塑造了整个系统的行为边界。</p>
+<p><strong>"Never delegate understanding."</strong></p>
+<p>这是 agent 委托子任务指南里的核心原则。把任务分出去可以，但不能把"理解"也一起分出去。如果主 agent 没有消化子 agent 返回的信息就直接让下一个 agent 执行，那中间就缺少了做判断的环节。配套的建议是：查找型任务给命令，探索型任务给问题——"prescribed steps become dead weight when the premise is wrong"，预设步骤在前提错误时只会成为包袱。</p>
+<p><strong>"Questions are not consent." / "Silence is not consent."</strong></p>
+<p>安全分类器里关于用户意图的两条基本原则。用户问"我们能不能修一下这个？"不等于授权修复；用户在两次操作之间没有干预，不等于默许。这两条打掉了 agent 设计里最常见的假设。</p>
+<p>由此衍生出一个不对称的安全策略：授权需要高证据门槛，因为误判的代价是危险操作；限制只需要低门槛，因为误判的代价只是暂停。宁可多停一下，也不要多做一步。</p>
+<p><strong>"Your job is not to confirm the work. Your job is to break it."</strong></p>
+<p>验证 agent 的系统指令开头。紧接着是一段坦诚的自我认知："You see the first 80% — polished UI, passing tests — and feel inclined to pass. The first 80% is on-distribution, the easy part. Your entire value is the last 20%." 以及 "Volume of output is not evidence of correctness."——输出多不代表做对了。</p>
+<p>这段话把 AI 的系统性缺陷写进了给 AI 自己看的指令里，用自我意识对抗系统性偏见。</p>
+<p><strong>安全模型看的不只是当下。</strong></p>
+<p>安全分类器里有一个叫 memory poisoning 的概念：通过向记忆文件写入精心构造的内容，影响未来会话的行为。当前会话没有直接危害，但它在记忆里埋了一颗种子，未来的会话读到这些内容后会据此行动。这意味着安全模型不能只判断"这个操作现在有没有害"，还要判断"这个操作在未来可能产生什么连锁效应"。</p>
+<h2 id="产品设计者的选择"><a class="header" href="#产品设计者的选择">产品设计者的选择</a></h2>
+<p>除了原则，源码里还能看到一些具体的产品决策，体现了这些原则怎么落地。</p>
+<p><strong>角色越窄，失控风险越低。</strong></p>
+<p>Claude Code 没有让一个通用 agent 包打天下，而是设计了多种专用角色。探索型 agent 被明确禁止一切写操作——不能创建文件、不能修改文件、不能用重定向符号。这不是因为 Claude 会主动捣乱，而是角色边界越清晰，任务偏离轨道的概率越低。</p>
+<p><strong>记忆整合借鉴了"睡眠巩固"。</strong></p>
+<p>第 10 章提到了 auto-dream 机制。它的设计灵感来自人类睡眠时的记忆巩固过程——不是实时整理，而是在条件满足时（足够时间 + 足够新会话）批量处理。整合分四个阶段：先读取现有记忆避免重复（Orient），再只读近期会话找重要信号（Gather），然后合并、去重、修正矛盾（Consolidate），最后更新索引保持精简（Prune）。这个流程解决的核心问题不是"存什么"，而是"什么时候整合"和"怎么防止膨胀"。</p>
+<p><strong>专家 checklist 可以产品化。</strong></p>
+<p>内置技能 <code>/simplify</code> 同时启动三个独立 agent 审查同一份代码变更：一个找复用机会，一个查代码质量，一个看执行效率。三个 agent 完成后主 agent 汇总并直接修复，false positive 跳过不讨论。这是把"人工审查 checklist"封装成 agent 工作流的典型例子。</p>
 <h2 id="可以推断的走向"><a class="header" href="#可以推断的走向">可以推断的走向</a></h2>
-<p><strong>多 agent 协作是主要投资方向。</strong></p>
-<p>task 体系里的 <code>local_agent</code>、<code>remote_agent</code>、<code>in_process_teammate</code>，AgentTool 的 worktree 隔离，team memory 的 API 同步——这些设计说明 Claude Code 不是在做单人工具，而是在做多 agent 的协作基础设施。</p>
-<p>现在这些功能还相对早期，但基础架构的设计已经预留了足够的空间。</p>
-<p><strong>MCP 会成为核心扩展路径。</strong></p>
-<p>内建工具覆盖了文件、shell、web，这个边界不会无限扩张。外部系统的接入将越来越多地通过 MCP 协议完成。随着 MCP 生态成熟，Claude Code 的能力边界将主要取决于有多少质量良好的 MCP server，而不是内建了多少工具。</p>
-<p><strong>上下文管理还在演化中。</strong></p>
-<p>auto compact、context collapse、分层 memory——这些机制并存，说明"如何在有限的上下文窗口里完成长任务"仍然是一个没有完全解决的问题。可以预期这个方向还会有更多探索。</p>
+<p>从这些设计选择和源码里的痕迹，能看出几个方向。</p>
+<p><strong>多 agent 协作是主要投资方向。</strong> Task 体系里的 <code>local_agent</code>、<code>remote_agent</code>、<code>in_process_teammate</code>，AgentTool 的 worktree 隔离，team memory 的 API 同步——这些不是在做单人工具，而是在做多 agent 的协作基础设施。现在还相对早期，但基础架构的空间已经预留好了。</p>
+<p><strong>MCP 会成为核心扩展路径。</strong> 内建工具覆盖了文件、shell、web，这个边界不会无限扩张。外部系统的接入将越来越多地通过 MCP 完成。Claude Code 的能力边界将主要取决于有多少质量好的 MCP server，而不是内建了多少工具。</p>
+<p><strong>上下文管理还在演化中。</strong> Auto compact、context collapse、分层 memory、auto-dream——这些机制并存，说明"如何在有限的上下文窗口里完成长任务"仍然是一个没有完全解决的问题。</p>
 <h2 id="最后"><a class="header" href="#最后">最后</a></h2>
 <p>Claude Code 是一个在"给 AI 更多自主权"和"让人类保持控制感"之间持续做取舍的系统。</p>
 <p>它的很多设计选择，在短期内会让系统看起来更保守——需要确认、需要显式操作、需要遵守规则。但这些约束积累下来，形成的是一套用户可以真正信任的 agent 基础设施。</p>
+<p>从源码里读到的那些原则——不要外包理解、提问不是授权、验证不是确认、宁可多停一下也不要多做一步——不只适用于 Claude Code。它们是这个阶段所有 agent 系统都需要面对的设计问题。</p>
 <p>这可能是比"更聪明的模型"更难解决的问题。</p>
 
                     </main>

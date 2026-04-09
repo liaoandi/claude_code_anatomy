@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Context 管理 - Claude Code 功能设计与实现</title>
+        <title>Plan Mode - Claude Code 功能设计与实现</title>
 
 
         <!-- Custom HTML head -->
@@ -29,6 +29,7 @@
         <link rel="stylesheet" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/github.css">
 
     </head>
     <body class="sidebar-visible no-js">
@@ -36,7 +37,7 @@
         <!-- Provide site root to javascript -->
         <script>
             var path_to_root = "";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
@@ -88,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="00-preface.html">前言</a></li><li class="chapter-item expanded affix "><a href="00b-architecture-overview.html">架构总览</a></li><li class="chapter-item expanded affix "><li class="part-title">主交互功能</li><li class="chapter-item expanded "><a href="01-dialog-and-command-input.html"><strong aria-hidden="true">1.</strong> 对话与命令输入</a></li><li class="chapter-item expanded "><a href="02-message-flow-and-session-ui.html"><strong aria-hidden="true">2.</strong> 消息流与会话界面</a></li><li class="chapter-item expanded "><a href="03-slash-commands.html"><strong aria-hidden="true">3.</strong> Slash Commands 功能族</a></li><li class="chapter-item expanded affix "><li class="part-title">代码操作功能</li><li class="chapter-item expanded "><a href="04-read-search-and-context.html"><strong aria-hidden="true">4.</strong> 读文件、搜内容、找文件</a></li><li class="chapter-item expanded "><a href="05-editing-and-diff.html"><strong aria-hidden="true">5.</strong> 改文件与 Diff 展示</a></li><li class="chapter-item expanded "><a href="06-shell-execution.html"><strong aria-hidden="true">6.</strong> Shell 执行</a></li><li class="chapter-item expanded affix "><li class="part-title">任务控制功能</li><li class="chapter-item expanded "><a href="07-plan-mode.html"><strong aria-hidden="true">7.</strong> Plan Mode</a></li><li class="chapter-item expanded "><a href="08-permissions-and-approval.html"><strong aria-hidden="true">8.</strong> Permissions 与 Approval</a></li><li class="chapter-item expanded "><a href="09-tasks-agents-and-teammates.html"><strong aria-hidden="true">9.</strong> Task、Agent、Teammate</a></li><li class="chapter-item expanded affix "><li class="part-title">记忆与上下文功能</li><li class="chapter-item expanded "><a href="10-memory.html"><strong aria-hidden="true">10.</strong> Memory 功能</a></li><li class="chapter-item expanded "><a href="11-session-resume-history.html"><strong aria-hidden="true">11.</strong> Session、Resume、History</a></li><li class="chapter-item expanded "><a href="12-context-management.html" class="active"><strong aria-hidden="true">12.</strong> Context 管理</a></li><li class="chapter-item expanded affix "><li class="part-title">外部连接能力</li><li class="chapter-item expanded "><a href="13-web-and-external-info.html"><strong aria-hidden="true">13.</strong> Web 访问与搜索</a></li><li class="chapter-item expanded "><a href="14-mcp.html"><strong aria-hidden="true">14.</strong> MCP</a></li><li class="chapter-item expanded "><a href="15-plugins-and-skills.html"><strong aria-hidden="true">15.</strong> Plugins 与 Skills</a></li><li class="chapter-item expanded affix "><li class="part-title">运行环境功能</li><li class="chapter-item expanded "><a href="16-config-and-feature-flags.html"><strong aria-hidden="true">16.</strong> Config 与 Feature Flags</a></li><li class="chapter-item expanded "><a href="17-remote-bridge-daemon-bg-sessions.html"><strong aria-hidden="true">17.</strong> Remote、Bridge、Daemon、Bg Sessions</a></li><li class="chapter-item expanded affix "><li class="part-title">结语</li><li class="chapter-item expanded "><a href="18-conclusion.html"><strong aria-hidden="true">18.</strong> 从这些设计里读到什么</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="00_preface.html">前言</a></li><li class="chapter-item expanded affix "><a href="00b_architecture_overview.html">架构总览</a></li><li class="chapter-item expanded affix "><li class="part-title">主交互功能</li><li class="chapter-item expanded "><a href="01_dialog_and_command_input.html"><strong aria-hidden="true">1.</strong> 对话与命令输入</a></li><li class="chapter-item expanded "><a href="02_message_flow_and_session_ui.html"><strong aria-hidden="true">2.</strong> 消息流与会话界面</a></li><li class="chapter-item expanded "><a href="03_slash_commands.html"><strong aria-hidden="true">3.</strong> Slash Commands 功能族</a></li><li class="chapter-item expanded affix "><li class="part-title">代码操作功能</li><li class="chapter-item expanded "><a href="04_read_search_and_context.html"><strong aria-hidden="true">4.</strong> 读文件、搜内容、找文件</a></li><li class="chapter-item expanded "><a href="05_editing_and_diff.html"><strong aria-hidden="true">5.</strong> 改文件与 Diff 展示</a></li><li class="chapter-item expanded "><a href="06_shell_execution.html"><strong aria-hidden="true">6.</strong> Shell 执行</a></li><li class="chapter-item expanded affix "><li class="part-title">任务控制功能</li><li class="chapter-item expanded "><a href="07_plan_mode.html" class="active"><strong aria-hidden="true">7.</strong> Plan Mode</a></li><li class="chapter-item expanded "><a href="08_permissions_and_approval.html"><strong aria-hidden="true">8.</strong> Permissions 与 Approval</a></li><li class="chapter-item expanded "><a href="09_tasks_agents_and_teammates.html"><strong aria-hidden="true">9.</strong> Task、Agent、Teammate</a></li><li class="chapter-item expanded affix "><li class="part-title">记忆与上下文功能</li><li class="chapter-item expanded "><a href="10_memory.html"><strong aria-hidden="true">10.</strong> Memory 功能</a></li><li class="chapter-item expanded "><a href="11_session_resume_history.html"><strong aria-hidden="true">11.</strong> Session、Resume、History</a></li><li class="chapter-item expanded "><a href="12_context_management.html"><strong aria-hidden="true">12.</strong> Context 管理</a></li><li class="chapter-item expanded affix "><li class="part-title">外部连接能力</li><li class="chapter-item expanded "><a href="13_web_and_external_info.html"><strong aria-hidden="true">13.</strong> Web 访问与搜索</a></li><li class="chapter-item expanded "><a href="14_mcp.html"><strong aria-hidden="true">14.</strong> MCP</a></li><li class="chapter-item expanded "><a href="15_plugins_and_skills.html"><strong aria-hidden="true">15.</strong> Plugins 与 Skills</a></li><li class="chapter-item expanded affix "><li class="part-title">运行环境功能</li><li class="chapter-item expanded "><a href="16_config_and_feature_flags.html"><strong aria-hidden="true">16.</strong> Config 与 Feature Flags</a></li><li class="chapter-item expanded "><a href="17_remote_bridge_daemon_bg_sessions.html"><strong aria-hidden="true">17.</strong> Remote、Bridge、Daemon、Bg Sessions</a></li><li class="chapter-item expanded affix "><li class="part-title">结语</li><li class="chapter-item expanded "><a href="18_conclusion.html"><strong aria-hidden="true">18.</strong> 从这些设计里读到什么</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -176,44 +177,27 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="第-12-章-context-管理"><a class="header" href="#第-12-章-context-管理">第 12 章 Context 管理</a></h1>
-<h2 id="上下文窗口是有限资源"><a class="header" href="#上下文窗口是有限资源">上下文窗口是有限资源</a></h2>
-<p>模型能"看到"的内容有上限。对话历史、读进来的文件、工具调用结果、memory 文件、skill 定义——这些都在消耗这个上限。用完了，就没法继续了。</p>
-<p>Claude Code 把这个资源的管理做成了显式功能，而不是让用户自己猜"为什么它突然忘了之前说的话"。</p>
-<h2 id="你能看到上下文花在哪里"><a class="header" href="#你能看到上下文花在哪里">你能看到上下文花在哪里</a></h2>
-<p><code>/context</code> 会显示当前上下文的使用分布：多少在对话历史里，多少在 memory 文件里，多少在 MCP tool 定义里，多少在 skill 里，还有多少剩余。</p>
-<p>这个可视化的价值不是帮你优化 token 用量，而是让系统行为变透明。如果 agent 好像没注意到某件事，你可以看看那件事是不是已经被压缩掉了；如果上下文快满了，你知道该做什么，而不是等到突然报错。</p>
-<h2 id="compact-是怎么工作的"><a class="header" href="#compact-是怎么工作的">Compact 是怎么工作的</a></h2>
-<p>Compact 有两种触发方式：</p>
-<ol>
-<li><strong>手动</strong>：<code>/compact</code> 立即触发，你可以在觉得上下文太乱的时候主动清理。</li>
-<li><strong>自动</strong>：当上下文用量接近模型上限时，系统自动触发一次 compact，然后继续对话。你会在消息流里看到一条提示，说明刚才发生了压缩——不是悄悄进行的。如果不想要自动 compact，可以在设置里关掉。</li>
-</ol>
-<p>压缩的逻辑不是随机丢弃，而是有优先级的：</p>
-<ul>
-<li>最近几轮对话完整保留，不压缩</li>
-<li>工具调用结果保留摘要，原始输出可以丢</li>
-<li>被后续对话引用的内容保留，没有被引用的可以丢</li>
-<li>纯文本的中间回复，多轮合并成摘要</li>
-</ul>
-<p>被压缩的内容会打上标记，界面上能看到"这里有内容被摘要了"，不是悄悄消失。</p>
-<h2 id="context-collapse"><a class="header" href="#context-collapse">Context Collapse</a></h2>
-<p>Context collapse 比 compact 更激进：把多轮内容（包括工具调用链）折叠成一个 summary block。适合长任务的阶段切换点——当前阶段完成了，折叠历史，清空空间，新阶段开始时只保留一个简短的"之前做了什么"的摘要。</p>
-<p>Context collapse 没有用户命令，完全自动触发：系统在每次 API 调用前判断是否需要折叠，也会在遇到上下文溢出错误时自动触发。启用 context collapse 后，自动 compact 会被关掉——两者解决同一个问题，不会同时运行。手动 <code>/compact</code> 不受影响，仍然可用。</p>
-<h2 id="为什么压缩要可见"><a class="header" href="#为什么压缩要可见">为什么压缩要可见</a></h2>
-<p>Compact 可以做成完全静默的——自动触发，不通知用户，对话继续。很多系统就是这样做的。</p>
-<p>问题是：你不知道压缩发生了，也不知道什么被丢掉了。如果因此出了问题——agent 忘了一个重要约束，或者重复做了已经做过的事——你很难判断是 agent 的问题还是上下文压缩导致的问题。</p>
-<p>Claude Code 选择让压缩可见：自动触发时会在消息流里留下记录，被压缩的内容会打上标记，<code>/context</code> 能看到上下文花在哪里。代价是多了一些需要了解的概念，好处是出了问题你知道从哪里查。</p>
+                        <h1 id="第-7-章-plan-mode"><a class="header" href="#第-7-章-plan-mode">第 7 章 Plan Mode</a></h1>
+<h2 id="先想清楚再动手怎么变成运行时约束"><a class="header" href="#先想清楚再动手怎么变成运行时约束">"先想清楚再动手"怎么变成运行时约束</a></h2>
+<p>做复杂任务之前先写一个计划，这个道理谁都懂。但如果只是在 prompt 里说"先规划再执行"，实际上没有任何保证——模型随时可能边想边做，在你还没看清楚的时候就开始改代码了。</p>
+<p>Plan mode 把这个约定变成了系统强制执行的状态。进入 plan mode 之后，写操作工具的权限上下文发生变化，模型想调用 FileEditTool 或者跑有副作用的 shell 命令，都会被拦住。这不是靠提示词约束，而是运行时约束。</p>
+<h2 id="进入和退出"><a class="header" href="#进入和退出">进入和退出</a></h2>
+<p><code>/plan</code> 切换到 plan mode。这不只是改了一个 UI 状态，而是写进了权限上下文，影响后续所有工具的执行策略。</p>
+<p>在 plan mode 里，模型可以读文件、搜索、思考、生成计划内容，但不能写文件、不能跑有副作用的命令。计划内容存在磁盘上的一个文件里，不是临时的内存变量——这意味着你可以用 <code>/plan open</code> 在外部编辑器里直接修改这个文件，手工调整计划，然后让模型按调整后的计划执行。</p>
+<p>确认计划没问题之后，退出 plan mode，模型重新获得写操作权限，进入执行阶段。你可以随时再次进入 plan mode 暂停，或者让整个执行过程跑完。</p>
+<h2 id="为什么是显式模式切换而不是自动判断"><a class="header" href="#为什么是显式模式切换而不是自动判断">为什么是显式模式切换，而不是自动判断</a></h2>
+<p>另一种设计是系统自动判断当前是在规划还是在执行，用户不需要手动切换。看起来更智能，但实际上把控制权从用户手里拿走了——你不确定系统现在是什么状态，也不确定它什么时候会开始真正改东西。对于风险较高的操作，这种不确定感很不舒服。</p>
+<p>显式模式切换的好处是状态对用户完全透明。你知道现在是规划状态，你决定什么时候进入执行状态。计划写到磁盘上，你可以审阅和修改，不是只能接受模型给出的方案。这是 Claude Code 在自动化程度和用户控制感之间的一个典型取舍。</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="11-session-resume-history.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="06_shell_execution.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="13-web-and-external-info.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="08_permissions_and_approval.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -223,11 +207,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="11-session-resume-history.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="06_shell_execution.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="13-web-and-external-info.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="08_permissions_and_approval.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

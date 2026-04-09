@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Task、Agent、Teammate - Claude Code 功能设计与实现</title>
+        <title>Plugins 与 Skills - Claude Code 功能设计与实现</title>
 
 
         <!-- Custom HTML head -->
@@ -29,6 +29,7 @@
         <link rel="stylesheet" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/github.css">
 
     </head>
     <body class="sidebar-visible no-js">
@@ -36,7 +37,7 @@
         <!-- Provide site root to javascript -->
         <script>
             var path_to_root = "";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
@@ -88,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="00-preface.html">前言</a></li><li class="chapter-item expanded affix "><a href="00b-architecture-overview.html">架构总览</a></li><li class="chapter-item expanded affix "><li class="part-title">主交互功能</li><li class="chapter-item expanded "><a href="01-dialog-and-command-input.html"><strong aria-hidden="true">1.</strong> 对话与命令输入</a></li><li class="chapter-item expanded "><a href="02-message-flow-and-session-ui.html"><strong aria-hidden="true">2.</strong> 消息流与会话界面</a></li><li class="chapter-item expanded "><a href="03-slash-commands.html"><strong aria-hidden="true">3.</strong> Slash Commands 功能族</a></li><li class="chapter-item expanded affix "><li class="part-title">代码操作功能</li><li class="chapter-item expanded "><a href="04-read-search-and-context.html"><strong aria-hidden="true">4.</strong> 读文件、搜内容、找文件</a></li><li class="chapter-item expanded "><a href="05-editing-and-diff.html"><strong aria-hidden="true">5.</strong> 改文件与 Diff 展示</a></li><li class="chapter-item expanded "><a href="06-shell-execution.html"><strong aria-hidden="true">6.</strong> Shell 执行</a></li><li class="chapter-item expanded affix "><li class="part-title">任务控制功能</li><li class="chapter-item expanded "><a href="07-plan-mode.html"><strong aria-hidden="true">7.</strong> Plan Mode</a></li><li class="chapter-item expanded "><a href="08-permissions-and-approval.html"><strong aria-hidden="true">8.</strong> Permissions 与 Approval</a></li><li class="chapter-item expanded "><a href="09-tasks-agents-and-teammates.html" class="active"><strong aria-hidden="true">9.</strong> Task、Agent、Teammate</a></li><li class="chapter-item expanded affix "><li class="part-title">记忆与上下文功能</li><li class="chapter-item expanded "><a href="10-memory.html"><strong aria-hidden="true">10.</strong> Memory 功能</a></li><li class="chapter-item expanded "><a href="11-session-resume-history.html"><strong aria-hidden="true">11.</strong> Session、Resume、History</a></li><li class="chapter-item expanded "><a href="12-context-management.html"><strong aria-hidden="true">12.</strong> Context 管理</a></li><li class="chapter-item expanded affix "><li class="part-title">外部连接能力</li><li class="chapter-item expanded "><a href="13-web-and-external-info.html"><strong aria-hidden="true">13.</strong> Web 访问与搜索</a></li><li class="chapter-item expanded "><a href="14-mcp.html"><strong aria-hidden="true">14.</strong> MCP</a></li><li class="chapter-item expanded "><a href="15-plugins-and-skills.html"><strong aria-hidden="true">15.</strong> Plugins 与 Skills</a></li><li class="chapter-item expanded affix "><li class="part-title">运行环境功能</li><li class="chapter-item expanded "><a href="16-config-and-feature-flags.html"><strong aria-hidden="true">16.</strong> Config 与 Feature Flags</a></li><li class="chapter-item expanded "><a href="17-remote-bridge-daemon-bg-sessions.html"><strong aria-hidden="true">17.</strong> Remote、Bridge、Daemon、Bg Sessions</a></li><li class="chapter-item expanded affix "><li class="part-title">结语</li><li class="chapter-item expanded "><a href="18-conclusion.html"><strong aria-hidden="true">18.</strong> 从这些设计里读到什么</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="00_preface.html">前言</a></li><li class="chapter-item expanded affix "><a href="00b_architecture_overview.html">架构总览</a></li><li class="chapter-item expanded affix "><li class="part-title">主交互功能</li><li class="chapter-item expanded "><a href="01_dialog_and_command_input.html"><strong aria-hidden="true">1.</strong> 对话与命令输入</a></li><li class="chapter-item expanded "><a href="02_message_flow_and_session_ui.html"><strong aria-hidden="true">2.</strong> 消息流与会话界面</a></li><li class="chapter-item expanded "><a href="03_slash_commands.html"><strong aria-hidden="true">3.</strong> Slash Commands 功能族</a></li><li class="chapter-item expanded affix "><li class="part-title">代码操作功能</li><li class="chapter-item expanded "><a href="04_read_search_and_context.html"><strong aria-hidden="true">4.</strong> 读文件、搜内容、找文件</a></li><li class="chapter-item expanded "><a href="05_editing_and_diff.html"><strong aria-hidden="true">5.</strong> 改文件与 Diff 展示</a></li><li class="chapter-item expanded "><a href="06_shell_execution.html"><strong aria-hidden="true">6.</strong> Shell 执行</a></li><li class="chapter-item expanded affix "><li class="part-title">任务控制功能</li><li class="chapter-item expanded "><a href="07_plan_mode.html"><strong aria-hidden="true">7.</strong> Plan Mode</a></li><li class="chapter-item expanded "><a href="08_permissions_and_approval.html"><strong aria-hidden="true">8.</strong> Permissions 与 Approval</a></li><li class="chapter-item expanded "><a href="09_tasks_agents_and_teammates.html"><strong aria-hidden="true">9.</strong> Task、Agent、Teammate</a></li><li class="chapter-item expanded affix "><li class="part-title">记忆与上下文功能</li><li class="chapter-item expanded "><a href="10_memory.html"><strong aria-hidden="true">10.</strong> Memory 功能</a></li><li class="chapter-item expanded "><a href="11_session_resume_history.html"><strong aria-hidden="true">11.</strong> Session、Resume、History</a></li><li class="chapter-item expanded "><a href="12_context_management.html"><strong aria-hidden="true">12.</strong> Context 管理</a></li><li class="chapter-item expanded affix "><li class="part-title">外部连接能力</li><li class="chapter-item expanded "><a href="13_web_and_external_info.html"><strong aria-hidden="true">13.</strong> Web 访问与搜索</a></li><li class="chapter-item expanded "><a href="14_mcp.html"><strong aria-hidden="true">14.</strong> MCP</a></li><li class="chapter-item expanded "><a href="15_plugins_and_skills.html" class="active"><strong aria-hidden="true">15.</strong> Plugins 与 Skills</a></li><li class="chapter-item expanded affix "><li class="part-title">运行环境功能</li><li class="chapter-item expanded "><a href="16_config_and_feature_flags.html"><strong aria-hidden="true">16.</strong> Config 与 Feature Flags</a></li><li class="chapter-item expanded "><a href="17_remote_bridge_daemon_bg_sessions.html"><strong aria-hidden="true">17.</strong> Remote、Bridge、Daemon、Bg Sessions</a></li><li class="chapter-item expanded affix "><li class="part-title">结语</li><li class="chapter-item expanded "><a href="18_conclusion.html"><strong aria-hidden="true">18.</strong> 从这些设计里读到什么</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -176,41 +177,43 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="第-9-章-taskagentteammate"><a class="header" href="#第-9-章-taskagentteammate">第 9 章 Task、Agent、Teammate</a></h1>
-<h2 id="task-是什么"><a class="header" href="#task-是什么">Task 是什么</a></h2>
-<p>当 Claude Code 需要执行一个超过几秒的操作——跑一个 shell 命令、启动一个子 agent、连接一个远程任务——它不会直接执行然后等结果，而是创建一个 task。</p>
-<p>Task 是 Claude Code 对"长时间执行"的统一抽象。每个 task 有唯一 id、类型、状态，输出写到磁盘上的专用文件里。状态从 <code>pending</code> 到 <code>running</code>，最终到 <code>completed</code>、<code>failed</code> 或 <code>killed</code>。</p>
-<p>这个抽象的存在让前台 UI 和后台执行解耦：UI 只读 task 状态和输出文件，不关心底层是 bash 还是 agent 还是远程进程在跑。</p>
-<h2 id="几种-task-类型"><a class="header" href="#几种-task-类型">几种 task 类型</a></h2>
+                        <h1 id="第-15-章-plugins-与-skills"><a class="header" href="#第-15-章-plugins-与-skills">第 15 章 Plugins 与 Skills</a></h1>
+<h2 id="一个共同机制两种扩展方式"><a class="header" href="#一个共同机制两种扩展方式">一个共同机制，两种扩展方式</a></h2>
+<p>Plugins 和 skills 是 Claude Code 的高层扩展方式，用来做"工作流复用"和"自定义 slash command"，不是接入外部系统（那是 MCP 的事）。</p>
+<p>两者的底层机制相同：写一个 markdown 文件，系统启动时扫描并编译成命令对象，并入命令注册表。用户用起来和内建命令一样，感知不到区别。</p>
+<h2 id="skill-是什么"><a class="header" href="#skill-是什么">Skill 是什么</a></h2>
+<p>一个 skill 就是一个 <code>SKILL.md</code> 文件，加上可选的辅助文件（脚本、模板、参考资料）。</p>
+<p>文件头部的 frontmatter 控制这个 skill 的行为：</p>
 <ul>
-<li><strong><code>local_bash</code></strong>：本地 shell 命令，最简单，跑完就结束。</li>
-<li><strong><code>local_agent</code></strong>：在本地启动的子 agent，有自己的上下文，可以独立读文件、改文件、跑命令，完成后把结果汇报给主 agent。这是 Claude Code 实现并行工作的基础——多个子 agent 同时处理不同部分，主 agent 汇总结果。</li>
-<li><strong><code>remote_agent</code></strong>：在远程环境启动的 agent，通过 bridge 通信。适合在 CI/CD 环境或者和主机隔离的容器里执行任务。</li>
-<li><strong><code>in_process_teammate</code></strong>：进程内的并行 agent，比 <code>local_agent</code> 开销更小，但隔离程度也更低。</li>
+<li><code>whenToUse</code>：告诉系统什么情况下应该用这个 skill</li>
+<li><code>allowedTools</code>：限制 skill 只能调用哪些工具</li>
+<li><code>model</code>、<code>effort</code>：指定用什么模型、花多大力气</li>
+<li><code>context: fork</code>：在独立的 subagent 里执行，不污染主上下文</li>
 </ul>
-<h2 id="agent-能干什么"><a class="header" href="#agent-能干什么">Agent 能干什么</a></h2>
-<p>AgentTool 是 Claude Code 的"让另一个 AI 来做这件事"的工具。</p>
-<p>调用时可以选择同步（等 agent 完成再继续）或者异步（提交任务，拿到 task id，继续干别的）。可以给 agent 分配一个独立的 git worktree，让它在自己的分支上工作，不影响主工作区。</p>
-<p>子 agent 的能力和主 agent 是一样的，可以读写文件、跑命令，有自己的权限上下文。但它是一个独立的执行单元，不共享主 agent 的对话历史，只接受任务描述和必要的上下文。</p>
-<h2 id="为什么要有这一层抽象"><a class="header" href="#为什么要有这一层抽象">为什么要有这一层抽象</a></h2>
-<p>没有 task 抽象的话，shell 命令、子 agent、远程任务都得各自管理自己的生命周期，各自实现进度显示、错误处理、输出收集。代码会很乱，用户体验也会碎片化。</p>
-<p>有了统一的 task 层：</p>
-<ul>
-<li>所有长时间操作都可以 attach、kill、查看 logs</li>
-<li>UI 只需要一套组件来显示任务状态，不管底层是什么</li>
-<li>执行者可以替换（比如从 local_agent 换成 remote_agent），UI 不用改</li>
-</ul>
-<p>多了一层抽象，多了复杂度，但换来的是整个系统的可管理性。</p>
+<p>skill 加载时会被估算 token，纳入上下文预算——默认大约占上下文窗口的 1%。如果 skill 太多或者描述太长，系统会先按比例截短，实在放不下就只保留名称。所以 skill 文件不是越详细越好，精炼的描述反而能让更多 skill 共存。</p>
+<p>skill 适合封装"Claude Code 自己能完成的工作流"，比如"按这套标准审查 PR"、"用这个格式生成报告"。如果要接入 Claude Code 本身没有能力触达的外部系统（比如数据库、内部 API），那是 MCP 的事，不是 skill 能做的。</p>
+<h2 id="plugin-是什么"><a class="header" href="#plugin-是什么">Plugin 是什么</a></h2>
+<p>Plugin 是 skill 的打包形式。一个 plugin 可以包含多个 skill 和命令，安装之后统一以 plugin 名称作为命令前缀，比如 <code>/review:start</code>、<code>/review:summary</code>。</p>
+<p>和单独的 skill 相比，plugin 多了一个能力：携带 hooks。hooks 是绑定到系统事件的自动触发脚本，不需要用户主动调用。比如每次写文件之前自动跑一次 lint 检查，或者每次会话开始时自动加载某个配置。安装 plugin 之后，这些行为就静默地生效了。</p>
+<p>可以绑定的事件远不只是"工具调用前后"。系统支持 28 种 hook 事件，覆盖了从会话启动、权限请求、子 agent 启动、task 完成、配置变更、文件变化到 worktree 创建等几乎所有值得拦截的时刻。这意味着 plugin 可以对系统行为做非常细粒度的定制，而不只是在工具调用前后加一段逻辑。</p>
+<h2 id="为什么扩展内容也要遵守系统规则"><a class="header" href="#为什么扩展内容也要遵守系统规则">为什么扩展内容也要遵守系统规则</a></h2>
+<p>Skill 的 <code>allowedTools</code> 限制工具调用，skill 的 token 估算纳入预算，plugin 的 hooks 走统一的 hook 机制——这些不是限制扩展能力，而是让扩展内容能被系统治理。</p>
+<p>如果 skill 可以绕过权限检查，一个写得粗糙的第三方 skill 就能在你不知情的情况下做任何事。把扩展纳入同一套规则，是扩展生态能健康运作的前提。</p>
+<h2 id="写-skill-的几个关键点"><a class="header" href="#写-skill-的几个关键点">写 Skill 的几个关键点</a></h2>
+<p><strong><code>whenToUse</code> 写清楚</strong>。这个字段告诉系统什么情况下应该用这个 skill，写得模糊的话，系统要么永远用、要么永远不用。要具体描述触发场景，比如"当用户要审查 PR 时"，而不是"代码相关任务"。</p>
+<p><strong>控制 token 体积</strong>。Skill 文件加载进上下文，如果很大，每次会话的上下文预算都会受影响。只放必要的指导，参考资料用单独的 references 文件，不要全塞进 <code>SKILL.md</code>。</p>
+<p><strong><code>allowedTools</code> 不要留空</strong>。不限制 allowed tools 的 skill 可以调用任何工具，包括你没想到的。明确列出这个 skill 需要的工具，既是安全考虑，也让别人一眼看清楚它的能力边界。</p>
+<p><strong>考虑用 <code>context: fork</code></strong>。如果 skill 执行的任务比较长、会产生大量中间输出，用 fork 让它在独立的 subagent 里执行，主对话的上下文不会被污染。</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="08-permissions-and-approval.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="14_mcp.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="10-memory.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="16_config_and_feature_flags.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -220,11 +223,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="08-permissions-and-approval.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="14_mcp.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="10-memory.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="16_config_and_feature_flags.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>改文件与 Diff 展示 - Claude Code 功能设计与实现</title>
+        <title>Config 与 Feature Flags - Claude Code 功能设计与实现</title>
 
 
         <!-- Custom HTML head -->
@@ -29,6 +29,7 @@
         <link rel="stylesheet" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/github.css">
 
     </head>
     <body class="sidebar-visible no-js">
@@ -36,7 +37,7 @@
         <!-- Provide site root to javascript -->
         <script>
             var path_to_root = "";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
@@ -88,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="00-preface.html">前言</a></li><li class="chapter-item expanded affix "><a href="00b-architecture-overview.html">架构总览</a></li><li class="chapter-item expanded affix "><li class="part-title">主交互功能</li><li class="chapter-item expanded "><a href="01-dialog-and-command-input.html"><strong aria-hidden="true">1.</strong> 对话与命令输入</a></li><li class="chapter-item expanded "><a href="02-message-flow-and-session-ui.html"><strong aria-hidden="true">2.</strong> 消息流与会话界面</a></li><li class="chapter-item expanded "><a href="03-slash-commands.html"><strong aria-hidden="true">3.</strong> Slash Commands 功能族</a></li><li class="chapter-item expanded affix "><li class="part-title">代码操作功能</li><li class="chapter-item expanded "><a href="04-read-search-and-context.html"><strong aria-hidden="true">4.</strong> 读文件、搜内容、找文件</a></li><li class="chapter-item expanded "><a href="05-editing-and-diff.html" class="active"><strong aria-hidden="true">5.</strong> 改文件与 Diff 展示</a></li><li class="chapter-item expanded "><a href="06-shell-execution.html"><strong aria-hidden="true">6.</strong> Shell 执行</a></li><li class="chapter-item expanded affix "><li class="part-title">任务控制功能</li><li class="chapter-item expanded "><a href="07-plan-mode.html"><strong aria-hidden="true">7.</strong> Plan Mode</a></li><li class="chapter-item expanded "><a href="08-permissions-and-approval.html"><strong aria-hidden="true">8.</strong> Permissions 与 Approval</a></li><li class="chapter-item expanded "><a href="09-tasks-agents-and-teammates.html"><strong aria-hidden="true">9.</strong> Task、Agent、Teammate</a></li><li class="chapter-item expanded affix "><li class="part-title">记忆与上下文功能</li><li class="chapter-item expanded "><a href="10-memory.html"><strong aria-hidden="true">10.</strong> Memory 功能</a></li><li class="chapter-item expanded "><a href="11-session-resume-history.html"><strong aria-hidden="true">11.</strong> Session、Resume、History</a></li><li class="chapter-item expanded "><a href="12-context-management.html"><strong aria-hidden="true">12.</strong> Context 管理</a></li><li class="chapter-item expanded affix "><li class="part-title">外部连接能力</li><li class="chapter-item expanded "><a href="13-web-and-external-info.html"><strong aria-hidden="true">13.</strong> Web 访问与搜索</a></li><li class="chapter-item expanded "><a href="14-mcp.html"><strong aria-hidden="true">14.</strong> MCP</a></li><li class="chapter-item expanded "><a href="15-plugins-and-skills.html"><strong aria-hidden="true">15.</strong> Plugins 与 Skills</a></li><li class="chapter-item expanded affix "><li class="part-title">运行环境功能</li><li class="chapter-item expanded "><a href="16-config-and-feature-flags.html"><strong aria-hidden="true">16.</strong> Config 与 Feature Flags</a></li><li class="chapter-item expanded "><a href="17-remote-bridge-daemon-bg-sessions.html"><strong aria-hidden="true">17.</strong> Remote、Bridge、Daemon、Bg Sessions</a></li><li class="chapter-item expanded affix "><li class="part-title">结语</li><li class="chapter-item expanded "><a href="18-conclusion.html"><strong aria-hidden="true">18.</strong> 从这些设计里读到什么</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="00_preface.html">前言</a></li><li class="chapter-item expanded affix "><a href="00b_architecture_overview.html">架构总览</a></li><li class="chapter-item expanded affix "><li class="part-title">主交互功能</li><li class="chapter-item expanded "><a href="01_dialog_and_command_input.html"><strong aria-hidden="true">1.</strong> 对话与命令输入</a></li><li class="chapter-item expanded "><a href="02_message_flow_and_session_ui.html"><strong aria-hidden="true">2.</strong> 消息流与会话界面</a></li><li class="chapter-item expanded "><a href="03_slash_commands.html"><strong aria-hidden="true">3.</strong> Slash Commands 功能族</a></li><li class="chapter-item expanded affix "><li class="part-title">代码操作功能</li><li class="chapter-item expanded "><a href="04_read_search_and_context.html"><strong aria-hidden="true">4.</strong> 读文件、搜内容、找文件</a></li><li class="chapter-item expanded "><a href="05_editing_and_diff.html"><strong aria-hidden="true">5.</strong> 改文件与 Diff 展示</a></li><li class="chapter-item expanded "><a href="06_shell_execution.html"><strong aria-hidden="true">6.</strong> Shell 执行</a></li><li class="chapter-item expanded affix "><li class="part-title">任务控制功能</li><li class="chapter-item expanded "><a href="07_plan_mode.html"><strong aria-hidden="true">7.</strong> Plan Mode</a></li><li class="chapter-item expanded "><a href="08_permissions_and_approval.html"><strong aria-hidden="true">8.</strong> Permissions 与 Approval</a></li><li class="chapter-item expanded "><a href="09_tasks_agents_and_teammates.html"><strong aria-hidden="true">9.</strong> Task、Agent、Teammate</a></li><li class="chapter-item expanded affix "><li class="part-title">记忆与上下文功能</li><li class="chapter-item expanded "><a href="10_memory.html"><strong aria-hidden="true">10.</strong> Memory 功能</a></li><li class="chapter-item expanded "><a href="11_session_resume_history.html"><strong aria-hidden="true">11.</strong> Session、Resume、History</a></li><li class="chapter-item expanded "><a href="12_context_management.html"><strong aria-hidden="true">12.</strong> Context 管理</a></li><li class="chapter-item expanded affix "><li class="part-title">外部连接能力</li><li class="chapter-item expanded "><a href="13_web_and_external_info.html"><strong aria-hidden="true">13.</strong> Web 访问与搜索</a></li><li class="chapter-item expanded "><a href="14_mcp.html"><strong aria-hidden="true">14.</strong> MCP</a></li><li class="chapter-item expanded "><a href="15_plugins_and_skills.html"><strong aria-hidden="true">15.</strong> Plugins 与 Skills</a></li><li class="chapter-item expanded affix "><li class="part-title">运行环境功能</li><li class="chapter-item expanded "><a href="16_config_and_feature_flags.html" class="active"><strong aria-hidden="true">16.</strong> Config 与 Feature Flags</a></li><li class="chapter-item expanded "><a href="17_remote_bridge_daemon_bg_sessions.html"><strong aria-hidden="true">17.</strong> Remote、Bridge、Daemon、Bg Sessions</a></li><li class="chapter-item expanded affix "><li class="part-title">结语</li><li class="chapter-item expanded "><a href="18_conclusion.html"><strong aria-hidden="true">18.</strong> 从这些设计里读到什么</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -176,35 +177,30 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="第-5-章-改文件与-diff-展示"><a class="header" href="#第-5-章-改文件与-diff-展示">第 5 章 改文件与 Diff 展示</a></h1>
-<h2 id="精准替换而不是整文件覆盖"><a class="header" href="#精准替换而不是整文件覆盖">精准替换，而不是整文件覆盖</a></h2>
-<p>Claude Code 改文件的主要方式是精准替换：你提供要改的旧内容和新内容，工具找到旧内容在文件里的位置，替换掉。</p>
-<p>这个设计选择背后有一个重要约束：<code>old_string</code> 必须在文件里唯一存在。如果同样的内容出现了两次，工具会拒绝执行，而不是随便改其中一处。</p>
-<p>这一条规则防止了很多"改错地方"的情况。如果模型写出了一段模糊的 <code>old_string</code>，系统直接拒绝，而不是悄悄改了一个错误的位置然后让用户事后发现。</p>
-<p>整文件覆盖（FileWriteTool）也存在，但主要用于新建文件或者真的要完全重写的情况。一般的修改都应该用精准替换，改动范围更小，diff 更可读。</p>
-<h2 id="编辑之前要过的关"><a class="header" href="#编辑之前要过的关">编辑之前要过的关</a></h2>
-<p>在真正写文件之前，FileEditTool 会做一批前置检查：</p>
-<ul>
-<li><strong>路径别名展开</strong>：先把 <code>~/</code>、相对路径等各种形式统一成绝对路径，防止路径别名绕过后续的权限规则。</li>
-<li><strong>权限检查</strong>：看用户的规则里这个路径是否允许写入。</li>
-<li><strong>文件状态检查</strong>：如果文件在上次读取之后被外部程序修改了，工具会拒绝覆盖，而不是强行写入。这保护了用户在另一个窗口里做的改动。</li>
-<li><strong>大文件保护</strong>：超过 1GB 的文件直接拒绝，防止内存问题。</li>
-</ul>
-<p>这些检查都在写入之前做完。如果任何一项不通过，操作失败，原文件不变。</p>
-<h2 id="diff-是信任的基础"><a class="header" href="#diff-是信任的基础">Diff 是信任的基础</a></h2>
-<p>每次成功的编辑，diff 都会出现在消息流里。用户不需要自己去比对，也不需要运行 <code>git diff</code>，直接在会话界面就能看到改了哪几行。</p>
-<p>这个设计不只是方便，而是系统可信度的基础。你不需要相信"agent 说它改对了"——你可以直接看改了什么。如果改得不对，当场就能发现，而不是等到跑测试才知道。</p>
-<p>改完文件之后，如果代码有类型错误或语法问题，这些报错也会一起出现在消息流里，不需要再切到编辑器里手动检查。</p>
+                        <h1 id="第-16-章-config-与-feature-flags"><a class="header" href="#第-16-章-config-与-feature-flags">第 16 章 Config 与 Feature Flags</a></h1>
+<h2 id="不只是参数配置"><a class="header" href="#不只是参数配置">不只是参数配置</a></h2>
+<p>Claude Code 的配置系统做两件事：控制运行时参数（超时时间、模型选择、各种开关），以及通过 feature flag 控制哪些功能对哪些用户可见。后者让同一份代码可以对外表现出不同的产品形态——外部公开版、内部开发版、实验功能版、组织定制版，功能集各不相同，但底层都是同一套代码。</p>
+<h2 id="feature-flag-怎么工作"><a class="header" href="#feature-flag-怎么工作">Feature Flag 怎么工作</a></h2>
+<p>Feature flag 的判断发生在命令注册、工具初始化的时候，不是运行时的 if/else。</p>
+<p>Flag 为 false 时，模块根本不加载，命令不出现在注册表里，Tab 补全里也看不到。工具层同理——某些工具的存在本身，受 feature flag 控制。</p>
+<p>这种设计有一个好处：不同构建版本的包体积可以差异很大。外部版不会携带任何内部功能的代码，而不只是把它们隐藏起来。</p>
+<h2 id="配置的层级"><a class="header" href="#配置的层级">配置的层级</a></h2>
+<p>配置有五个层级，从高到低：企业策略（通过管理平台下发，优先级最高）、用户级（<code>~/.claude/settings.json</code>）、项目共享级（<code>.claude/settings.json</code>，提交到仓库）、项目本地级（<code>.claude/settings.local.json</code>，不提交）、以及服务端 feature flag。</p>
+<p>高层级可以覆盖低层级。企业策略还可以锁定某些配置项，让用户无法修改——比如强制禁用某些工具、限制只能连接指定组织。这对企业部署很重要：组织可以强制安全策略，同时让用户保留个性化配置的空间。</p>
+<h2 id="一份代码多条产品线"><a class="header" href="#一份代码多条产品线">一份代码，多条产品线</a></h2>
+<p>如果没有 feature flag，维护多个产品版本的常见做法是拉多个 fork——外部版一个、内部版一个、实验版一个，各自维护。问题是每次改一个核心功能，所有 fork 都要同步，成本越来越高。</p>
+<p>Feature flag 的方案是：只有一份代码，差异全部做成开关，主干统一迭代，不同产品线通过配置区分。代价是代码里会散落着各种条件判断，理解某个功能的完整行为需要知道在哪些 flag 组合下它是开着的。但对于需要同时维护多个产品版本的系统来说，这个复杂度是值得的。</p>
+<p>从源码里能印证这一点：大约 100 个 feature flag，还有 19 个不出现在 <code>/help</code> 里的隐藏命令——<code>/ultraplan</code>、<code>/teleport</code>、<code>/autofix-pr</code>、<code>/buddy</code> 等，都是正在演化中的产品线留下的痕迹。</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="04-read-search-and-context.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="15_plugins_and_skills.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="06-shell-execution.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="17_remote_bridge_daemon_bg_sessions.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -214,11 +210,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="04-read-search-and-context.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="15_plugins_and_skills.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="06-shell-execution.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="17_remote_bridge_daemon_bg_sessions.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

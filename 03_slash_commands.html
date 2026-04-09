@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>架构总览 - Claude Code 功能设计与实现</title>
+        <title>Slash Commands 功能族 - Claude Code 功能设计与实现</title>
 
 
         <!-- Custom HTML head -->
@@ -29,6 +29,7 @@
         <link rel="stylesheet" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/github.css">
 
     </head>
     <body class="sidebar-visible no-js">
@@ -36,7 +37,7 @@
         <!-- Provide site root to javascript -->
         <script>
             var path_to_root = "";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
@@ -88,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="00-preface.html">前言</a></li><li class="chapter-item expanded affix "><a href="00b-architecture-overview.html" class="active">架构总览</a></li><li class="chapter-item expanded affix "><li class="part-title">主交互功能</li><li class="chapter-item expanded "><a href="01-dialog-and-command-input.html"><strong aria-hidden="true">1.</strong> 对话与命令输入</a></li><li class="chapter-item expanded "><a href="02-message-flow-and-session-ui.html"><strong aria-hidden="true">2.</strong> 消息流与会话界面</a></li><li class="chapter-item expanded "><a href="03-slash-commands.html"><strong aria-hidden="true">3.</strong> Slash Commands 功能族</a></li><li class="chapter-item expanded affix "><li class="part-title">代码操作功能</li><li class="chapter-item expanded "><a href="04-read-search-and-context.html"><strong aria-hidden="true">4.</strong> 读文件、搜内容、找文件</a></li><li class="chapter-item expanded "><a href="05-editing-and-diff.html"><strong aria-hidden="true">5.</strong> 改文件与 Diff 展示</a></li><li class="chapter-item expanded "><a href="06-shell-execution.html"><strong aria-hidden="true">6.</strong> Shell 执行</a></li><li class="chapter-item expanded affix "><li class="part-title">任务控制功能</li><li class="chapter-item expanded "><a href="07-plan-mode.html"><strong aria-hidden="true">7.</strong> Plan Mode</a></li><li class="chapter-item expanded "><a href="08-permissions-and-approval.html"><strong aria-hidden="true">8.</strong> Permissions 与 Approval</a></li><li class="chapter-item expanded "><a href="09-tasks-agents-and-teammates.html"><strong aria-hidden="true">9.</strong> Task、Agent、Teammate</a></li><li class="chapter-item expanded affix "><li class="part-title">记忆与上下文功能</li><li class="chapter-item expanded "><a href="10-memory.html"><strong aria-hidden="true">10.</strong> Memory 功能</a></li><li class="chapter-item expanded "><a href="11-session-resume-history.html"><strong aria-hidden="true">11.</strong> Session、Resume、History</a></li><li class="chapter-item expanded "><a href="12-context-management.html"><strong aria-hidden="true">12.</strong> Context 管理</a></li><li class="chapter-item expanded affix "><li class="part-title">外部连接能力</li><li class="chapter-item expanded "><a href="13-web-and-external-info.html"><strong aria-hidden="true">13.</strong> Web 访问与搜索</a></li><li class="chapter-item expanded "><a href="14-mcp.html"><strong aria-hidden="true">14.</strong> MCP</a></li><li class="chapter-item expanded "><a href="15-plugins-and-skills.html"><strong aria-hidden="true">15.</strong> Plugins 与 Skills</a></li><li class="chapter-item expanded affix "><li class="part-title">运行环境功能</li><li class="chapter-item expanded "><a href="16-config-and-feature-flags.html"><strong aria-hidden="true">16.</strong> Config 与 Feature Flags</a></li><li class="chapter-item expanded "><a href="17-remote-bridge-daemon-bg-sessions.html"><strong aria-hidden="true">17.</strong> Remote、Bridge、Daemon、Bg Sessions</a></li><li class="chapter-item expanded affix "><li class="part-title">结语</li><li class="chapter-item expanded "><a href="18-conclusion.html"><strong aria-hidden="true">18.</strong> 从这些设计里读到什么</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="00_preface.html">前言</a></li><li class="chapter-item expanded affix "><a href="00b_architecture_overview.html">架构总览</a></li><li class="chapter-item expanded affix "><li class="part-title">主交互功能</li><li class="chapter-item expanded "><a href="01_dialog_and_command_input.html"><strong aria-hidden="true">1.</strong> 对话与命令输入</a></li><li class="chapter-item expanded "><a href="02_message_flow_and_session_ui.html"><strong aria-hidden="true">2.</strong> 消息流与会话界面</a></li><li class="chapter-item expanded "><a href="03_slash_commands.html" class="active"><strong aria-hidden="true">3.</strong> Slash Commands 功能族</a></li><li class="chapter-item expanded affix "><li class="part-title">代码操作功能</li><li class="chapter-item expanded "><a href="04_read_search_and_context.html"><strong aria-hidden="true">4.</strong> 读文件、搜内容、找文件</a></li><li class="chapter-item expanded "><a href="05_editing_and_diff.html"><strong aria-hidden="true">5.</strong> 改文件与 Diff 展示</a></li><li class="chapter-item expanded "><a href="06_shell_execution.html"><strong aria-hidden="true">6.</strong> Shell 执行</a></li><li class="chapter-item expanded affix "><li class="part-title">任务控制功能</li><li class="chapter-item expanded "><a href="07_plan_mode.html"><strong aria-hidden="true">7.</strong> Plan Mode</a></li><li class="chapter-item expanded "><a href="08_permissions_and_approval.html"><strong aria-hidden="true">8.</strong> Permissions 与 Approval</a></li><li class="chapter-item expanded "><a href="09_tasks_agents_and_teammates.html"><strong aria-hidden="true">9.</strong> Task、Agent、Teammate</a></li><li class="chapter-item expanded affix "><li class="part-title">记忆与上下文功能</li><li class="chapter-item expanded "><a href="10_memory.html"><strong aria-hidden="true">10.</strong> Memory 功能</a></li><li class="chapter-item expanded "><a href="11_session_resume_history.html"><strong aria-hidden="true">11.</strong> Session、Resume、History</a></li><li class="chapter-item expanded "><a href="12_context_management.html"><strong aria-hidden="true">12.</strong> Context 管理</a></li><li class="chapter-item expanded affix "><li class="part-title">外部连接能力</li><li class="chapter-item expanded "><a href="13_web_and_external_info.html"><strong aria-hidden="true">13.</strong> Web 访问与搜索</a></li><li class="chapter-item expanded "><a href="14_mcp.html"><strong aria-hidden="true">14.</strong> MCP</a></li><li class="chapter-item expanded "><a href="15_plugins_and_skills.html"><strong aria-hidden="true">15.</strong> Plugins 与 Skills</a></li><li class="chapter-item expanded affix "><li class="part-title">运行环境功能</li><li class="chapter-item expanded "><a href="16_config_and_feature_flags.html"><strong aria-hidden="true">16.</strong> Config 与 Feature Flags</a></li><li class="chapter-item expanded "><a href="17_remote_bridge_daemon_bg_sessions.html"><strong aria-hidden="true">17.</strong> Remote、Bridge、Daemon、Bg Sessions</a></li><li class="chapter-item expanded affix "><li class="part-title">结语</li><li class="chapter-item expanded "><a href="18_conclusion.html"><strong aria-hidden="true">18.</strong> 从这些设计里读到什么</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -176,52 +177,36 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="架构总览"><a class="header" href="#架构总览">架构总览</a></h1>
-<p>理解一个系统最快的方式，是跟着一个具体操作走一遍，看它在系统里经历了什么。</p>
-<h2 id="一次文件编辑发生了什么"><a class="header" href="#一次文件编辑发生了什么">一次文件编辑发生了什么</a></h2>
-<p>假设你让 Claude Code 修改一个文件。从你按下回车，到 diff 出现在界面上，中间经过了这些：</p>
-<p>首先，你的输入被判断为自然语言任务，送给模型处理。模型决定要调用 FileEditTool。</p>
-<p>调用之前，FileEditTool 先问一句：这次编辑，用户允许吗？它检查你的权限规则，如果这个路径在允许范围内，直接继续；如果没有匹配规则，弹出确认框等你决定。</p>
-<p>权限通过后，工具执行编辑：校验 old_string 唯一存在、路径安全、文件没被外部改动，然后写入。</p>
-<p>写入之后，工具把结果打包成消息，包括 diff、成功状态、LSP 诊断信息。消息进入消息流，经过排序和分组，最终显示在你面前。</p>
-<p>如果这次编辑很耗时，或者是子 agent 做的，整个过程被包装成一个 task，有自己的 id 和状态，你可以随时查看进度。</p>
-<p>这一次操作，就触碰了系统里几乎所有的层。</p>
-<h2 id="从这个例子看到的结构"><a class="header" href="#从这个例子看到的结构">从这个例子看到的结构</a></h2>
-<p>把上面的流程抽象出来，就得到了系统的基本分层：</p>
-<ul>
-<li><strong>入口层</strong>：判断你说的是什么、当前是什么运行模式</li>
-<li><strong>命令层</strong>：slash command 的注册和执行</li>
-<li><strong>工具层</strong>：实际干活——FileEditTool、BashTool、WebFetchTool 等</li>
-<li><strong>权限层</strong>：横切所有工具，每次操作前的决策</li>
-<li><strong>消息层</strong>：把工具输出变成统一的消息，进入会话流</li>
-<li><strong>任务层</strong>：长时间执行的统一容器</li>
-<li><strong>状态层</strong>：memory、session、context、config</li>
-</ul>
-<p>这些层不是严格的调用栈，真实代码里会交织。但每层的职责是清楚的，出了问题一般能定位到哪一层在负责。</p>
-<h2 id="一个贯穿始终的设计选择"><a class="header" href="#一个贯穿始终的设计选择">一个贯穿始终的设计选择</a></h2>
-<p>读完这本书，你会发现 Claude Code 一遍一遍地做同一件事：把某种能力从"让模型用 shell 命令临时解决"变成"专门的工具，带权限检查和展示协议"。</p>
-<p>读文件可以跑 <code>cat</code>，但有 FileReadTool。搜索可以跑 <code>grep</code>，但有 GrepTool。联网可以跑 <code>curl</code>，但有 WebFetchTool。</p>
-<p>每次这样做，系统就多了一层，但也多了对这件事的感知和控制：知道花了多少 token、知道用户允不允许、知道怎么展示给用户看。</p>
-<p>理解了这个模式，后面每一章都会变得更好读。</p>
-<h2 id="各章导航"><a class="header" href="#各章导航">各章导航</a></h2>
-<ul>
-<li>第 1-3 章：输入和命令——用户怎么和系统交互</li>
-<li>第 4-6 章：核心工具——读、改、执行</li>
-<li>第 7-9 章：控制层——plan mode、权限、任务</li>
-<li>第 10-12 章：记忆——memory、session、context</li>
-<li>第 13-15 章：向外延伸——web、MCP、plugins/skills</li>
-<li>第 16-17 章：运行环境——config、后台模式</li>
-</ul>
+                        <h1 id="第-3-章-slash-commands-功能族"><a class="header" href="#第-3-章-slash-commands-功能族">第 3 章 Slash Commands 功能族</a></h1>
+<h2 id="slash-command-解决的是什么问题"><a class="header" href="#slash-command-解决的是什么问题">Slash command 解决的是什么问题</a></h2>
+<p>用自然语言操作 AI 有一个内在问题：结果不确定。你说"帮我进入规划模式"，模型理不理解、怎么理解，每次可能不一样。</p>
+<p>slash command 解决的就是这个问题。<code>/plan</code> 永远是进入 plan mode，<code>/compact</code> 永远是压缩上下文，跟模型怎么想没关系。它给熟练用户提供了一条绕过自然语言不确定性的高速通道。</p>
+<p>这不是"AI 产品应该全用自然语言"和"还是用命令行吧"之间的妥协，而是两种模式各司其职的刻意设计。</p>
+<h2 id="命令是怎么工作的"><a class="header" href="#命令是怎么工作的">命令是怎么工作的</a></h2>
+<p>slash command 有几种不同的执行方式，取决于命令的性质：</p>
+<ol>
+<li><strong>交给模型处理</strong>：把用户意图包装成 prompt，模型再去调用工具。<code>/review</code> 就是这样——命令把"审查当前改动"的意图构造成 prompt，模型决定读哪些文件、怎么分析。</li>
+<li><strong>本地直接执行</strong>：不经过模型，直接返回 UI 组件，结果是确定性的。<code>/permissions</code> 打开权限面板、<code>/memory</code> 打开记忆文件，都是这类。</li>
+<li><strong>两者组合</strong>：先在本地做准备，再交给模型。<code>/compact</code> 就是先在本地计算当前上下文的分布，再用模型做实际的摘要压缩。</li>
+</ol>
+<p>这种分类让命令系统很灵活：不是所有命令都需要走一遍 LLM，能在本地确定性完成的，就在本地完成。</p>
+<h2 id="feature-flag-和命令可见性"><a class="header" href="#feature-flag-和命令可见性">Feature flag 和命令可见性</a></h2>
+<p>命令注册表里有一个重要机制：命令可以通过 feature flag 条件注册。</p>
+<p>实际效果是：某些命令只在内部版出现，某些只在实验版出现，某些只有在特定组织下才可见。从代码角度看，所有这些命令都在同一份代码里，但不同的构建、不同的环境下，命令列表是不同的。</p>
+<p>这让 Claude Code 可以在一份主干代码上并行演化多条产品路线，而不是维护多个 fork。代价是命令注册逻辑变复杂了，好处是功能迭代速度快得多。</p>
+<h2 id="插件和-skill-的命令怎么融入"><a class="header" href="#插件和-skill-的命令怎么融入">插件和 skill 的命令怎么融入</a></h2>
+<p>用户通过插件安装的 skill，最终也会并入同一个命令注册表。从用户的角度，通过 skill 安装的自定义命令和 <code>/compact</code> 这样的内建命令，使用体验完全一样。</p>
+<p>这是一个重要的设计决策：扩展能力和内建能力共享同一个接口层。用户不需要区分"这个命令是内建的还是安装的"，这条界限在使用层是透明的。</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="00-preface.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="02_message_flow_and_session_ui.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="01-dialog-and-command-input.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="04_read_search_and_context.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -231,11 +216,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="00-preface.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="02_message_flow_and_session_ui.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="01-dialog-and-command-input.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="04_read_search_and_context.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
