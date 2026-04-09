@@ -1,5 +1,5 @@
 [book]
-title = "Claude Code 功能设计与实现"
+title = "解剖 Claude Code"
 authors = ["liaoandi"]
 language = "zh"
 src = "src"

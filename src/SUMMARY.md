@@ -1,4 +1,4 @@
-# Claude Code 功能设计与实现
+# 解剖 Claude Code
 
 [前言](00_preface.md)
 [架构总览](00b_architecture_overview.md)
